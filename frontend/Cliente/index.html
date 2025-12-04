@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXSOFT - Hardware & Leasing</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 nav-glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-8">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center gap-3">
+                    <!-- Logo Icon (Simulado con CSS basado en la imagen) -->
+                    <div class="relative w-10 h-10 flex items-center justify-center">
+                        <span class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-2xl hidden md:block">
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-search text-slate-400 group-focus-within:text-pixsoft-primary transition-colors"></i>
+                        </div>
+                        <input type="text" 
+                            class="block w-full pl-11 pr-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-pixsoft-primary/50 focus:bg-white transition-all shadow-sm"
+                            placeholder="Buscar hardware, componentes, laptops...">
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">2</span>
+                    </button>
+                    <a href="../Login.html" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white shadow-lg shadow-pixsoft-primary/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Iniciar Sesión</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Secondary Nav -->
+        <div class="border-t border-slate-200 bg-white/50 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center h-12 gap-8 overflow-x-auto text-sm font-medium text-slate-600 no-scrollbar">
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Hardware</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Computadoras</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Laptops</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap text-pixsoft-primary font-semibold">Arrendamiento</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Software</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Accesorios</a>
+                    <a href="#" class="hover:text-red-500 transition-colors whitespace-nowrap">Ofertas</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Hero Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+            <!-- Venta Hero -->
+            <div class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
+                <div class="absolute inset-0 bg-linear-to-br from-blue-50 to-transparent opacity-50"></div>
+                <div class="relative z-10 max-w-md">
+                    <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mb-4 border border-blue-200">VENTA DIRECTA</span>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Potencia tu Setup <br><span class="text-blue-500">al Máximo Nivel</span></h2>
+                    <p class="text-slate-600 mb-8 text-lg">Encuentra las últimas tarjetas gráficas, procesadores y componentes de alto rendimiento.</p>
+                    <button class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-1">
+                        Ver Catálogo de Venta
+                    </button>
+                </div>
+                <img src="https://assets.nvidia.partners/images/png/geforce-rtx-4090-back.png" alt="GPU" class="absolute -right-20 -bottom-20 w-96 opacity-80 group-hover:scale-110 transition-all duration-500 rotate-12 drop-shadow-2xl">
+            </div>
+
+            <!-- Leasing Hero -->
+            <div class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
+                <div class="absolute inset-0 bg-linear-to-br from-cyan-50 to-transparent opacity-50"></div>
+                <div class="relative z-10 max-w-md">
+                    <span class="inline-block px-3 py-1 rounded-full bg-cyan-100 text-cyan-600 text-xs font-bold mb-4 border border-cyan-200">LEASING EMPRESARIAL</span>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Tecnología sin <br><span class="text-pixsoft-primary">Descapitalizarte</span></h2>
+                    <p class="text-slate-600 mb-8 text-lg">Renta equipos de cómputo de última generación con planes flexibles y soporte incluido.</p>
+                    <button class="px-6 py-3 rounded-xl bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold shadow-lg shadow-pixsoft-primary/20 transition-all hover:-translate-y-1">
+                        Cotizar Arrendamiento
+                    </button>
+                </div>
+                <img src="https://pngimg.com/d/macbook_PNG55.png" alt="Laptop" class="absolute -right-10 bottom-10 w-80 opacity-90 group-hover:scale-110 transition-all duration-500 drop-shadow-2xl">
+            </div>
+        </div>
+
+        <!-- Featured Products -->
+        <div class="mb-8 flex items-end justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Productos Destacados</h2>
+                <p class="text-slate-500">Lo mejor en hardware y soluciones empresariales</p>
+            </div>
+            <a href="#" class="text-pixsoft-primary hover:text-pixsoft-secondary transition-colors text-sm font-medium flex items-center gap-1">
+                Ver todo <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Product Card (Venta) -->
+            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="px-2 py-1 rounded bg-green-100 text-green-600 text-xs font-bold border border-green-200">VENTA</span>
+                </div>
+                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
+                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
+                    <img src="https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_UF894,1000_QL80_.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">ASUS ROG Strix GeForce RTX 4090 OC Edition 24GB</h3>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="flex text-yellow-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <span class="text-xs text-slate-400">(24)</span>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="flex items-end justify-between mb-3">
+                            <div>
+                                <p class="text-xs text-slate-400 line-through">$42,999</p>
+                                <p class="text-xl font-bold text-slate-900">$38,500</p>
+                            </div>
+                            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-circle mr-1"></i>Stock</span>
+                        </div>
+                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-primary border border-slate-200 hover:border-pixsoft-primary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2 group/btn">
+                            <i class="fa-solid fa-cart-plus group-hover/btn:scale-110 transition-transform"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card (Leasing) -->
+            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="px-2 py-1 rounded bg-pixsoft-primary/10 text-pixsoft-primary text-xs font-bold border border-pixsoft-primary/20">LEASING</span>
+                </div>
+                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
+                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
+                    <img src="https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-3420/media-gallery/peripherals_laptop_latitude_3420_gallery_1.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=555&qlt=100,1&resMode=sharp2&size=555,402&chrss=full" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Dell Latitude 3420 Intel Core i5 16GB RAM 512GB SSD</h3>
+                    <p class="text-xs text-slate-500 mb-4">Ideal para trabajo remoto y oficina</p>
+                    <div class="mt-auto">
+                        <div class="flex items-end justify-between mb-3">
+                            <div>
+                                <p class="text-xs text-slate-400">Renta mensual desde</p>
+                                <p class="text-xl font-bold text-pixsoft-primary">$850 <span class="text-xs font-normal text-slate-400">/mes</span></p>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-secondary border border-slate-200 hover:border-pixsoft-secondary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2">
+                            Ver Planes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Product Card (Venta) -->
+             <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="px-2 py-1 rounded bg-green-100 text-green-600 text-xs font-bold border border-green-200">VENTA</span>
+                </div>
+                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
+                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
+                    <img src="https://www.cyberpuerta.mx/img/product/XL/CP-AMD-100-100000593WOF-1.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Procesador AMD Ryzen 9 7950X 4.5GHz</h3>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="flex text-yellow-400 text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="text-xs text-slate-400">(128)</span>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="flex items-end justify-between mb-3">
+                            <div>
+                                <p class="text-xs text-slate-400 line-through">$11,500</p>
+                                <p class="text-xl font-bold text-slate-900">$10,299</p>
+                            </div>
+                            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-circle mr-1"></i>Stock</span>
+                        </div>
+                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-primary border border-slate-200 hover:border-pixsoft-primary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2 group/btn">
+                            <i class="fa-solid fa-cart-plus group-hover/btn:scale-110 transition-transform"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card (Leasing) -->
+            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="px-2 py-1 rounded bg-pixsoft-primary/10 text-pixsoft-primary text-xs font-bold border border-pixsoft-primary/20">LEASING</span>
+                </div>
+                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
+                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
+                    <img src="https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Lenovo ThinkPad X1 Carbon Gen 10 i7 16GB</h3>
+                    <p class="text-xs text-slate-500 mb-4">Ultrabook empresarial premium</p>
+                    <div class="mt-auto">
+                        <div class="flex items-end justify-between mb-3">
+                            <div>
+                                <p class="text-xs text-slate-400">Renta mensual desde</p>
+                                <p class="text-xl font-bold text-pixsoft-primary">$1,200 <span class="text-xs font-normal text-slate-400">/mes</span></p>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-secondary border border-slate-200 hover:border-pixsoft-secondary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2">
+                            Ver Planes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white/80 backdrop-blur-lg pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="relative w-8 h-8 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                        </div>
+                        <span class="text-xl font-bold text-slate-900">PIXSOFT</span>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-4">Tu aliado tecnológico en hardware de alto rendimiento y soluciones de arrendamiento empresarial.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 font-bold mb-4">Comprar</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Componentes PC</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Laptops Gamer</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Monitores</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Periféricos</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 font-bold mb-4">Empresas</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Arrendamiento de Equipo</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Licenciamiento Software</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Servidores</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Cotizador B2B</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 font-bold mb-4">Soporte</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Centro de Ayuda</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Garantías</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Estado del Pedido</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 text-sm">© 2025 PIXSOFT. Todos los derechos reservados.</p>
+                <div class="flex gap-4 text-slate-500 text-sm">
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors">Privacidad</a>
+                    <a href="#" class="hover:text-pixsoft-primary transition-colors">Términos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
