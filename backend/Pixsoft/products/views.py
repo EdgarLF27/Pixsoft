@@ -1,10 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny 
+from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.views import APIView
+from django.db.models import F, Count, Sum
 from .models import SaleCategory, SaleProduct
 from .serializers import SaleCategorySerializer, SaleProductSerializer
-from django.db.models import F
 
 # --- ViewSet para Categorías (Soporta Jerarquía) ---
 
@@ -63,3 +64,47 @@ class SaleProductViewSet(viewsets.ModelViewSet):
             "message": "Compra procesada. Stock actualizado en tiempo real.",
             "new_stock": product.stock_quantity
         }, status=status.HTTP_200_OK)
+
+class InventoryAnalyticsView(APIView):
+    """
+    Endpoint para Reportes de Inventario.
+    Retorna:
+    - Estado del stock (Total, Agotado, Bajo Stock).
+    - Distribución por categorías.
+    - Valor total del inventario.
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        # 1. KPIs de Stock
+        total_products = SaleProduct.objects.count()
+        out_of_stock = SaleProduct.objects.filter(stock_quantity=0).count()
+        low_stock = SaleProduct.objects.filter(stock_quantity__lt=5, stock_quantity__gt=0).count()
+        
+        # Valor del inventario (Precio * Cantidad)
+        inventory_value_qs = SaleProduct.objects.aggregate(
+            total_value=Sum(F('price') * F('stock_quantity'))
+        )
+        total_value = inventory_value_qs['total_value'] or 0
+
+        # 2. Distribución por Categoría
+        category_distribution = SaleProduct.objects.values('category__name').annotate(
+            count=Count('id')
+        ).order_by('-count')
+
+        # 3. Alertas de Stock Bajo (Detalle)
+        low_stock_items = SaleProduct.objects.filter(stock_quantity__lt=5).values(
+            'name', 'sku', 'stock_quantity'
+        )[:10]
+
+        data = {
+            "summary": {
+                "total_products": total_products,
+                "out_of_stock": out_of_stock,
+                "low_stock": low_stock,
+                "total_inventory_value": total_value
+            },
+            "by_category": list(category_distribution),
+            "alerts": list(low_stock_items)
+        }
+        return Response(data)

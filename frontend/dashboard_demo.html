@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard API Demo (Dev)</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #333;
+            color: #0f0;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🛠️ Dashboard API Tester</h1>
+    <p>Esta página es para probar la conexión con la API de Reportes. <br> Tu compañero puede tomar el código JS de aquí
+        para implementarlo en el diseño final.</p>
+
+    <div style="margin-bottom: 20px;">
+        <button onclick="loadSales()">📊 Cargar Ventas</button>
+        <button onclick="loadInventory()">📦 Cargar Inventario</button>
+        <button onclick="logout()">🚪 Cerrar Sesión</button>
+    </div>
+
+    <!-- SALES SECTION -->
+    <div class="card">
+        <h2>Ventas (Sales Analytics)</h2>
+        <div id="sales-container">Dale click al botón para cargar...</div>
+        <h3>Respuesta JSON Cruda:</h3>
+        <pre id="sales-json">Waiting...</pre>
+    </div>
+
+    <!-- INVENTORY SECTION -->
+    <div class="card">
+        <h2>Inventario (Inventory Analytics)</h2>
+        <div id="inventory-container">Dale click al botón para cargar...</div>
+        <h3>Respuesta JSON Cruda:</h3>
+        <pre id="inventory-json">Waiting...</pre>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000/api/v1';
+
+        // 1. Auth Check (Reutilizamos la lógica de tu login)
+        function getHeaders() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert("No estás logueado. Redirigiendo al login...");
+                window.location.href = 'Login.html';
+                return null;
+            }
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // 2. Load Sales Function
+        async function loadSales() {
+            const headers = getHeaders();
+            if (!headers) return;
+
+            document.getElementById('sales-container').innerText = "Cargando...";
+
+            try {
+                const response = await fetch(`${API_BASE}/dashboard/sales/`, { method: 'GET', headers: headers });
+
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error("No autorizado. ¿Eres Admin?");
+                }
+
+                const data = await response.json();
+
+                // Mostrar JSON Crudo
+                document.getElementById('sales-json').textContent = JSON.stringify(data, null, 2);
+
+                // Mostrar Resumen Simple
+                document.getElementById('sales-container').innerHTML = `
+                    <p><strong>Ingresos Totales:</strong> $${data.summary.total_revenue}</p>
+                    <p><strong>Pedidos Totales:</strong> ${data.summary.total_orders}</p>
+                    <p><strong>Pendientes:</strong> ${data.summary.pending_orders}</p>
+                    <p><em>Ver consola para más detalles...</em></p>
+                `;
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('sales-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                document.getElementById('sales-json').textContent = "Error al fetchear datos.";
+            }
+        }
+
+        // 3. Load Inventory Function
+        async function loadInventory() {
+            const headers = getHeaders();
+            if (!headers) return;
+
+            document.getElementById('inventory-container').innerText = "Cargando...";
+
+            try {
+                const response = await fetch(`${API_BASE}/dashboard/inventory/`, { method: 'GET', headers: headers });
+
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error("No autorizado. ¿Eres Admin?");
+                }
+
+                const data = await response.json();
+
+                // Mostrar JSON Crudo
+                document.getElementById('inventory-json').textContent = JSON.stringify(data, null, 2);
+
+                // Mostrar Resumen Simple
+                document.getElementById('inventory-container').innerHTML = `
+                    <p><strong>Total Productos:</strong> ${data.summary.total_products}</p>
+                    <p><strong>Agotados:</strong> ${data.summary.out_of_stock}</p>
+                    <p><strong>Valor Inventario:</strong> $${data.summary.total_inventory_value}</p>
+                    <p><strong>Alertas Stock Bajo:</strong> ${data.alerts.length}</p>
+                `;
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('inventory-container').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                document.getElementById('inventory-json').textContent = "Error al fetchear datos.";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('user_role');
+            window.location.href = 'Login.html';
+        }
+    </script>
+</body>
+
+</html>
