@@ -1,295 +1,437 @@
-const API_BASE = "http://localhost:8000/api/v1/shipping/";
-let allShipments = [];
-let currentId = null;
+/**
+ * Shipping Management Logic
+ * Uses Components: Table, Modal, Toast, API
+ */
+
+// Globals
+let shipmentsTable;
+let shipmentModal;
+let shippingMethods = [];
+let allShipmentsCache = [];
 let isEditing = false;
+let currentId = null;
 
-// --- Inicialización ---
-window.onload = async () => {
-    checkAuth();
-    await fetchShippingMethods();
-    await fetchShipments();
+document.addEventListener("DOMContentLoaded", async () => {
+  // 1. Sidebar
+  if (typeof renderSidebar === "function") renderSidebar("envios");
 
-    // Listeners para filtros
-    document.getElementById("searchInput").addEventListener("input", filterShipments);
-    document.getElementById("statusFilter").addEventListener("change", filterShipments);
+  // 2. Initialize
+  initializeTable();
+  initializeModal();
+
+  // 3. Load Data
+  await loadMethods();
+  await loadShipments();
+
+  // 4. Filters
+  setupFilters();
+});
+
+// --- Initialization ---
+
+function initializeTable() {
+  shipmentsTable = new Table({
+    containerId: "shipments-table-container",
+    columns: [
+      {
+        key: "tracking_number",
+        label: "Tracking / ID",
+        render: (val, row) => `
+                    <div>
+                        <span class="font-medium text-slate-900">${
+                          val ||
+                          '<span class="text-slate-400 italic">Sin Tracking</span>'
+                        }</span>
+                        <div class="text-xs text-slate-400">ID: ${row.id}</div>
+                    </div>
+                `,
+      },
+      {
+        key: "customer_name",
+        label: "Cliente",
+        render: (val, row) => `
+                    <div>
+                        <div class="text-slate-900 font-medium">${val}</div>
+                        <div class="text-xs text-slate-500">${row.customer_email}</div>
+                    </div>
+                `,
+      },
+      {
+        key: "shipping_method_name",
+        label: "Método",
+        render: (val, row) =>
+          `<span class="text-slate-600">${
+            val || "ID: " + row.shipping_method
+          }</span>`,
+      },
+      {
+        key: "destination_address",
+        label: "Destino",
+        render: (val) =>
+          `<div class="max-w-[200px] truncate text-slate-600 text-xs" title="${val}">${val}</div>`,
+      },
+      {
+        key: "status",
+        label: "Estado",
+        render: (val) => {
+          const map = {
+            PENDING: {
+              text: "Pendiente",
+              badge: "bg-yellow-100 text-yellow-700",
+              icon: "fa-clock",
+            },
+            PROCESSING: {
+              text: "Procesando",
+              badge: "bg-blue-100 text-blue-700",
+              icon: "fa-gears",
+            },
+            SHIPPED: {
+              text: "Enviado",
+              badge: "bg-indigo-100 text-indigo-700",
+              icon: "fa-box",
+            },
+            IN_TRANSIT: {
+              text: "En Tránsito",
+              badge: "bg-cyan-100 text-cyan-700",
+              icon: "fa-truck-fast",
+            },
+            DELIVERED: {
+              text: "Entregado",
+              badge: "bg-green-100 text-green-700",
+              icon: "fa-check",
+            },
+            RETURNED: {
+              text: "Devuelto",
+              badge: "bg-red-100 text-red-700",
+              icon: "fa-rotate-left",
+            },
+            SCHEDULED_PICKUP: {
+              text: "Prog. Recogida",
+              badge: "bg-purple-100 text-purple-700",
+              icon: "fa-calendar-check",
+            },
+            PICKED_UP: {
+              text: "Recogido",
+              badge: "bg-purple-200 text-purple-800",
+              icon: "fa-people-carry-box",
+            },
+          };
+          const st = map[val] || {
+            text: val,
+            badge: "badge-ghost",
+            icon: "fa-circle",
+          };
+          return `<span class="badge ${st.badge}"><i class="fa-solid ${st.icon} mr-1"></i>${st.text}</span>`;
+        },
+      },
+      {
+        key: "scheduled_date",
+        label: "Fecha Prog.",
+        render: (val) =>
+          `<span class="text-slate-600 text-xs">${
+            val ? formatDate(val, true) : "-"
+          }</span>`,
+      },
+      {
+        key: "actions",
+        label: "Acciones",
+        alignment: "right",
+        render: (_, row) => `
+                    <div class="flex items-center justify-end gap-2">
+                        <button onclick="editShipment('${row.id}')" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteShipment('${row.id}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Eliminar">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `,
+      },
+    ],
+    emptyState: {
+      icon: "fa-solid fa-truck-fast",
+      title: "No hay envíos",
+      message: "Registra un envío para comenzar el seguimiento.",
+    },
+  });
+}
+
+function initializeModal() {
+  shipmentModal = new Modal({
+    title: "Nuevo Envío",
+    content: getShipmentFormHTML(), // Defined below
+    size: "2xl",
+    buttons: [
+      {
+        text: "Cancelar",
+        class: "px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg",
+        onClick: () => shipmentModal.close(),
+      },
+      {
+        text: "Guardar Envío",
+        class: "btn-primary",
+        onClick: handleSaveShipment,
+      },
+    ],
+    onOpen: () => {
+      populateMethodSelect();
+      if (!isEditing) {
+        // Set default status if new
+        const statusSel = document.getElementById("shipStatus");
+        if (statusSel) statusSel.value = "PENDING";
+      }
+    },
+  });
+}
+
+// --- Data Loading ---
+
+async function loadMethods() {
+  try {
+    shippingMethods = await api.get("shipping/methods/");
+  } catch (error) {
+    console.error("Error loading methods:", error);
+  }
+}
+
+async function loadShipments() {
+  try {
+    const container = document.getElementById("shipments-table-container");
+    if (container) container.innerHTML = Loading.spinner("Cargando envíos...");
+
+    const data = await api.get("shipping/shipments/");
+    allShipmentsCache = data; // Cache for filtering
+    shipmentsTable.render(data);
+
+    const count = document.getElementById("showingCount");
+    if (count) count.textContent = data.length;
+  } catch (error) {
+    console.error("Error shipments:", error);
+    shipmentsTable.render([]);
+    Toast.show({ type: "error", message: "Error cargando envíos" });
+  }
+}
+
+// --- Logic ---
+
+function setupFilters() {
+  const search = document.getElementById("searchInput");
+  const status = document.getElementById("statusFilter");
+
+  const handleFilter = () => {
+    const term = search.value.toLowerCase();
+    const stat = status.value;
+
+    const filtered = allShipmentsCache.filter((s) => {
+      const matchesTerm =
+        (s.tracking_number || "").toLowerCase().includes(term) ||
+        (s.customer_name || "").toLowerCase().includes(term) ||
+        (s.customer_email || "").toLowerCase().includes(term);
+      const matchesStatus = !stat || s.status === stat;
+      return matchesTerm && matchesStatus;
+    });
+
+    shipmentsTable.render(filtered);
+    document.getElementById("showingCount").textContent = filtered.length;
+  };
+
+  search.addEventListener("input", handleFilter);
+  status.addEventListener("change", handleFilter);
+}
+
+function populateMethodSelect() {
+  const select = document.getElementById("shipMethod");
+  if (!select) return;
+
+  // Preserve value if editing
+  const currentVal = select.value;
+
+  select.innerHTML = '<option value="">Seleccionar...</option>';
+  shippingMethods.forEach((m) => {
+    select.add(
+      new Option(`${m.name} (${m.type}) - ${formatCurrency(m.base_cost)}`, m.id)
+    );
+  });
+
+  if (currentVal) select.value = currentVal;
+}
+
+// --- Actions ---
+
+window.openShipmentModal = function () {
+  isEditing = false;
+  currentId = null;
+  shipmentModal.updateTitle("Nuevo Envío");
+  shipmentModal.open();
+  // Form is reset by modal close usually, but let's be safe
+  const form = document.getElementById("shipmentForm");
+  if (form) form.reset();
 };
 
-function checkAuth() {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-        // Redirigir a login si no hay token
-        console.warn("No hay token de acceso");
-        window.location.href = '../Login.html';
-    }
-}
+window.editShipment = function (id) {
+  const item = allShipmentsCache.find((s) => s.id == id);
+  if (!item) return;
 
-// --- API Helper ---
-async function apiCall(endpoint, method = 'GET', body = null) {
-    const token = localStorage.getItem('accessToken');
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+  isEditing = true;
+  currentId = item.id;
+  shipmentModal.updateTitle("Editar Envío");
+  shipmentModal.open();
 
-    try {
-        const res = await fetch(API_BASE + endpoint, {
-            method, headers, body: body ? JSON.stringify(body) : null
-        });
+  // Fill Data
+  document.getElementById("shipTracking").value = item.tracking_number || "";
+  document.getElementById("shipStatus").value = item.status;
 
-        if (res.status === 401) {
-            alert("Sesión expirada.");
-            window.location.href = '../Login.html';
-            return null;
-        }
+  // Fill specific fields (populate select first in onOpen, then value)
+  // Since onOpen runs async/sync before this if called after open(), we need to wait or manually populate here if needed.
+  // However, onOpen fires when we call open().
+  // We can rely on onOpen triggering populate, then setting value.
+  // Or call populate explicit here.
+  populateMethodSelect();
+  document.getElementById("shipMethod").value = item.shipping_method;
 
-        if (!res.ok) {
-            const errorText = await res.text();
-            try {
-                const errorJson = JSON.parse(errorText);
-                // Intenta mostrar un mensaje amigable si es un objeto de errores de Django
-                const msg = Object.entries(errorJson).map(([k, v]) => `${k}: ${v}`).join('\n');
-                throw new Error(msg || errorText);
-            } catch (e) {
-                throw new Error(errorText);
-            }
-        }
-        return res.status === 204 ? true : await res.json();
-    } catch (e) {
-        console.error("API Error:", e);
-        alert("Error al guardar: \n" + e.message);
-        return null;
-    }
-}
-
-// --- Métodos de Envío ---
-async function fetchShippingMethods() {
-    const methods = await apiCall('methods/');
-    if (methods) {
-        const select = document.getElementById("shipMethod");
-        select.innerHTML = '<option value="">Seleccionar...</option>';
-        methods.forEach(m => {
-            select.innerHTML += `<option value="${m.id}">${m.name} (${m.type}) - $${m.base_cost}</option>`;
-        });
-    }
-}
-
-// --- Envíos (CRUD) ---
-async function fetchShipments() {
-    const data = await apiCall('shipments/');
-    if (data) {
-        allShipments = data;
-        renderShipments(allShipments);
-    }
-}
-
-function renderShipments(list) {
-    const tbody = document.getElementById("shipmentsTableBody");
-    const countSpan = document.getElementById("showingCount");
-
-    tbody.innerHTML = "";
-    countSpan.textContent = list.length;
-
-    if (list.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="7" class="px-6 py-8 text-center text-slate-500">
-                    <i class="fa-solid fa-truck-fast text-3xl mb-2 opacity-30"></i>
-                    <p>No se encontraron envíos.</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    list.forEach(s => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 transition-colors";
-
-        let statusColor = "bg-slate-100 text-slate-700";
-        let icon = "fa-circle";
-        let statusText = s.status; // Fallback
-
-        // Mapeo de estados para visualización
-        const statusMap = {
-            'PENDING': { text: 'Pendiente', color: 'bg-yellow-100 text-yellow-700', icon: 'fa-clock' },
-            'PROCESSING': { text: 'Procesando', color: 'bg-blue-100 text-blue-700', icon: 'fa-gears' },
-            'SHIPPED': { text: 'Enviado', color: 'bg-indigo-100 text-indigo-700', icon: 'fa-box' },
-            'IN_TRANSIT': { text: 'En Tránsito', color: 'bg-cyan-100 text-cyan-700', icon: 'fa-truck-fast' },
-            'DELIVERED': { text: 'Entregado', color: 'bg-green-100 text-green-700', icon: 'fa-check' },
-            'RETURNED': { text: 'Devuelto', color: 'bg-red-100 text-red-700', icon: 'fa-rotate-left' },
-            'SCHEDULED_PICKUP': { text: 'Prog. Recogida', color: 'bg-purple-100 text-purple-700', icon: 'fa-calendar-check' },
-            'PICKED_UP': { text: 'Recogido', color: 'bg-purple-200 text-purple-800', icon: 'fa-people-carry-box' }
-        };
-
-        if (statusMap[s.status]) {
-            statusText = statusMap[s.status].text;
-            statusColor = statusMap[s.status].color;
-            icon = statusMap[s.status].icon;
-        }
-
-        const dateStr = s.scheduled_date ? new Date(s.scheduled_date).toLocaleString() : '-';
-        // Asumiendo que el backend devuelve el nombre del método, si no, habría que buscarlo
-        // Si el serializador no incluye shipping_method_name, mostrar ID o ajustar serializador.
-        // Por ahora asumo que shipping_method es el ID, y tal vez no tengo el nombre fácil.
-        // Pero para robustez, mostraré el ID si no hay nombre.
-        const methodName = s.shipping_method_name || `Método #${s.shipping_method}`;
-
-        tr.innerHTML = `
-            <td class="px-6 py-4 font-medium text-slate-900">
-                ${s.tracking_number || '<span class="text-slate-400 italic">Sin Tracking</span>'}
-                <div class="text-xs text-slate-400">ID: ${s.id}</div>
-            </td>
-            <td class="px-6 py-4">
-                <div class="text-slate-900 font-medium">${s.customer_name}</div>
-                <div class="text-xs text-slate-500">${s.customer_email}</div>
-            </td>
-            <td class="px-6 py-4 text-slate-600">${methodName}</td>
-            <td class="px-6 py-4 text-slate-600 text-xs max-w-[200px] truncate" title="${s.destination_address}">
-                ${s.destination_address}
-            </td>
-            <td class="px-6 py-4">
-                <span class="px-2 py-1 rounded-full text-xs font-medium flex w-fit items-center gap-1 ${statusColor}">
-                    <i class="fa-solid ${icon}"></i> ${statusText}
-                </span>
-            </td>
-            <td class="px-6 py-4 text-slate-600 text-xs">${dateStr}</td>
-            <td class="px-6 py-4 text-right">
-                <button onclick='editShipment(${JSON.stringify(s).replace(/'/g, "&#39;")})' class="text-slate-400 hover:text-[#5DADE2] transition-colors mr-2">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button onclick="deleteShipment(${s.id})" class="text-slate-400 hover:text-red-500 transition-colors">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-function filterShipments() {
-    const term = document.getElementById("searchInput").value.toLowerCase();
-    const status = document.getElementById("statusFilter").value;
-
-    const filtered = allShipments.filter(s => {
-        const matchesTerm = (s.tracking_number && s.tracking_number.toLowerCase().includes(term)) ||
-            s.customer_name.toLowerCase().includes(term) ||
-            s.customer_email.toLowerCase().includes(term);
-        const matchesStatus = status ? s.status === status : true;
-        return matchesTerm && matchesStatus;
-    });
-
-    renderShipments(filtered);
-}
-
-// --- Modal ---
-function openShipmentModal() {
-    isEditing = false;
-    currentId = null;
-    document.getElementById("modalTitle").textContent = "Nuevo Envío";
-
-    // Reset form
-    document.getElementById("shipTracking").value = "";
-    document.getElementById("shipStatus").value = "PENDING";
-    document.getElementById("shipMethod").value = "";
+  if (item.scheduled_date) {
+    const d = new Date(item.scheduled_date);
+    // Local datetime format: YYYY-MM-DDTHH:mm
+    // Hacky local adjust
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    document.getElementById("shipDate").value = local;
+  } else {
     document.getElementById("shipDate").value = "";
-    document.getElementById("custName").value = "";
-    document.getElementById("custEmail").value = "";
-    document.getElementById("shipOrigin").value = "";
-    document.getElementById("shipDestination").value = "";
+  }
 
-    document.getElementById("shipmentModal").classList.remove("hidden");
-    document.getElementById("modalOverlay").classList.remove("opacity-0");
-    document.getElementById("shipmentModalPanel").classList.remove("scale-95", "opacity-0");
-}
+  document.getElementById("custName").value = item.customer_name;
+  document.getElementById("custEmail").value = item.customer_email;
+  document.getElementById("shipOrigin").value = item.origin_address;
+  document.getElementById("shipDestination").value = item.destination_address;
+};
 
-function closeShipmentModal() {
-    document.getElementById("modalOverlay").classList.add("opacity-0");
-    document.getElementById("shipmentModalPanel").classList.add("scale-95", "opacity-0");
-    setTimeout(() => {
-        document.getElementById("shipmentModal").classList.add("hidden");
-    }, 200);
-}
+window.deleteShipment = async function (id) {
+  Modal.confirm({
+    title: "Eliminar Envío",
+    message: "¿Confirma que desea eliminar este registro?",
+    onConfirm: async () => {
+      try {
+        await api.delete(`shipping/shipments/${id}/`);
+        Toast.show({ type: "success", message: "Envío eliminado" });
+        loadShipments();
+      } catch (error) {
+        Toast.show({ type: "error", message: "No se pudo eliminar" });
+      }
+    },
+  });
+};
 
-function editShipment(s) {
-    isEditing = true;
-    currentId = s.id;
-    document.getElementById("modalTitle").textContent = "Editar Envío";
+async function handleSaveShipment() {
+  // Validate
+  const payload = {
+    tracking_number:
+      document.getElementById("shipTracking").value.trim() || null,
+    status: document.getElementById("shipStatus").value,
+    shipping_method: document.getElementById("shipMethod").value,
+    scheduled_date: document.getElementById("shipDate").value || null,
+    customer_name: document.getElementById("custName").value.trim(),
+    customer_email: document.getElementById("custEmail").value.trim(),
+    origin_address: document.getElementById("shipOrigin").value.trim(),
+    destination_address: document
+      .getElementById("shipDestination")
+      .value.trim(),
+  };
 
-    document.getElementById("shipTracking").value = s.tracking_number || "";
-    document.getElementById("shipStatus").value = s.status;
-    document.getElementById("shipMethod").value = s.shipping_method;
+  // Basic Val
+  if (
+    !payload.shipping_method ||
+    !payload.customer_name ||
+    !payload.customer_email ||
+    !payload.origin_address ||
+    !payload.destination_address
+  ) {
+    Toast.show({
+      type: "warning",
+      message: "Completa todos los campos obligatorios",
+    });
+    return;
+  }
 
-    // Formato fecha para input datetime-local: YYYY-MM-DDTHH:mm
-    if (s.scheduled_date) {
-        const d = new Date(s.scheduled_date);
-        // Ajuste zona horaria simplificado (o usar librería)
-        const iso = d.toISOString().slice(0, 16);
-        document.getElementById("shipDate").value = iso;
-    } else {
-        document.getElementById("shipDate").value = "";
-    }
-
-    document.getElementById("custName").value = s.customer_name;
-    document.getElementById("custEmail").value = s.customer_email;
-    document.getElementById("shipOrigin").value = s.origin_address;
-    document.getElementById("shipDestination").value = s.destination_address;
-
-    document.getElementById("shipmentModal").classList.remove("hidden");
-    document.getElementById("modalOverlay").classList.remove("opacity-0");
-    document.getElementById("shipmentModalPanel").classList.remove("scale-95", "opacity-0");
-}
-
-async function saveShipment() {
-    const trackingInput = document.getElementById("shipTracking").value.trim();
-
-    const payload = {
-        tracking_number: trackingInput === "" ? null : trackingInput,
-        status: document.getElementById("shipStatus").value,
-        shipping_method: document.getElementById("shipMethod").value,
-        scheduled_date: document.getElementById("shipDate").value || null,
-        customer_name: document.getElementById("custName").value.trim(),
-        customer_email: document.getElementById("custEmail").value.trim(),
-        origin_address: document.getElementById("shipOrigin").value.trim(),
-        destination_address: document.getElementById("shipDestination").value.trim()
-    };
-
-    // Validación básica
-    if (!payload.shipping_method) {
-        alert("Por favor selecciona un método de envío.");
-        return;
-    }
-    if (!payload.customer_name) {
-        alert("El nombre del cliente es obligatorio.");
-        return;
-    }
-    if (!payload.customer_email) {
-        alert("El email del cliente es obligatorio.");
-        return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(payload.customer_email)) {
-        alert("Por favor ingresa un correo electrónico válido.");
-        return;
-    }
-    if (!payload.origin_address || !payload.destination_address) {
-        alert("Las direcciones de origen y destino son obligatorias.");
-        return;
-    }
-
-    let success;
+  try {
     if (isEditing) {
-        success = await apiCall(`shipments/${currentId}/`, 'PUT', payload);
+      await api.put(`shipping/shipments/${currentId}/`, payload);
+      Toast.show({ type: "success", message: "Envío actualizado" });
     } else {
-        success = await apiCall('shipments/', 'POST', payload);
+      await api.post("shipping/shipments/", payload);
+      Toast.show({ type: "success", message: "Envío creado" });
     }
-
-    if (success) {
-        closeShipmentModal();
-        fetchShipments();
-    }
+    shipmentModal.close();
+    loadShipments();
+  } catch (error) {
+    console.error("Save error:", error);
+    Toast.show({ type: "error", message: "Error al guardar envío" });
+  }
 }
 
-async function deleteShipment(id) {
-    if (confirm("¿Estás seguro de eliminar este envío?")) {
-        const success = await apiCall(`shipments/${id}/`, 'DELETE');
-        if (success) fetchShipments();
-    }
+// --- Template ---
+
+function getShipmentFormHTML() {
+  return `
+        <form id="shipmentForm" class="space-y-6" onsubmit="event.preventDefault();">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Número de Seguimiento</label>
+                    <input type="text" id="shipTracking" class="input-field w-full" placeholder="Ej. TRK-123456789">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Estado</label>
+                    <select id="shipStatus" class="input-field w-full">
+                        <option value="PENDING">Pendiente</option>
+                        <option value="PROCESSING">Procesando</option>
+                        <option value="SHIPPED">Enviado</option>
+                        <option value="IN_TRANSIT">En Tránsito</option>
+                        <option value="DELIVERED">Entregado</option>
+                        <option value="SCHEDULED_PICKUP">Programado Recogida</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Método de Envío *</label>
+                    <select id="shipMethod" class="input-field w-full" required>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">Fecha Programada</label>
+                    <input type="datetime-local" id="shipDate" class="input-field w-full">
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4">
+                <h3 class="text-sm font-bold text-slate-900 mb-3">Datos del Cliente</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre *</label>
+                        <input type="text" id="custName" class="input-field w-full" placeholder="Nombre completo" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Email *</label>
+                        <input type="email" id="custEmail" class="input-field w-full" placeholder="email@cliente.com" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Dirección Origen *</label>
+                        <textarea id="shipOrigin" rows="3" class="input-field w-full" placeholder="Dirección salida" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Dirección Destino *</label>
+                        <textarea id="shipDestination" rows="3" class="input-field w-full" placeholder="Dirección entrega" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `;
 }

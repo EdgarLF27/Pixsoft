@@ -65,76 +65,11 @@
         </div>
     </main>
 
-    <!-- User Modal -->
-    <div id="userModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity opacity-0" id="modalOverlay"
-            onclick="closeUserModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col transform transition-all scale-95 opacity-0 pointer-events-auto"
-                id="userModalPanel">
-
-                <div
-                    class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
-                    <h2 class="text-lg font-bold text-slate-800" id="modalTitle">Nuevo Administrador</h2>
-                    <button onclick="closeUserModal()"
-                        class="text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
-
-                <div class="p-6 space-y-4">
-                    <input type="hidden" id="userId">
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Username</label>
-                        <input type="text" id="username" class="input-field">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Email</label>
-                        <input type="email" id="email" class="input-field">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre Completo</label>
-                        <input type="text" id="fullname" class="input-field">
-                    </div>
-
-                    <div id="passwordField">
-                        <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña</label>
-                        <input type="password" id="password" class="input-field" placeholder="Mínimo 8 caracteres">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-700 mb-2">Privilegios</label>
-                        <div class="flex gap-4">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="isStaff" class="w-4 h-4 text-[#5DADE2] rounded">
-                                <span class="text-slate-600">Staff (Acceso básico)</span>
-                            </label>
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="isSuperuser" class="w-4 h-4 text-[#5DADE2] rounded">
-                                <span class="text-slate-600">Superusuario (Total)</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3 rounded-b-2xl">
-                    <button onclick="closeUserModal()"
-                        class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200">Cancelar</button>
-                    <button onclick="saveUser()" class="btn-primary">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Scripts -->
     <script src="../js/components/sidebar.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSidebar('admins');
-        });
-    </script>
+    <script src="../js/components/modal.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/utils/api.js"></script>
     <script src="../js/admins.js"></script>
 </body>
 

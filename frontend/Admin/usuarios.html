@@ -71,111 +71,12 @@
         </div>
     </main>
 
+    <!-- Scripts -->
     <script src="../js/components/sidebar.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-             // Basic sidebar render if component exists, otherwise manual or mock
-             if (typeof renderSidebar === 'function') {
-                renderSidebar('usuarios'); 
-             }
-             loadUsers();
-        });
-
-        async function loadUsers() {
-            try {
-                const token = localStorage.getItem('accessToken');
-                if (!token) {
-                    window.location.href = '../Login.html';
-                    return;
-                }
-
-                const response = await fetch('http://127.0.0.1:8000/api/v1/users/manage/', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const users = await response.json();
-                    renderUsers(users);
-                } else {
-                    console.error('Error fetching users:', response.status);
-                    if (response.status === 401) {
-                         alert('Sesión expirada. Por favor inicia sesión nuevamente.');
-                         window.location.href = '../Login.html';
-                    } else if (response.status === 403) {
-                         alert('Acceso denegado. No tienes permisos de administrador.');
-                         window.location.href = '../Cliente/index.html';
-                    }
-                }
-            } catch (error) {
-                console.error('Network error:', error);
-            }
-        }
-
-        function renderUsers(users) {
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = '';
-
-            users.forEach(user => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition-colors group';
-                tr.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-slate-900">#${user.id}</td>
-                    <td class="px-6 py-4 font-medium text-slate-900">${user.username}</td>
-                     <td class="px-6 py-4 text-slate-500">${user.email || '-'}</td>
-                     <td class="px-6 py-4">
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer" onchange="toggleAdminStatus(${user.id}, this.checked)" ${user.profile && user.profile.is_staff ? 'checked' : ''} ${user.username === 'admin' ? 'disabled' : ''}> 
-                            <!-- Note: API returns is_staff but serializer structure might differ, checking generic 'is_staff' from custom serializer or standard user model -->
-                             <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#5DADE2]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5DADE2]"></div>
-                        </label>
-                    </td>
-                     <td class="px-6 py-4 text-right">
-                         <button class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                // Temporary fix: the serializer I updated was CustomTokenObtainPairSerializer, 
-                // but the list view uses standard UserSerializer. I need to make sure UserSerializer or the view returns is_staff.
-                // Standard Django UserSerializer usually doesn't include is_staff unless specified.
-                // I should verify UserSerializer in users/serializers.py.
-                
-                // Let's optimize the checkbox checked state logic in the next step if needed after checking serializer.
-                // user.is_staff should be directly on the user object if correctly serialized.
-                
-                // Updating innerHTML for checkbox based on probable field 'is_staff' directly on user object.
-                const isStaff = user.is_staff === true; 
-                tr.querySelector('input[type="checkbox"]').checked = isStaff;
-                
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function toggleAdminStatus(userId, isStaff) {
-             try {
-                const token = localStorage.getItem('accessToken');
-                const response = await fetch(`http://127.0.0.1:8000/api/v1/users/manage/${userId}/`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ is_staff: isStaff })
-                });
-
-                if (response.ok) {
-                    // Success notification (could implement toast)
-                    console.log(`User ${userId} admin status updated to ${isStaff}`);
-                } else {
-                    console.error('Failed to update status');
-                     // Revert checkbox if failed?
-                     alert('Error al actualizar permisos.');
-                     loadUsers(); // Reload to revert state
-                }
-            } catch (error) {
-                console.error('Network error:', error);
-            }
-        }
-    </script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/components/modal.js"></script>
+    <script src="../js/utils/api.js"></script>
+    <script src="../js/usuariosAdmin.js"></script>
 </body>
 </html>
+

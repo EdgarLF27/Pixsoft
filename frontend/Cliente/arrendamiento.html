@@ -23,51 +23,9 @@
 
 <body class="min-h-screen flex flex-col bg-slate-50">
 
-    <!-- Navbar (Same as index.html) -->
-    <nav class="fixed top-0 w-full z-50 nav-glass">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 gap-8">
-                <div class="shrink-0 flex items-center gap-3">
-                    <a href="index.html" class="flex items-center gap-3">
-                        <div class="relative w-10 h-10 flex items-center justify-center">
-                            <span
-                                class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
-                                style="font-family: sans-serif;">P</span>
-                        </div>
-                        <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
-                    </a>
-                </div>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
 
-                <div class="flex-1 max-w-2xl hidden md:block">
-                    <!-- Search could go here -->
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <a href="../cart.html"
-                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
-                        <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    </a>
-                    <a href="profile.html"
-                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
-                        <i class="fa-solid fa-user text-xl"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Secondary Nav -->
-        <div class="border-t border-slate-200 bg-white/50 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div
-                    class="flex items-center h-12 gap-8 overflow-x-auto text-sm font-medium text-slate-600 no-scrollbar">
-                    <a href="index.html"
-                        class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Inicio</a>
-                    <a href="#" class="text-pixsoft-primary font-semibold whitespace-nowrap">Arrendamiento</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Soluciones TI</a>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <main class="flex-1 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
@@ -211,9 +169,22 @@
         </div>
     </div>
 
+    <!-- Component Scripts -->
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/utils/api.js"></script>
+    <script src="../js/utils/formatting.js"></script>
+
     <!-- Scripts -->
     <script src="../js/cart.js"></script>
     <script src="../js/leasing.js"></script>
+
+    <!-- Initialize Components -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNavbar(0);
+        });
+    </script>
 </body>
 
 </html>

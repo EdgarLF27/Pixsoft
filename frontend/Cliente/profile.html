@@ -25,40 +25,8 @@
 <body class="min-h-screen flex flex-col bg-slate-50">
 
     <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 nav-glass bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 gap-8">
-                <!-- Logo -->
-                <a href="index.html" class="shrink-0 flex items-center gap-3">
-                    <div class="relative w-10 h-10 flex items-center justify-center">
-                        <span
-                            class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
-                            style="font-family: sans-serif;">P</span>
-                    </div>
-                    <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
-                </a>
+    <div id="navbar-container"></div>
 
-                <!-- Actions -->
-                <div class="flex items-center gap-4">
-                    <a href="../cart.html"
-                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
-                        <i class="fa-solid fa-cart-shopping text-xl"></i>
-                        <span id="cart-item-count"
-                            class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
-                    </a>
-                    <a href="profile.html" class="p-2 text-pixsoft-primary transition-colors relative"
-                        title="Mi Perfil">
-                        <i class="fa-solid fa-user text-xl"></i>
-                    </a>
-                    <button onclick="logout()"
-                        class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
-                        <i class="fa-solid fa-sign-out-alt"></i>
-                        <span>Cerrar Sesión</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <main class="flex-1 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
@@ -185,7 +153,14 @@
 
     </main>
 
+    <!-- Component Scripts -->
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/utils/api.js"></script>
+    <script src="../js/utils/formatting.js"></script>
+
     <script>
+
         const API_BASE = 'http://127.0.0.1:8000/api/v1/';
 
         function logout() {
@@ -332,6 +307,9 @@
             alert('Detalles del pedido #' + orderId + ' (Próximamente modal de detalles)');
             // TODO: Implement modal if needed
         }
+
+        // Initialize components
+        renderNavbar(0);
 
         // Load profile and orders on start
         fetchProfile();
