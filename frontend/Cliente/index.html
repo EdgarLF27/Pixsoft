@@ -110,7 +110,7 @@
                         title="Mi Perfil">
                         <i class="fa-solid fa-user text-xl"></i>
                     </a>
-                    <button onclick="logout()"
+                    <button id="logout-btn"
                         class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
                         <i class="fa-solid fa-sign-out-alt"></i>
                         <span>Cerrar Sesión</span>
@@ -124,14 +124,21 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="flex items-center h-12 gap-8 overflow-x-auto text-sm font-medium text-slate-600 no-scrollbar">
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Hardware</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Computadoras</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Laptops</a>
-                    <a href="arrendamiento.html"
-                        class="hover:text-pixsoft-primary transition-colors whitespace-nowrap text-pixsoft-primary font-semibold">Arrendamiento</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Software</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Accesorios</a>
-                    <a href="#" class="hover:text-red-500 transition-colors whitespace-nowrap">Ofertas</a>
+                    <a href="#" class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap"
+                        data-category="hardware">Hardware</a>
+                    <a href="#" class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap"
+                        data-category="computadoras">Computadoras</a>
+                    <a href="#" class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap"
+                        data-category="laptops">Laptops</a>
+                    <a href="#"
+                        class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap text-pixsoft-primary font-semibold active-category"
+                        data-category="arrendamiento">Arrendamiento</a>
+                    <a href="#" class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap"
+                        data-category="software">Software</a>
+                    <a href="#" class="category-link hover:text-pixsoft-primary transition-colors whitespace-nowrap"
+                        data-category="accesorios">Accesorios</a>
+                    <a href="#" class="category-link hover:text-red-500 transition-colors whitespace-nowrap"
+                        data-category="ofertas">Ofertas</a>
                 </div>
             </div>
         </div>
@@ -154,7 +161,7 @@
                             class="text-blue-500">al Máximo Nivel</span></h2>
                     <p class="text-slate-600 mb-8 text-lg">Encuentra las últimas tarjetas gráficas, procesadores y
                         componentes de alto rendimiento.</p>
-                    <button
+                    <button onclick="filterProductsByCategory('hardware')"
                         class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-1">
                         Ver Catálogo de Venta
                     </button>
@@ -175,7 +182,7 @@
                             class="text-pixsoft-primary">Descapitalizarte</span></h2>
                     <p class="text-slate-600 mb-8 text-lg">Renta equipos de cómputo de última generación con planes
                         flexibles y soporte incluido.</p>
-                    <button onclick="window.location.href='arrendamiento.html'"
+                    <button onclick="filterProductsByCategory('arrendamiento')"
                         class="px-6 py-3 rounded-xl bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold shadow-lg shadow-pixsoft-primary/20 transition-all hover:-translate-y-1">
                         Cotizar Arrendamiento
                     </button>
@@ -185,16 +192,11 @@
             </div>
         </div>
 
-        <!-- Featured Products -->
-        <div class="mb-8 flex items-end justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">Productos Destacados</h2>
-                <p class="text-slate-500">Lo mejor en hardware y soluciones empresariales</p>
-            </div>
-            <a href="#"
-                class="text-pixsoft-primary hover:text-pixsoft-secondary transition-colors text-sm font-medium flex items-center gap-1">
-                Ver todo <i class="fa-solid fa-arrow-right"></i>
-            </a>
+        <!-- Category Title -->
+        <div id="category-title" class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Productos en Arrendamiento</h2>
+            <p class="text-slate-500" id="category-description">Equipos de última generación disponibles para renta
+                empresarial</p>
         </div>
 
         <!-- Products Grid (Dynamic) -->
@@ -235,20 +237,31 @@
                 <div>
                     <h4 class="text-slate-900 font-bold mb-4">Comprar</h4>
                     <ul class="space-y-2 text-sm text-slate-500">
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Componentes PC</a></li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Laptops Gamer</a></li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Monitores</a></li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Periféricos</a></li>
+                        <li><a href="#" onclick="filterProductsByCategory('hardware')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Componentes PC</a>
+                        </li>
+                        <li><a href="#" onclick="filterProductsByCategory('laptops')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Laptops Gamer</a>
+                        </li>
+                        <li><a href="#" onclick="filterProductsByCategory('accesorios')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Monitores</a></li>
+                        <li><a href="#" onclick="filterProductsByCategory('accesorios')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Periféricos</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-slate-900 font-bold mb-4">Empresas</h4>
                     <ul class="space-y-2 text-sm text-slate-500">
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Arrendamiento de Equipo</a>
+                        <li><a href="#" onclick="filterProductsByCategory('arrendamiento')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Arrendamiento de
+                                Equipo</a>
                         </li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Licenciamiento Software</a>
+                        <li><a href="#" onclick="filterProductsByCategory('software')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Licenciamiento
+                                Software</a>
                         </li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Servidores</a></li>
+                        <li><a href="#" onclick="filterProductsByCategory('computadoras')"
+                                class="hover:text-pixsoft-primary transition-colors cursor-pointer">Servidores</a></li>
                         <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Cotizador B2B</a></li>
                     </ul>
                 </div>
@@ -272,24 +285,11 @@
         </div>
     </footer>
 
-    <script>
-        function logout() {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            alert('Has cerrado la sesión.');
-            window.location.href = '../Login.html';
-        }
-
-        // Opcional: Actualizar el contador del carrito (si tienes esa info disponible)
-        // document.getElementById('cart-item-count').innerText = numeroDeItems;
-    </script>
-
     <!-- Script para gestión del carrito -->
     <script src="../js/cart.js"></script>
 
     <!-- Script para cargar productos dinámicamente -->
     <script src="../js/indexCliente.js"></script>
-
 
 </body>
 
