@@ -11,9 +11,61 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card-gradient-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .card-gradient-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .card-gradient-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .chart-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .chart-gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .chart-gradient-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
-<body class="h-screen overflow-hidden flex text-sm">
+<body class="h-screen overflow-hidden flex text-sm bg-gradient-to-br from-slate-50 to-blue-50/30">
 
     <!-- Sidebar -->
     <div id="sidebar-container"></div>
@@ -21,8 +73,7 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Mobile Header -->
-        <header class="md:hid
-        den h-16 flex items-center justify-between px-4 glass-panel z-40">
+        <header class="md:hidden h-16 flex items-center justify-between px-4 bg-white/80 backdrop-blur-md z-40">
             <button id="menu-btn" class="text-slate-600 hover:text-slate-900">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
@@ -34,286 +85,940 @@
 
             <!-- KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Card 1 -->
-                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#5DADE2]/10 rounded-full blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Ingresos Totales</p>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-1">$1,245,000</h3>
+                <!-- Card 1 - Ingresos Totales -->
+                <div class="card-gradient-1 rounded-2xl p-6 relative overflow-hidden shadow-soft hover-lift">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-white/80 text-xs font-medium uppercase tracking-wider">Ingresos Totales
+                                </p>
+                                <h3 class="text-2xl font-bold text-white mt-1" id="total-revenue">$0</h3>
+                            </div>
+                            <div class="p-3 rounded-xl glass-effect text-white">
+                                <i class="fa-solid fa-dollar-sign text-lg"></i>
+                            </div>
                         </div>
-                        <div class="p-2 rounded-lg bg-[#5DADE2]/10 text-[#5DADE2]">
-                            <i class="fa-solid fa-dollar-sign text-lg"></i>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="px-2 py-1 rounded-full bg-white/20 text-white flex items-center gap-1">
+                                <i class="fa-solid fa-database mr-1"></i>
+                                <span id="revenue-source">Cargando...</span>
+                            </span>
+                            <span class="text-white/80">Datos reales del sistema</span>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="badge-neon-green px-1.5 py-0.5 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-trend-up"></i> +12.5%
-                        </span>
-                        <span class="text-slate-500">vs mes anterior</span>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Equipos en Renta</p>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-1">342</h3>
+                <!-- Card 2 - Órdenes -->
+                <div class="card-gradient-2 rounded-2xl p-6 relative overflow-hidden shadow-soft hover-lift">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-white/80 text-xs font-medium uppercase tracking-wider">Total Órdenes</p>
+                                <h3 class="text-2xl font-bold text-white mt-1" id="total-orders">0</h3>
+                            </div>
+                            <div class="p-3 rounded-xl glass-effect text-white">
+                                <i class="fa-solid fa-cart-shopping text-lg"></i>
+                            </div>
                         </div>
-                        <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-                            <i class="fa-solid fa-laptop text-lg"></i>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="px-2 py-1 rounded-full bg-white/20 text-white flex items-center gap-1">
+                                <i class="fa-solid fa-database mr-1"></i>
+                                <span id="orders-source">Cargando...</span>
+                            </span>
+                            <span class="text-white/80">Datos reales del sistema</span>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="badge-neon-blue px-1.5 py-0.5 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-plus"></i> 8 nuevos
-                        </span>
-                        <span class="text-slate-500">esta semana</span>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Alertas Stock</p>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-1">15</h3>
+                <!-- Card 3 - Productos -->
+                <div class="card-gradient-3 rounded-2xl p-6 relative overflow-hidden shadow-soft hover-lift">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-white/80 text-xs font-medium uppercase tracking-wider">Productos Activos
+                                </p>
+                                <h3 class="text-2xl font-bold text-white mt-1" id="total-products">0</h3>
+                            </div>
+                            <div class="p-3 rounded-xl glass-effect text-white">
+                                <i class="fa-solid fa-box text-lg"></i>
+                            </div>
                         </div>
-                        <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-400">
-                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="px-2 py-1 rounded-full bg-white/20 text-white flex items-center gap-1">
+                                <i class="fa-solid fa-database mr-1"></i>
+                                <span id="products-source">Cargando...</span>
+                            </span>
+                            <span class="text-white/80">Datos reales del sistema</span>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="badge-neon-red px-1.5 py-0.5 rounded flex items-center gap-1">
-                            <i class="fa-solid fa-circle-exclamation"></i> Crítico
-                        </span>
-                        <span class="text-slate-500">requiere atención</span>
                     </div>
                 </div>
 
-                <!-- Card 4 -->
-                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-pink-500/10 rounded-full blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p class="text-slate-500 text-xs font-medium uppercase tracking-wider">Tickets Soporte</p>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-1">28</h3>
+                <!-- Card 4 - Clientes -->
+                <div class="card-gradient-4 rounded-2xl p-6 relative overflow-hidden shadow-soft hover-lift">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-white/80 text-xs font-medium uppercase tracking-wider">Clientes Activos
+                                </p>
+                                <h3 class="text-2xl font-bold text-white mt-1" id="total-clients">0</h3>
+                            </div>
+                            <div class="p-3 rounded-xl glass-effect text-white">
+                                <i class="fa-solid fa-users text-lg"></i>
+                            </div>
                         </div>
-                        <div class="p-2 rounded-lg bg-pink-500/10 text-pink-400">
-                            <i class="fa-solid fa-headset text-lg"></i>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="px-2 py-1 rounded-full bg-white/20 text-white flex items-center gap-1">
+                                <i class="fa-solid fa-database mr-1"></i>
+                                <span id="clients-source">Cargando...</span>
+                            </span>
+                            <span class="text-white/80">Datos reales del sistema</span>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="badge-neon-yellow px-1.5 py-0.5 rounded flex items-center gap-1">
-                            <i class="fa-regular fa-clock"></i> 5 pendientes
-                        </span>
-                        <span class="text-slate-500">por responder</span>
                     </div>
                 </div>
             </div>
 
             <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <!-- Main Chart -->
-                <div class="glass-panel rounded-2xl p-6 lg:col-span-2">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-bold text-slate-900">Rendimiento Comercial</h3>
-                        <div class="flex bg-slate-100 rounded-lg p-1">
-                            <button
-                                class="px-3 py-1 rounded-md bg-[#5DADE2]/20 text-[#5DADE2] text-xs font-medium transition-all">Mensual</button>
-                            <button
-                                class="px-3 py-1 rounded-md text-slate-500 hover:text-slate-900 text-xs font-medium transition-all">Anual</button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Chart 1 - Productos por Categoría -->
+                <div class="bg-white rounded-2xl p-6 relative overflow-hidden shadow-soft">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 chart-gradient-3/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Productos por Categoría</h3>
+                                <p class="text-slate-500 text-sm mt-1">
+                                    <i class="fa-solid fa-database mr-1 text-blue-500"></i>
+                                    <strong>Datos en tiempo real:</strong> Distribución de productos en el catálogo
+                                    obtenida directamente de la API de productos.
+                                    Última actualización: <span id="last-categories-update"
+                                        class="font-medium">hoy</span>
+                                </p>
+                            </div>
+                            <div class="px-3 py-1 rounded-lg chart-gradient-3 text-white text-xs font-medium">
+                                <i class="fa-solid fa-layer-group mr-1"></i> Categorías
+                            </div>
                         </div>
-                    </div>
-                    <div class="relative h-64 w-full">
-                        <canvas id="performanceChart"></canvas>
+                        <div class="relative h-64">
+                            <canvas id="productsByCategoryChart"></canvas>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between" id="categories-stats">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-database text-blue-500"></i>
+                                <p class="text-slate-500 text-sm" id="categories-data-source">Cargando datos reales...
+                                </p>
+                            </div>
+                            <button onclick="refreshProductsData()"
+                                class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Actualizar ahora
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Secondary Chart / Stats -->
-                <div class="glass-panel rounded-2xl p-6 flex flex-col">
-                    <h3 class="text-lg font-bold text-slate-900 mb-6">Distribución</h3>
-                    <div class="relative flex-1 flex items-center justify-center">
-                        <canvas id="doughnutChart"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span class="text-2xl font-bold text-slate-900">100%</span>
-                            <span class="text-xs text-slate-500">Total</span>
-                        </div>
-                    </div>
-                    <div class="mt-6 space-y-3">
-                        <div class="flex items-center justify-between text-sm">
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-[#5DADE2]"></span>
-                                <span class="text-slate-600">Ventas</span>
+                <!-- Chart 2 - Rendimiento Mensual -->
+                <div class="bg-white rounded-2xl p-6 relative overflow-hidden shadow-soft">
+                    <div class="absolute -right-20 -top-20 w-60 h-60 chart-gradient/10 rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Rendimiento Mensual</h3>
+                                <p class="text-slate-500 text-sm mt-1">
+                                    <i class="fa-solid fa-database mr-1 text-purple-500"></i>
+                                    <strong>Fuente de datos:</strong> Análisis de órdenes procesadas en los últimos 6
+                                    meses.
+                                    Datos extraídos de <code class="text-xs">/api/v1/orders/orders/</code>
+                                </p>
                             </div>
-                            <span class="font-medium text-slate-900">65%</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-purple-500"></span>
-                                <span class="text-slate-600">Arrendamientos</span>
+                                <div class="flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full chart-gradient"></span>
+                                    <span class="text-xs text-slate-600">Ingresos</span>
+                                </div>
+                                <div class="flex items-center gap-1 ml-3">
+                                    <span class="w-2 h-2 rounded-full chart-gradient-2"></span>
+                                    <span class="text-xs text-slate-600">Órdenes</span>
+                                </div>
                             </div>
-                            <span class="font-medium text-slate-900">35%</span>
+                        </div>
+                        <div class="relative h-64">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4" id="performance-stats">
+                            <div
+                                class="p-3 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50/50 border border-blue-100">
+                                <p class="text-slate-500 text-xs">
+                                    <i class="fa-solid fa-money-bill-wave mr-1"></i>
+                                    Ingreso Promedio
+                                </p>
+                                <p class="text-lg font-bold text-slate-900" id="avg-revenue">$0</p>
+                            </div>
+                            <div
+                                class="p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-100">
+                                <p class="text-slate-500 text-xs">
+                                    <i class="fa-solid fa-chart-line mr-1"></i>
+                                    Órdenes/Mes
+                                </p>
+                                <p class="text-lg font-bold text-slate-900" id="avg-orders">0</p>
+                            </div>
+                            <div
+                                class="p-3 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50/50 border border-purple-100">
+                                <p class="text-slate-500 text-xs">
+                                    <i class="fa-solid fa-trend-up mr-1"></i>
+                                    Crecimiento
+                                </p>
+                                <p class="text-lg font-bold text-slate-900" id="growth-rate">0%</p>
+                            </div>
+                            <div
+                                class="p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-100">
+                                <p class="text-slate-500 text-xs">
+                                    <i class="fa-solid fa-trophy mr-1"></i>
+                                    Mejor Mes
+                                </p>
+                                <p class="text-lg font-bold text-slate-900" id="best-month">-</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p class="text-xs text-slate-500">
+                                <i class="fa-solid fa-circle-info mr-1"></i>
+                                Datos calculados a partir de órdenes reales del sistema PIXSOFT
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Orders Table -->
-            <div class="glass-panel rounded-2xl overflow-hidden">
-                <div
-                    class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <h3 class="text-lg font-bold text-slate-900">Gestión de Pedidos</h3>
-                    <div class="flex gap-2">
-                        <div class="relative">
-                            <i
-                                class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                            <input type="text" placeholder="Buscar pedido..."
-                                class="input-field pl-8 bg-slate-100 sm:w-64">
+            <!-- Quick Stats -->
+            <div class="bg-white rounded-2xl p-6 shadow-soft mb-8">
+                <h3 class="text-lg font-bold text-slate-900 mb-6">Resumen Rápido</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-slate-700 font-medium">Stock Bajo</span>
+                            <i class="fa-solid fa-database text-blue-500"></i>
                         </div>
-                        <button
-                            class="px-3 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all">
-                            <i class="fa-solid fa-filter"></i>
-                        </button>
+                        <p class="text-2xl font-bold text-slate-900" id="low-stock-count">0</p>
+                        <p class="text-slate-500 text-xs mt-1">
+                            Datos reales: productos con menos de 10 unidades en inventario
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-slate-700 font-medium">Órdenes Pendientes</span>
+                            <i class="fa-solid fa-database text-emerald-500"></i>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900" id="pending-orders">0</p>
+                        <p class="text-slate-500 text-xs mt-1">
+                            Datos en tiempo real del endpoint de órdenes
+                        </p>
+                    </div>
+
+                    <div
+                        class="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-slate-700 font-medium">Actividad Hoy</span>
+                            <i class="fa-solid fa-database text-purple-500"></i>
+                        </div>
+                        <div class="flex items-baseline gap-3">
+                            <p class="text-2xl font-bold text-slate-900" id="new-today">0</p>
+                            <span class="text-sm text-slate-500">
+                                órdenes creadas hoy
+                                <span class="text-xs block" id="today-date"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Filter Tabs -->
-                <div class="px-6 py-3 border-b border-slate-200 flex gap-6 text-sm">
-                    <button class="text-[#5DADE2] font-medium border-b-2 border-[#5DADE2] pb-3 -mb-3.5">Todos</button>
-                    <button class="text-slate-500 hover:text-slate-900 transition-colors pb-3">Ventas</button>
-                    <button class="text-slate-500 hover:text-slate-900 transition-colors pb-3">Arrendamientos</button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
-                                <th class="px-6 py-4 font-medium">ID Pedido</th>
-                                <th class="px-6 py-4 font-medium">Cliente</th>
-                                <th class="px-6 py-4 font-medium">Tipo</th>
-                                <th class="px-6 py-4 font-medium">Estado</th>
-                                <th class="px-6 py-4 font-medium">Fecha</th>
-                                <th class="px-6 py-4 font-medium text-right">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm divide-y divide-slate-200">
-                            <tr class="hover:bg-slate-50 transition-colors group">
-                                <td class="px-6 py-4 font-medium text-slate-900">#ORD-7829</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-                                            JM</div>
-                                        <span class="text-slate-700">Juan M.</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-slate-700"><i
-                                            class="fa-solid fa-cart-shopping text-[#5DADE2] mr-2"></i>Venta</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="badge-neon-green px-2 py-1 rounded-full text-xs font-medium">Completado</span>
-                                </td>
-                                <td class="px-6 py-4 text-slate-500">04 Dic, 2025</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-slate-500 hover:text-slate-900 transition-colors"><i
-                                            class="fa-solid fa-ellipsis-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors group">
-                                <td class="px-6 py-4 font-medium text-slate-900">#LSE-2045</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-                                            TC</div>
-                                        <span class="text-slate-700">Tech Corp</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-slate-700"><i
-                                            class="fa-solid fa-file-contract text-purple-400 mr-2"></i>Leasing</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="badge-neon-yellow px-2 py-1 rounded-full text-xs font-medium">Pendiente</span>
-                                </td>
-                                <td class="px-6 py-4 text-slate-500">03 Dic, 2025</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-slate-500 hover:text-slate-900 transition-colors"><i
-                                            class="fa-solid fa-ellipsis-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors group">
-                                <td class="px-6 py-4 font-medium text-slate-900">#ORD-7828</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-                                            AL</div>
-                                        <span class="text-slate-700">Ana L.</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-slate-700"><i
-                                            class="fa-solid fa-cart-shopping text-[#5DADE2] mr-2"></i>Venta</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="badge-neon-blue px-2 py-1 rounded-full text-xs font-medium">Enviado</span>
-                                </td>
-                                <td class="px-6 py-4 text-slate-500">03 Dic, 2025</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-slate-500 hover:text-slate-900 transition-colors"><i
-                                            class="fa-solid fa-ellipsis-vertical"></i></button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors group">
-                                <td class="px-6 py-4 font-medium text-slate-900">#LSE-2044</td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-                                            ST</div>
-                                        <span class="text-slate-700">Startup Inc</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-slate-700"><i
-                                            class="fa-solid fa-file-contract text-purple-400 mr-2"></i>Leasing</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="badge-neon-green px-2 py-1 rounded-full text-xs font-medium">Activo</span>
-                                </td>
-                                <td class="px-6 py-4 text-slate-500">02 Dic, 2025</td>
-                                <td class="px-6 py-4 text-right">
-                                    <button class="text-slate-500 hover:text-slate-900 transition-colors"><i
-                                            class="fa-solid fa-ellipsis-vertical"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="p-4 border-t border-slate-200 flex justify-center">
-                    <button class="text-sm text-slate-500 hover:text-slate-900 transition-colors">Ver todos los
-                        pedidos</button>
+            <!-- Data Status -->
+            <div class="bg-white rounded-2xl p-6 shadow-soft">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Estado de los Datos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <div id="products-status" class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
+                            <div>
+                                <p class="font-medium text-slate-700">API Productos</p>
+                                <p class="text-xs text-slate-500" id="products-status-text">Conectando...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <div id="orders-status" class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
+                            <div>
+                                <p class="font-medium text-slate-700">API Órdenes</p>
+                                <p class="text-xs text-slate-500" id="orders-status-text">Conectando...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <div id="users-status" class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></div>
+                            <div>
+                                <p class="font-medium text-slate-700">API Usuarios</p>
+                                <p class="text-xs text-slate-500" id="users-status-text">Conectando...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </main>
+
+    <!-- Loading Animation -->
+    <div id="loading" class="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="text-center">
+            <div class="relative w-20 h-20 mx-auto mb-4">
+                <div class="absolute inset-0 rounded-full border-4 border-blue-200 animate-pulse"></div>
+                <div class="absolute inset-2 rounded-full border-4 border-transparent border-t-blue-500 animate-spin">
+                </div>
+                <div class="absolute inset-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 opacity-20"></div>
+            </div>
+            <p class="text-slate-700 font-medium">Cargando datos del sistema...</p>
+            <p class="text-slate-500 text-sm mt-1">Conectando con PIXSOFT API</p>
+        </div>
+    </div>
+
     <script src="../js/components/sidebar.js"></script>
+
     <script>
+        // Variables globales para las gráficas
+        let productsByCategoryChart = null;
+        let performanceChart = null;
+
+        // URLs de la API
+        const API_BASE = 'http://localhost:8000/api/v1/';
+
+        // Datos
+        let products = [];
+        let orders = [];
+        let users = [];
+        let dataLastUpdated = null;
+
+        // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
             renderSidebar('dashboard');
+            loadDashboardData();
+            updateTodayDate();
         });
+
+        // Cargar datos del dashboard
+        async function loadDashboardData() {
+            showLoading();
+            dataLastUpdated = new Date();
+
+            try {
+                // Cargar datos en paralelo
+                const [productsData, ordersData, usersData] = await Promise.allSettled([
+                    fetchDataWithRetry(API_BASE + 'products/productos/'),
+                    fetchDataWithRetry(API_BASE + 'orders/orders/'),
+                    fetchDataWithRetry(API_BASE + 'users/')
+                ]);
+
+                // Actualizar estado de APIs
+                updateAPIStatus('products', productsData);
+                updateAPIStatus('orders', ordersData);
+                updateAPIStatus('users', usersData);
+
+                // Procesar productos - FORZAR DATOS REALES
+                if (productsData.status === 'fulfilled') {
+                    products = extractArrayData(productsData.value);
+                    document.getElementById('products-source').textContent = `${products.length} registros`;
+                    document.getElementById('products-status-text').textContent = `OK (${products.length} productos)`;
+                } else {
+                    // Si falla, mostrar error claro
+                    document.getElementById('products-source').textContent = 'ERROR';
+                    document.getElementById('products-status-text').textContent = 'Error de conexión';
+                    products = []; // Forzar array vacío para evitar datos ficticios
+                }
+
+                // Procesar órdenes - FORZAR DATOS REALES
+                if (ordersData.status === 'fulfilled') {
+                    orders = extractArrayData(ordersData.value);
+                    document.getElementById('orders-source').textContent = `${orders.length} registros`;
+                    document.getElementById('orders-status-text').textContent = `OK (${orders.length} órdenes)`;
+                } else {
+                    document.getElementById('orders-source').textContent = 'ERROR';
+                    document.getElementById('orders-status-text').textContent = 'Error de conexión';
+                    orders = [];
+                }
+
+                // Procesar usuarios - FORZAR DATOS REALES
+                if (usersData.status === 'fulfilled') {
+                    users = extractArrayData(usersData.value);
+                    document.getElementById('clients-source').textContent = `${users.length} registros`;
+                    document.getElementById('users-status-text').textContent = `OK (${users.length} usuarios)`;
+                } else {
+                    document.getElementById('clients-source').textContent = 'ERROR';
+                    document.getElementById('users-status-text').textContent = 'Error de conexión';
+                    users = [];
+                }
+
+                // Actualizar todas las métricas
+                updateKPICards();
+                updateQuickStats();
+                createCharts();
+                updateLastUpdatedTime();
+
+                hideLoading();
+
+            } catch (error) {
+                console.error('Error crítico:', error);
+                hideLoading();
+                showRealDataError();
+            }
+        }
+
+        // Función para extraer array de datos
+        function extractArrayData(data) {
+            if (Array.isArray(data)) return data;
+            if (data && data.results && Array.isArray(data.results)) return data.results;
+            if (data && data.data && Array.isArray(data.data)) return data.data;
+            return [];
+        }
+
+        // Función mejorada para fetch con reintentos
+        async function fetchDataWithRetry(url, retries = 3) {
+            const token = localStorage.getItem('accessToken');
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, { headers });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                }
+            }
+        }
+
+        // Actualizar estado de APIs
+        function updateAPIStatus(api, result) {
+            const statusElement = document.getElementById(`${api}-status`);
+            const statusText = document.getElementById(`${api}-status-text`);
+
+            if (result.status === 'fulfilled') {
+                statusElement.className = 'w-3 h-3 rounded-full bg-green-500';
+                statusElement.classList.remove('animate-pulse');
+            } else {
+                statusElement.className = 'w-3 h-3 rounded-full bg-red-500';
+                statusText.textContent = `Error: ${result.reason?.message || 'Desconocido'}`;
+            }
+        }
+
+        // Actualizar tarjetas KPI
+        function updateKPICards() {
+            // Ingresos totales (solo órdenes completadas)
+            const totalRevenue = orders.reduce((sum, order) => {
+                // Solo contar órdenes completadas o aprobadas
+                const status = (order.status || '').toLowerCase();
+                const isCompleted = status.includes('completed') || status.includes('completado') ||
+                    status.includes('approved') || status.includes('aprobado');
+                return isCompleted ? sum + (parseFloat(order.total) || 0) : sum;
+            }, 0);
+
+            document.getElementById('total-revenue').textContent = `$${totalRevenue.toLocaleString('es-MX')}`;
+            document.getElementById('revenue-source').innerHTML =
+                `<i class="fa-solid fa-check-circle mr-1"></i>${orders.length} órdenes analizadas`;
+
+            // Total órdenes
+            document.getElementById('total-orders').textContent = orders.length;
+
+            // Total productos
+            document.getElementById('total-products').textContent = products.length;
+
+            // Total clientes (excluyendo admin)
+            const activeClients = users.filter(user => {
+                const isAdmin = user.is_staff || user.role === 'admin' || user.username === 'admin';
+                return !isAdmin;
+            }).length;
+            document.getElementById('total-clients').textContent = activeClients;
+        }
+
+        // Actualizar estadísticas rápidas
+        function updateQuickStats() {
+            // Productos con stock bajo (< 10 unidades) - DATOS REALES
+            const lowStockCount = products.filter(product => {
+                const stock = parseInt(product.stock_quantity || product.stock || 0);
+                return stock < 10 && stock > 0;
+            }).length;
+            document.getElementById('low-stock-count').textContent = lowStockCount;
+
+            // Órdenes pendientes - DATOS REALES
+            const pendingOrders = orders.filter(order => {
+                const status = (order.status || '').toLowerCase();
+                return status.includes('pending') || status.includes('pendiente') ||
+                    status.includes('processing') || status.includes('procesando');
+            }).length;
+            document.getElementById('pending-orders').textContent = pendingOrders;
+
+            // Nuevos hoy - DATOS REALES
+            const today = new Date().toISOString().split('T')[0];
+            const newToday = orders.filter(order => {
+                const orderDate = order.created_at || order.order_date || order.date_created;
+                if (!orderDate) return false;
+                return orderDate.includes(today);
+            }).length;
+            document.getElementById('new-today').textContent = newToday;
+        }
+
+        // Crear gráficas
+        function createCharts() {
+            createProductsByCategoryChart();
+            createPerformanceChart();
+        }
+
+        // Gráfica 1: Productos por Categoría
+        function createProductsByCategoryChart() {
+            const ctx = document.getElementById('productsByCategoryChart').getContext('2d');
+
+            // Destruir gráfica anterior si existe
+            if (productsByCategoryChart) {
+                productsByCategoryChart.destroy();
+            }
+
+            // Agrupar productos por categoría - DATOS REALES
+            const categories = {};
+            products.forEach(product => {
+                const category = product.category || product.categoria || product.category_name || 'Sin categoría';
+                categories[category] = (categories[category] || 0) + 1;
+            });
+
+            // Ordenar por cantidad
+            const sortedCategories = Object.entries(categories)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 6);
+
+            const categoryLabels = sortedCategories.map(item => item[0]);
+            const categoryCounts = sortedCategories.map(item => item[1]);
+
+            // Actualizar estadísticas
+            const statsElement = document.getElementById('categories-stats');
+            if (products.length === 0) {
+                document.getElementById('categories-data-source').innerHTML =
+                    '<span class="text-red-500">⚠️ No hay productos en el sistema</span>';
+            } else {
+                const totalCategories = Object.keys(categories).length;
+                document.getElementById('categories-data-source').innerHTML =
+                    `<strong>${products.length}</strong> productos en <strong>${totalCategories}</strong> categorías`;
+
+                // Actualizar timestamp
+                const now = new Date();
+                document.getElementById('last-categories-update').textContent =
+                    now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // Si no hay categorías, mostrar mensaje
+            if (categoryLabels.length === 0) {
+                statsElement.innerHTML = `
+                    <div class="text-center w-full py-8">
+                        <i class="fa-solid fa-database text-4xl text-slate-300 mb-2"></i>
+                        <p class="text-slate-500">No hay datos de categorías disponibles</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Colores para las barras
+            const softColors = [
+                'rgba(102, 126, 234, 0.7)',
+                'rgba(240, 147, 251, 0.7)',
+                'rgba(79, 172, 254, 0.7)',
+                'rgba(67, 233, 123, 0.7)',
+                'rgba(255, 193, 7, 0.7)',
+                'rgba(156, 39, 176, 0.7)'
+            ];
+
+            // Datos para la gráfica
+            const data = {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryCounts,
+                    backgroundColor: softColors.slice(0, categoryLabels.length),
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: softColors.map(color => color.replace('0.7', '0.9')).slice(0, categoryLabels.length),
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.8
+                }]
+            };
+
+            // Crear gráfica
+            productsByCategoryChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function (context) {
+                                    const percentage = ((context.raw / products.length) * 100).toFixed(1);
+                                    return `${context.label}: ${context.raw} productos (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(241, 245, 249, 0.8)' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 11 },
+                                callback: function (value) {
+                                    return Number.isInteger(value) ? value : '';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 11 } }
+                        }
+                    },
+                    animation: { duration: 1500, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+        // Gráfica 2: Rendimiento Mensual
+        function createPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+
+            // Destruir gráfica anterior si existe
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+
+            // Generar datos mensuales REALES
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            // Últimos 6 meses
+            const displayMonths = [];
+            const revenueData = [];
+            const ordersData = [];
+
+            for (let i = 5; i >= 0; i--) {
+                const targetDate = new Date(currentYear, currentMonth - i, 1);
+                const monthIndex = targetDate.getMonth();
+                const monthYear = targetDate.getFullYear();
+
+                displayMonths.push(months[monthIndex]);
+
+                // Filtrar órdenes REALES del mes
+                const monthOrders = orders.filter(order => {
+                    const orderDate = order.created_at || order.order_date || order.date_created;
+                    if (!orderDate) return false;
+
+                    const date = new Date(orderDate);
+                    return date.getMonth() === monthIndex && date.getFullYear() === monthYear;
+                });
+
+                // Calcular ingresos REALES (solo órdenes completadas)
+                const monthRevenue = monthOrders.reduce((sum, order) => {
+                    const status = (order.status || '').toLowerCase();
+                    const isCompleted = status.includes('completed') || status.includes('completado') ||
+                        status.includes('approved') || status.includes('aprobado');
+                    return isCompleted ? sum + (parseFloat(order.total) || 0) : sum;
+                }, 0);
+
+                revenueData.push(monthRevenue);
+                ordersData.push(monthOrders.length);
+            }
+
+            // Actualizar estadísticas REALES
+            const totalRevenue = revenueData.reduce((a, b) => a + b, 0);
+            const avgRevenue = totalRevenue / (revenueData.length || 1);
+            const totalOrders = ordersData.reduce((a, b) => a + b, 0);
+            const avgOrders = totalOrders / (ordersData.length || 1);
+
+            let growth = 0;
+            if (revenueData.length >= 2 && revenueData[revenueData.length - 2] > 0) {
+                growth = ((revenueData[revenueData.length - 1] - revenueData[revenueData.length - 2]) /
+                    revenueData[revenueData.length - 2] * 100).toFixed(1);
+            }
+
+            let bestMonthIndex = revenueData.indexOf(Math.max(...revenueData));
+            if (Math.max(...revenueData) === 0) bestMonthIndex = -1;
+
+            // Actualizar elementos
+            document.getElementById('avg-revenue').textContent = `$${Math.round(avgRevenue).toLocaleString('es-MX')}`;
+            document.getElementById('avg-orders').textContent = Math.round(avgOrders);
+
+            const growthElement = document.getElementById('growth-rate');
+            growthElement.textContent = `${growth}%`;
+            growthElement.className = `text-lg font-bold ${growth > 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            document.getElementById('best-month').textContent = bestMonthIndex >= 0 ? displayMonths[bestMonthIndex] : '-';
+
+            // Crear gradientes
+            const revenueGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            revenueGradient.addColorStop(0, 'rgba(102, 126, 234, 0.2)');
+            revenueGradient.addColorStop(1, 'rgba(102, 126, 234, 0.05)');
+
+            const ordersGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            ordersGradient.addColorStop(0, 'rgba(240, 147, 251, 0.2)');
+            ordersGradient.addColorStop(1, 'rgba(240, 147, 251, 0.05)');
+
+            // Datos para la gráfica
+            const data = {
+                labels: displayMonths,
+                datasets: [
+                    {
+                        label: 'Ingresos',
+                        data: revenueData,
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: revenueGradient,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgb(102, 126, 234)',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: revenueData.some(v => v > 0) ? 5 : 0,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Órdenes',
+                        data: ordersData,
+                        borderColor: 'rgb(240, 147, 251)',
+                        backgroundColor: ordersGradient,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgb(240, 147, 251)',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: ordersData.some(v => v > 0) ? 5 : 0,
+                        pointHoverRadius: 7
+                    }
+                ]
+            };
+
+            // Crear gráfica
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#475569',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            usePointStyle: true,
+                            callbacks: {
+                                label: function (context) {
+                                    if (context.datasetIndex === 0) {
+                                        return `Ingresos: $${context.raw.toLocaleString('es-MX')}`;
+                                    } else {
+                                        return `Órdenes: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(241, 245, 249, 0.8)' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 11 },
+                                callback: function (value) {
+                                    if (value >= 1000) return '$' + (value / 1000) + 'K';
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: { color: 'rgba(241, 245, 249, 0.8)' },
+                            ticks: { color: '#64748b', font: { size: 11 } }
+                        }
+                    },
+                    interaction: { intersect: false, mode: 'index' },
+                    animation: { duration: 2000, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+        // Función para actualizar fecha de hoy
+        function updateTodayDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('today-date').textContent =
+                today.toLocaleDateString('es-MX', options);
+        }
+
+        // Función para actualizar tiempo de última actualización
+        function updateLastUpdatedTime() {
+            if (dataLastUpdated) {
+                const timeString = dataLastUpdated.toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+
+                // Actualizar en todas las tarjetas
+                document.querySelectorAll('.text-white/80:last-child').forEach(el => {
+                    if (el.textContent.includes('Datos reales')) {
+                        el.textContent = `Actualizado: ${timeString}`;
+                    }
+                });
+            }
+        }
+
+        // Función para refrescar datos de productos
+        async function refreshProductsData() {
+            const btn = event?.target?.closest('button');
+            if (btn) {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Actualizando...';
+                btn.disabled = true;
+
+                try {
+                    const productsData = await fetchDataWithRetry(API_BASE + 'products/productos/');
+                    products = extractArrayData(productsData);
+                    updateKPICards();
+                    updateQuickStats();
+                    createProductsByCategoryChart();
+
+                    // Mostrar confirmación
+                    btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>¡Actualizado!';
+                    btn.className = 'text-xs text-emerald-600 hover:text-emerald-800 font-medium';
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.className = 'text-xs text-blue-600 hover:text-blue-800 font-medium';
+                        btn.disabled = false;
+                    }, 2000);
+
+                } catch (error) {
+                    btn.innerHTML = '<i class="fa-solid fa-times mr-1"></i>Error';
+                    btn.className = 'text-xs text-red-600 hover:text-red-800 font-medium';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.className = 'text-xs text-blue-600 hover:text-blue-800 font-medium';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+            }
+        }
+
+        // Mostrar error de datos reales
+        function showRealDataError() {
+            // Mostrar mensajes de error claros
+            document.querySelectorAll('[id$="-source"]').forEach(el => {
+                el.innerHTML = '<i class="fa-solid fa-times-circle mr-1"></i>Error de conexión';
+            });
+
+            document.getElementById('categories-data-source').innerHTML =
+                '<span class="text-red-500">⚠️ No se pudieron cargar los datos reales</span>';
+
+            // Crear gráficas vacías
+            createEmptyCharts();
+        }
+
+        // Crear gráficas vacías
+        function createEmptyCharts() {
+            const ctx1 = document.getElementById('productsByCategoryChart').getContext('2d');
+            const ctx2 = document.getElementById('performanceChart').getContext('2d');
+
+            // Gráfica vacía para productos
+            new Chart(ctx1, {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Esperando datos del sistema...',
+                            color: '#64748b',
+                            font: { size: 14 }
+                        }
+                    }
+                }
+            });
+
+            // Gráfica vacía para rendimiento
+            new Chart(ctx2, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Conectando con la API de órdenes...',
+                            color: '#64748b',
+                            font: { size: 14 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mostrar/ocultar loading
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        // Refrescar datos automáticamente cada 30 segundos
+        setInterval(() => {
+            console.log('🔄 Actualizando datos del dashboard...');
+            loadDashboardData();
+        }, 30000);
+
+        // También actualizar al hacer foco en la ventana
+        window.addEventListener('focus', () => {
+            console.log('🔍 Ventana enfocada, actualizando datos...');
+            loadDashboardData();
+        });
+
     </script>
-    <script src="../js/indexAdmin.js"></script>
+
 </body>
 
 </html>
