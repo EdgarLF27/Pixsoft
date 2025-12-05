@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrendamiento de Equipos - Pixsoft</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .tab-inactive {
+            color: #6b7280;
+        }
+
+        .tab-inactive:hover {
+            color: #374151;
+        }
+
+        .spec-row:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-indigo-600">Pixsoft Leasing</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="auth-status" class="text-sm font-medium text-gray-500">Verificando sesión...</span>
+                    <button onclick="logout()"
+                        class="text-sm text-red-600 hover:text-red-800 font-medium">Salir</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Tabs de Categorías -->
+        <div class="mb-8">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button onclick="switchTab('computers')" id="tab-computers"
+                        class="tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center">
+                        <i data-lucide="laptop" class="w-4 h-4 mr-2"></i> Computadoras
+                    </button>
+                    <button onclick="switchTab('servers')" id="tab-servers"
+                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
+                        <i data-lucide="server" class="w-4 h-4 mr-2"></i> Servidores y Redes
+                    </button>
+                    <button onclick="switchTab('printing')" id="tab-printing"
+                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
+                        <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Impresión
+                    </button>
+                    <button onclick="switchTab('contracts')" id="tab-contracts"
+                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center ml-auto text-indigo-600">
+                        <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Mis Contratos
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Contenido: Catálogo de Productos -->
+        <div id="catalog-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Las tarjetas de productos se inyectarán aquí -->
+            <div class="col-span-full text-center py-12 text-gray-500">Cargando equipos...</div>
+        </div>
+
+        <!-- Contenido: Mis Contratos -->
+        <div id="contracts-view" class="hidden">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Equipo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Periodo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contracts-list" class="bg-white divide-y divide-gray-200">
+                        <!-- Contratos inyectados aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal de Cotización y Contrato -->
+    <div id="quote-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 overflow-hidden">
+            <div class="px-6 py-4 bg-indigo-600 flex justify-between items-center">
+                <h3 class="text-lg font-medium text-white" id="modal-title">Configurar Arrendamiento</h3>
+                <button onclick="closeModal()" class="text-white hover:text-gray-200"><i data-lucide="x"
+                        class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6">
+                <div class="flex gap-6">
+                    <!-- Columna Izquierda: Info Producto -->
+                    <div class="w-1/3 border-r pr-6">
+                        <h4 class="font-bold text-gray-900 text-lg mb-2" id="modal-product-name">Nombre Equipo</h4>
+                        <p class="text-sm text-gray-500 mb-4" id="modal-product-desc">Descripción...</p>
+
+                        <div class="bg-gray-50 p-3 rounded text-xs space-y-1" id="modal-product-specs">
+                            <!-- Specs -->
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Formulario -->
+                    <div class="w-2/3 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Periodo de Arrendamiento</label>
+                            <select id="modal-period"
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border">
+                                <option value="DAILY">Diario</option>
+                                <option value="WEEKLY">Semanal</option>
+                                <option value="MONTHLY">Mensual</option>
+                                <option value="ANNUAL" selected>Anual</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Inicio</label>
+                                <input type="date" id="modal-start"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Fin</label>
+                                <input type="date" id="modal-end"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input id="modal-maintenance" type="checkbox"
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="modal-maintenance" class="ml-2 block text-sm text-gray-900">
+                                Incluir Mantenimiento y Seguro (+10%)
+                            </label>
+                        </div>
+
+                        <div id="quote-summary" class="bg-indigo-50 p-4 rounded-md hidden">
+                            <div class="flex justify-between text-sm font-medium text-indigo-900">
+                                <span>Costo Total Estimado:</span>
+                                <span id="modal-total-cost" class="text-lg font-bold">$0.00</span>
+                            </div>
+                            <p class="text-xs text-indigo-700 mt-1" id="modal-duration-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                <button type="button" onclick="calculateQuote()"
+                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cotizar
+                </button>
+                <button type="button" id="btn-create-contract" onclick="createContract()" disabled
+                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Generar Contrato
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Firma -->
+    <div id="sign-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900">Firma de Contrato</h3>
+                <button onclick="document.getElementById('sign-modal').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="prose prose-sm max-w-none bg-gray-50 p-4 border rounded mb-4">
+                    <h4 class="text-center font-bold mb-4">CONTRATO DE ARRENDAMIENTO DE EQUIPO TECNOLÓGICO</h4>
+                    <pre id="contract-text" class="whitespace-pre-wrap font-mono text-xs"></pre>
+                </div>
+
+                <div class="border-t pt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Firma Digital (Escriba su nombre
+                        completo para aceptar)</label>
+                    <input type="text" id="signature-input" placeholder="Yo, [Nombre Completo], acepto los términos..."
+                        class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <p class="text-xs text-gray-500 mt-1">Al escribir su nombre y hacer clic en Firmar, acepta
+                        legalmente los términos y condiciones expuestos arriba.</p>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                <button type="button" onclick="submitSignature()"
+                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Firmar Digitalmente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuración y Estado ---
+        const API_BASE = "http://localhost:8000/api/v1/leasing/";
+        let allProducts = [];
+        let currentCategory = 'computers';
+        let currentQuote = null;
+        let activeContractId = null;
+
+        // --- Inicialización ---
+        window.onload = async () => {
+            if (window.lucide) lucide.createIcons();
+            checkAuth();
+            await loadProducts();
+            setupDates();
+        };
+
+        function checkAuth() {
+            const token = localStorage.getItem('accessToken');
+            const statusEl = document.getElementById('auth-status');
+            if (!token) {
+                statusEl.textContent = "No autenticado";
+                statusEl.classList.add('text-red-500');
+                // Opcional: Redirigir a setup_auth.html si se desea forzar
+            } else {
+                statusEl.textContent = "Sesión Activa";
+                statusEl.classList.add('text-green-600');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            window.location.href = '../Login.html';
+        }
+
+        function setupDates() {
+            const today = new Date().toISOString().split('T')[0];
+            const nextYear = new Date();
+            nextYear.setFullYear(nextYear.getFullYear() + 1);
+
+            document.getElementById('modal-start').value = today;
+            document.getElementById('modal-end').value = nextYear.toISOString().split('T')[0];
+        }
+
+        // --- API Helper ---
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const token = localStorage.getItem('accessToken');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            try {
+                const res = await fetch(API_BASE + endpoint, {
+                    method, headers, body: body ? JSON.stringify(body) : null
+                });
+
+                if (res.status === 401) {
+                    alert("Sesión expirada. Por favor ingrese nuevamente.");
+                    window.location.href = '../Login.html';
+                    return null;
+                }
+
+                if (!res.ok) throw new Error(await res.text());
+                return res.status === 204 ? true : await res.json();
+            } catch (e) {
+                console.error("API Error:", e);
+                alert("Error: " + e.message);
+                return null;
+            }
+        }
+
+        // --- Lógica de UI ---
+        async function loadProducts() {
+            const data = await apiCall('products/');
+            if (data) {
+                allProducts = data;
+                renderCatalog();
+            }
+        }
+
+        function switchTab(tab) {
+            // Actualizar estilos de tabs
+            ['computers', 'servers', 'printing', 'contracts'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.className = "tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center";
+                } else {
+                    btn.className = "tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center";
+                }
+            });
+
+            if (tab === 'contracts') {
+                document.getElementById('catalog-view').classList.add('hidden');
+                document.getElementById('contracts-view').classList.remove('hidden');
+                loadContracts();
+            } else {
+                document.getElementById('catalog-view').classList.remove('hidden');
+                document.getElementById('contracts-view').classList.add('hidden');
+                currentCategory = tab;
+                renderCatalog();
+            }
+        }
+
+        function renderCatalog() {
+            const container = document.getElementById('catalog-view');
+            container.innerHTML = '';
+
+            // Mapeo de categorías del backend a tabs del frontend
+            const categoryMap = {
+                'computers': 'Computadoras Portátiles y de Escritorio',
+                'servers': 'Servidores y Equipos de Red',
+                'printing': 'Equipos de Impresión y Digitalización'
+            };
+
+            const filtered = allProducts.filter(p => p.category_name === categoryMap[currentCategory]);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No hay equipos disponibles en esta categoría.</div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                // Renderizar especificaciones
+                let specsHtml = '';
+                if (p.specifications) {
+                    Object.entries(p.specifications).slice(0, 4).forEach(([k, v]) => {
+                        specsHtml += `<div class="flex justify-between text-xs text-gray-600 mb-1"><span>${k}:</span> <span class="font-medium">${v}</span></div>`;
+                    });
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-white overflow-hidden shadow rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200";
+                card.innerHTML = `
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 truncate">${p.name}</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 h-10 overflow-hidden">${p.description}</p>
+                        
+                        <div class="mt-4 bg-gray-50 p-3 rounded-md border border-gray-100">
+                            ${specsHtml}
+                        </div>
+
+                        <div class="mt-5">
+                            <button onclick='openQuoteModal(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Cotizar Arrendamiento
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- Cotización ---
+        let selectedProduct = null;
+
+        function openQuoteModal(product) {
+            selectedProduct = product;
+            document.getElementById('modal-product-name').textContent = product.name;
+            document.getElementById('modal-product-desc').textContent = product.description;
+
+            // Render specs en modal
+            const specsContainer = document.getElementById('modal-product-specs');
+            specsContainer.innerHTML = '';
+            if (product.specifications) {
+                Object.entries(product.specifications).forEach(([k, v]) => {
+                    specsContainer.innerHTML += `<div class="flex justify-between border-b border-gray-200 pb-1 last:border-0"><span>${k}</span> <span class="font-semibold">${v}</span></div>`;
+                });
+            }
+
+            document.getElementById('quote-summary').classList.add('hidden');
+            document.getElementById('btn-create-contract').disabled = true;
+            document.getElementById('quote-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('quote-modal').classList.add('hidden');
+        }
+
+        async function calculateQuote() {
+            const payload = {
+                product_id: selectedProduct.id,
+                period: document.getElementById('modal-period').value,
+                start_date: document.getElementById('modal-start').value,
+                end_date: document.getElementById('modal-end').value
+            };
+
+            const data = await apiCall('quote/', 'POST', payload);
+            if (data) {
+                currentQuote = data;
+
+                // Aplicar recargo de mantenimiento si está seleccionado (simulado en frontend por simplicidad visual, idealmente en backend)
+                let cost = parseFloat(data.total_cost);
+                if (document.getElementById('modal-maintenance').checked) {
+                    cost *= 1.10; // +10%
+                }
+
+                document.getElementById('modal-total-cost').textContent = `$${cost.toFixed(2)}`;
+                document.getElementById('modal-duration-text').textContent = `Duración: ${data.duration_days} días`;
+                document.getElementById('quote-summary').classList.remove('hidden');
+                document.getElementById('btn-create-contract').disabled = false;
+            }
+        }
+
+        async function createContract() {
+            if (!currentQuote) return;
+
+            let finalCost = parseFloat(currentQuote.total_cost);
+            if (document.getElementById('modal-maintenance').checked) {
+                finalCost *= 1.10;
+            }
+
+            const payload = {
+                product: selectedProduct.id,
+                plan: currentQuote.plan_id,
+                start_date: document.getElementById('modal-start').value,
+                end_date: document.getElementById('modal-end').value,
+                total_cost: finalCost,
+                contract_document: currentQuote.contract_document,
+                is_signed: false,
+                status: 'PENDING'
+            };
+
+            const res = await apiCall('contracts/', 'POST', payload);
+            if (res) {
+                alert(`Contrato #${res.id} generado exitosamente.`);
+                closeModal();
+                switchTab('contracts');
+            }
+        }
+
+        // --- Contratos ---
+        async function loadContracts() {
+            const list = document.getElementById('contracts-list');
+            list.innerHTML = '<tr><td colspan="5" class="text-center py-4">Cargando...</td></tr>';
+
+            const data = await apiCall('contracts/');
+            list.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                list.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No tienes contratos activos.</td></tr>';
+                return;
+            }
+
+            data.forEach(c => {
+                const tr = document.createElement('tr');
+                const statusColor = c.is_signed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+                const statusText = c.is_signed ? 'Firmado / Activo' : 'Pendiente de Firma';
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#${c.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${c.product_name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${c.plan_period}</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">${statusText}</span></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        ${!c.is_signed ? `<button onclick="openSignModal(${c.id}, '${encodeURIComponent(c.contract_document)}')" class="text-indigo-600 hover:text-indigo-900">Firmar</button>` : '<span class="text-gray-400">Firmado</span>'}
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        function openSignModal(id, docEncoded) {
+            activeContractId = id;
+            document.getElementById('contract-text').textContent = decodeURIComponent(docEncoded);
+            document.getElementById('signature-input').value = '';
+            document.getElementById('sign-modal').classList.remove('hidden');
+        }
+
+        async function submitSignature() {
+            const sig = document.getElementById('signature-input').value;
+            if (sig.trim().length < 5) {
+                alert("Por favor escriba su nombre completo para firmar.");
+                return;
+            }
+
+            const res = await apiCall(`contracts/${activeContractId}/`, 'PATCH', {
+                is_signed: true,
+                status: 'ACTIVE'
+            });
+
+            if (res) {
+                alert("Contrato firmado correctamente.");
+                document.getElementById('sign-modal').classList.add('hidden');
+                loadContracts();
+            }
+        }
+
+    </script>
+</body>
+
+</html>

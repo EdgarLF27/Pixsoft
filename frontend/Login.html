@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,26 @@
     <!-- Aquí tu compañero del frontend agregará los estilos de Tailwind CSS -->
     <!-- <link href="/path/to/tailwind.css" rel="stylesheet"> -->
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
         <h2 class="text-2xl font-bold text-center mb-6">Iniciar Sesión</h2>
         <form id="loginForm">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuario o Email:</label>
-                <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="text" id="username" name="username"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required>
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+                <input type="password" id="password" name="password"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    required>
             </div>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
                     Ingresar
                 </button>
             </div>
@@ -43,10 +50,12 @@
         <div class="mt-6 border-t pt-4">
             <p class="text-center text-gray-700 text-sm mb-4">O inicia sesión con:</p>
             <div class="flex justify-center space-x-4">
-                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Google
                 </button>
-                <button class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button
+                    class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Facebook
                 </button>
             </div>
@@ -87,12 +96,13 @@
 
                 if (response.ok) {
                     console.log('Login exitoso. Tokens JWT recibidos:', result);
+                    // Guardar tokens en localStorage
+                    localStorage.setItem('accessToken', result.access);
+                    localStorage.setItem('refreshToken', result.refresh);
+
                     alert('¡Login exitoso!');
-                    // Aquí podrías guardar los tokens en localStorage o sessionStorage
-                    // localStorage.setItem('accessToken', result.access);
-                    // localStorage.setItem('refreshToken', result.refresh);
-                    // Opcional: Redireccionar a una página protegida
-                    // window.location.href = 'dashboard.html';
+                    // Redireccionar al módulo de arrendamiento
+                    window.location.href = 'Admin/arrendamiento.html';
                 } else {
                     console.error('Error en el login:', result);
                     alert('Error en el login:\n' + JSON.stringify(result, null, 2));
@@ -104,4 +114,5 @@
         });
     </script>
 </body>
+
 </html>
