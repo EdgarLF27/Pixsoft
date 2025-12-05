@@ -64,16 +64,6 @@ function renderSidebar(activePageId) {
                 )}"></i>
                 Usuarios
             </a>
-            <a href="admins.html" class="${getLinkClass(
-              activePageId,
-              "admins"
-            )}">
-                <i class="fa-solid fa-user-shield w-5 ${getIconClass(
-                  activePageId,
-                  "admins"
-                )}"></i>
-                Administradores
-            </a>
             <div class="pt-4 pb-2">
                 <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema</p>
             </div>
