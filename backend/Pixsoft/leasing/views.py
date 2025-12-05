@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.permissions import AllowAny
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -27,7 +27,10 @@ class ProductListView(APIView):
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = RentalContract.objects.all()
     serializer_class = RentalContractSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(customer=self.request.user)
 
 # Vista para planes
 class PlanListView(APIView):

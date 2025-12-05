@@ -14,12 +14,13 @@ class RentalPlanSerializer(serializers.ModelSerializer):
 
 class RentalProductSerializer(serializers.ModelSerializer):
     category = RentalCategorySerializer(read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
     plans = RentalPlanSerializer(many=True, read_only=True)
     
     class Meta:
         model = RentalProduct
         fields = [
-            'id', 'name', 'description', 'category', 
+            'id', 'name', 'description', 'category', 'category_name',
             'specifications', 'sku', 'stock_quantity',
             'is_available', 'plans'
         ]
@@ -37,3 +38,6 @@ class RentalContractSerializer(serializers.ModelSerializer):
             'start_date', 'end_date', 'total_cost',
             'is_signed', 'contract_document', 'status'
         ]
+        extra_kwargs = {
+            'customer': {'read_only': True}
+        }
