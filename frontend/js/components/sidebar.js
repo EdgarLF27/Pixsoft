@@ -47,6 +47,16 @@ function renderSidebar(activePageId) {
                 )}"></i>
                 Arrendamientos
             </a>
+            <a href="envios.html" class="${getLinkClass(
+              activePageId,
+              "envios"
+            )}">
+                <i class="fa-solid fa-truck-fast w-5 ${getIconClass(
+                  activePageId,
+                  "envios"
+                )}"></i>
+                Envíos
+            </a>
             <a href="#" class="${getLinkClass(activePageId, "clientes")}">
                 <i class="fa-solid fa-users w-5 ${getIconClass(
                   activePageId,
