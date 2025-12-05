@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import CustomTokenObtainPairView, UserListUpdateView, ToggleUserStaffStatusView
+from users.views import CustomTokenObtainPairView, UserListUpdateView, ToggleUserStaffStatusView, GoogleLogin
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -15,4 +15,7 @@ urlpatterns = [
     path('leasing/', include('leasing.urls')),
     path('orders/', include('orders.urls')),
     path('shipping/', include('shipping.urls')),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('auth/google/', GoogleLogin.as_view(), name='google_login'),
 ]

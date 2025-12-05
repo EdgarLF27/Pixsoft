@@ -3,8 +3,16 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from .serializers import UserSerializer, CustomTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 User = get_user_model()
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = "http://127.0.0.1:8000/api/v1/auth/google/callback/"
+    client_class = OAuth2Client
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -14,7 +22,7 @@ class RegisterView(generics.CreateAPIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
@@ -22,7 +30,6 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        # Ensure profile exists
         if not hasattr(user, 'profile'):
             from .models import Profile
             Profile.objects.create(user=user)
@@ -42,7 +49,4 @@ class ToggleUserStaffStatusView(generics.UpdateAPIView):
     permission_classes = [IsAdminUser]
 
     def perform_update(self, serializer):
-        # Toggle staff status logic could also be done here or in serializer, 
-        # but using a simple update is cleaner if we pass the new value.
-        # However, to strictly 'toggle' or force 'is_staff', we can intercept.
         instance = serializer.save()
