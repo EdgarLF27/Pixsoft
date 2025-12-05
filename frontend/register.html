@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <!-- Aquí tu compañero del frontend agregará los estilos de Tailwind CSS -->
+    <!-- <link href="/path/to/tailwind.css" rel="stylesheet"> -->
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+        <h2 class="text-2xl font-bold text-center mb-6">Crear Cuenta</h2>
+        <form id="registrationForm">
+            <!-- Información de la Cuenta -->
+            <fieldset class="mb-6 p-4 border border-gray-300 rounded-md">
+                <legend class="text-lg font-semibold mb-4 px-2">Datos de la Cuenta</legend>
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de Usuario:</label>
+                    <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                    <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+            </fieldset>
+
+            <!-- Información Personal -->
+            <fieldset class="mb-6 p-4 border border-gray-300 rounded-md">
+                <legend class="text-lg font-semibold mb-4 px-2">Información Personal</legend>
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nombre(s):</label>
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="ap_p" class="block text-gray-700 text-sm font-bold mb-2">Apellido Paterno:</label>
+                    <input type="text" id="ap_p" name="ap_p" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="ap_m" class="block text-gray-700 text-sm font-bold mb-2">Apellido Materno:</label>
+                    <input type="text" id="ap_m" name="ap_m" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="phone_number" class="block text-gray-700 text-sm font-bold mb-2">Teléfono:</label>
+                    <input type="tel" id="phone_number" name="phone_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+            </fieldset>
+
+            <!-- Direcciones -->
+            <fieldset class="mb-6 p-4 border border-gray-300 rounded-md">
+                <legend class="text-lg font-semibold mb-4 px-2">Direcciones</legend>
+                <div class="mb-4">
+                    <label for="shipping_address" class="block text-gray-700 text-sm font-bold mb-2">Dirección de Envío:</label>
+                    <textarea id="shipping_address" name="shipping_address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="billing_address" class="block text-gray-700 text-sm font-bold mb-2">Dirección de Facturación:</label>
+                    <textarea id="billing_address" name="billing_address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Registrarse
+            </button>
+            <!--
+                Aquí iría la lógica JavaScript para:
+                1. Capturar los datos del formulario (incluyendo los campos anidados para 'profile').
+                2. Construir el objeto JSON con la estructura esperada por tu API.
+                3. Enviar una petición POST a tu API de registro (ej: /users/register/).
+                4. Manejar la respuesta (redirigir al login, mostrar mensajes de éxito/error).
+            -->
+        </form>
+
+        <p class="text-center text-gray-600 text-xs mt-4">
+            ¿Ya tienes una cuenta? <a href="login.html" class="text-blue-500 hover:text-blue-800">Inicia sesión aquí</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function (event) {
+            // Prevenir el envío tradicional del formulario
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Construir el objeto JSON con la estructura anidada que espera la API
+            const data = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                name: formData.get('name'),
+                profile: {
+                    ap_p: formData.get('ap_p'),
+                    ap_m: formData.get('ap_m'),
+                    phone_number: formData.get('phone_number'),
+                    shipping_address: formData.get('shipping_address'),
+                    billing_address: formData.get('billing_address')
+                }
+            };
+
+            console.log('Enviando datos a la API:', JSON.stringify(data, null, 2));
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/v1/users/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    console.log('Registro exitoso:', result);
+                    alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+                    // Opcional: Redireccionar al login
+                    // window.location.href = 'login.html';
+                } else {
+                    console.error('Error en el registro:', result);
+                    // Mostrar los errores en un formato legible
+                    alert('Error en el registro:\n' + JSON.stringify(result, null, 2));
+                }
+            } catch (error) {
+                console.error('Error de red o de conexión:', error);
+                alert('No se pudo conectar con el servidor. Revisa la consola para más detalles.');
+            }
+        });
+    </script>
+</body>
+</html>
