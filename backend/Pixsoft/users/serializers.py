@@ -32,9 +32,29 @@ class UserSerializer(serializers.ModelSerializer):
         )
         
         # The post_save signal creates the profile. We just update it.
-        # This handles the case where profile_data is empty.
         Profile.objects.filter(user=user).update(**profile_data)
         
         return user
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', None)
+
+        # Update User instance
+        instance.first_name = validated_data.get('name', instance.first_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+        
+        # Handle password separately if provided
+        if 'password' in validated_data:
+            instance.set_password(validated_data['password'])
+        
+        instance.save()
+
+        # Update Profile instance
+        if profile_data is not None:
+            Profile.objects.filter(user=instance).update(**profile_data)
+
+        return instance
+
 
 
