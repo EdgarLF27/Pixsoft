@@ -28,6 +28,6 @@ class SaleProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'brand', 'model', 'description', 
             'category', 'category_name', 'price', 
-            'stock_quantity', 'is_available', 'custom_attributes', 'sku'
+            'stock_quantity', 'is_available', 'custom_attributes', 'sku', 'image'
         ]
         read_only_fields = ['is_available']

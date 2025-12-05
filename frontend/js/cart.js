@@ -63,9 +63,12 @@ function addProductToCart(product) {
       id: product.id,
       name: product.name,
       price: product.price,
-      image:
-        product.custom_attributes?.image_url ||
-        "https://via.placeholder.com/100x100?text=Producto",
+      image: product.image
+        ? product.image.startsWith("http")
+          ? product.image
+          : `http://localhost:8000${product.image}`
+        : product.custom_attributes?.image_url ||
+          "https://via.placeholder.com/100x100?text=Producto",
       quantity: 1,
     });
   }
@@ -176,10 +179,10 @@ function renderCartDropdown() {
     .map(
       (item) => `
         <div class="flex gap-3 p-3 hover:bg-slate-50 rounded-lg transition-colors group">
-            <div class="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+            <div class="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-200">
                 <img src="${item.image}" alt="${
         item.name
-      }" class="w-full h-full object-contain">
+      }" class="w-full h-full object-cover">
             </div>
             <div class="flex-1 min-w-0">
                 <h4 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1">${

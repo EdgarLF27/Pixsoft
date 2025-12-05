@@ -58,6 +58,15 @@ class SaleProduct(models.Model):
         help_text="Atributos específicos del producto (e.g., {'Tipo Conector': 'HDMI', 'Velocidad': '10Gbps'})"
     )
     
+    # Imagen del producto
+    image = models.ImageField(
+        upload_to='products/',
+        null=True,
+        blank=True,
+        verbose_name="Imagen del Producto"
+    )
+
+    
     # Propiedad de disponibilidad
     @property
     def is_available(self):
