@@ -1,5 +1,6 @@
-from pathlib import Path
+# settings.py - COMPLETO Y CORREGIDO
 
+from pathlib import Path
 import os
 from dotenv import load_dotenv
 
@@ -7,7 +8,6 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR.parent, '.env')) # Load .env file from the backend folder
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -18,11 +18,10 @@ SECRET_KEY = 'django-insecure-=m#^mp8bp+%8u1-6izh^(vi2^9e2-9xd5--i59hhl03*b(5_!i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# PERMITE TODOS LOS HOSTS PARA DESARROLLO
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,18 +30,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',  # AÑADIDO: corsheaders debe estar en INSTALLED_APPS
     'users',
     'api',
     'leasing',
     'products',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
-    # 1. Seguridad DEBE ir primero
+    # 1. Seguridad
     'django.middleware.security.SecurityMiddleware',
     
-    # 2. CORS DEBE ir muy alto, antes de CommonMiddleware/CSRF
+    # 2. CORS DEBE estar aquí, al inicio pero después de SecurityMiddleware
     'corsheaders.middleware.CorsMiddleware', 
     
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Nota: Se eliminó el 'django.middleware.security.SecurityMiddleware' duplicado al final
 ]
 
 ROOT_URLCONF = 'Pixsoft.urls'
@@ -73,11 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Pixsoft.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-# Usando SQLite temporalmente para testing (cambia a PostgreSQL en producción)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -85,22 +79,7 @@ DATABASES = {
     }
 }
 
-# Configuración original de PostgreSQL (comentada temporalmente)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME'),
-#         'USER': os.environ.get('DB_USER'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD'),
-#         'HOST': os.environ.get('DB_HOST'),
-#         'PORT': os.environ.get('DB_PORT'),
-#     }
-# }
-
-
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -116,51 +95,114 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
+# Static files
 STATIC_URL = 'static/'
 
-# Django Rest Framework configuration
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ----------------------------------------------------------------------
+# --- CONFIGURACIÓN DRF (Django REST Framework) CORREGIDA ---
+# ----------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.authentication.SupabaseAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # AÑADIDO para desarrollo
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # CAMBIADO: Permitir acceso sin autenticación para desarrollo
+        'rest_framework.permissions.AllowAny',
     ],
 }
 
 # ----------------------------------------------------------------------
-# --- CONFIGURACIÓN CRÍTICA PARA CORREGIR EL ERROR DE CORS ---
+# --- CONFIGURACIÓN CRÍTICA DE CORS CORREGIDA ---
 # ----------------------------------------------------------------------
 
-# 1. Deshabilitar el permiso general de CORS (Mejor práctica)
-CORS_ALLOW_ALL_ORIGINS = False 
+# IMPORTANTE: Para desarrollo, permite todos los orígenes
+CORS_ALLOW_ALL_ORIGINS = True  # CAMBIADO de False a True para desarrollo
 
-# 2. Especificar exactamente los orígenes permitidos
-# Los errores indican que el front-end se ejecuta desde el puerto 5500,
-# típicamente usando Live Server de VS Code.
+# También puedes mantener estas configuraciones específicas:
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5500",
     "http://127.0.0.1:5500",
-    "http://localhost:8000", # Ya que la API corre aquí, a veces es necesario para herramientas internas.
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "file://",  # Para abrir HTML directamente desde el sistema de archivos
 ]
 
-# 3. Permite que el front-end envíe credenciales (cookies) si fueran necesarias
+# Permite credenciales (cookies, headers de autenticación)
 CORS_ALLOW_CREDENTIALS = True
 
+# Métodos HTTP permitidos
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Headers permitidos
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 # ----------------------------------------------------------------------
+# --- CONFIGURACIÓN ADICIONAL DE SEGURIDAD PARA DESARROLLO ---
+# ----------------------------------------------------------------------
+
+# Deshabilitar CSRF para desarrollo (¡QUITAR EN PRODUCCIÓN!)
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+# OPCIONAL: Deshabilitar CSRF completamente para desarrollo
+# CSRF_COOKIE_SECURE = False
+# CSRF_USE_SESSIONS = False
+
+# Para autenticación por sesión
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False  # Solo True en producción con HTTPS
+SESSION_COOKIE_HTTPONLY = True
+
+# ----------------------------------------------------------------------
+# --- CONFIGURACIÓN DE LOGGING PARA DEBUG ---
+# ----------------------------------------------------------------------
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'corsheaders': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
