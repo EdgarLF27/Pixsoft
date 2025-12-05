@@ -8,6 +8,7 @@ from users.views import UserViewSet
 from products.views import SaleProductViewSet, SaleCategoryViewSet
 from shipping.views import ShippingMethodViewSet, ShipmentViewSet
 from billing.views import InvoiceViewSet, PaymentViewSet
+from orders.views import OrderViewSet, CartViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -15,7 +16,6 @@ router.register(r'users', UserViewSet)
 # router.register(r'categories', SaleCategoryViewSet) # Moved to products.urls
 router.register(r'shipping/methods', ShippingMethodViewSet)
 router.register(r'shipping/shipments', ShipmentViewSet)
-from orders.views import OrderViewSet, CartViewSet
 
 router.register(r'billing/invoices', InvoiceViewSet, basename='invoice')
 router.register(r'billing/payments', PaymentViewSet)
@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('api/v1/leasing/', include('leasing.urls')),
     path('api/v1/products/', include('products.urls')),
+    path('api/v1/marketing/', include('marketing.urls')),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
