@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .cart-container { max-width: 800px; margin: auto; }
+        .cart-item { border-bottom: 1px solid #ccc; padding: 10px 0; }
+        .add-item-form { margin-top: 2em; border-top: 2px solid #000; padding-top: 1em; }
+        #token { width: 100%; padding: 8px; margin-bottom: 1em; }
+    </style>
+</head>
+<body>
+
+    <div class="cart-container">
+        <div class="logout-section" style="text-align: right; margin-bottom: 1em;">
+            <button onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <h1>Carrito de Compras</h1>
+
+        <div id="cart-content">
+            <!-- El contenido del carrito se cargará aquí -->
+        </div>
+
+        <div class="add-item-form">
+            <h2>Añadir Producto (Ejemplo)</h2>
+            <p>Este es un formulario de ejemplo para añadir productos. Necesitarás los IDs reales de tu base de datos.</p>
+            
+            <form id="addItemForm" onsubmit="addItemToCart(event)">
+                <label for="product_type">Tipo:</label>
+                <select id="product_type" name="product_type">
+                    <option value="sale">Venta</option>
+                    <option value="rental">Alquiler</option>
+                </select>
+                <br><br>
+                <label for="product_id">ID del Producto:</label>
+                <input type="number" id="product_id" name="product_id" required value="1">
+                <br><br>
+                <label for="rental_plan_id">ID Plan de Alquiler (si aplica):</label>
+                <input type="number" id="rental_plan_id" name="rental_plan_id" value="1">
+                <br><br>
+                <label for="quantity">Cantidad:</label>
+                <input type="number" id="quantity" name="quantity" required value="1" min="1">
+                <br><br>
+                <button type="submit">Añadir al Carrito</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- Protección de Ruta ---
+        (function() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('Acceso denegado. Debes iniciar sesión.');
+                // Redirige al login. Ajusta la ruta si es necesario.
+                window.location.href = '/frontend/Login.html'; 
+            }
+        })();
+        
+        const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
+
+        // Cargar el carrito automáticamente al abrir la página
+        window.onload = fetchCart;
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('accessToken');
+            // La validación ahora se hace en el script de protección de ruta
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+        }
+
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            alert('Has cerrado la sesión.');
+            window.location.href = '/frontend/Login.html';
+        }
+
+        async function fetchCart() {
+            const headers = getAuthHeaders();
+            if (!headers.Authorization.includes('null')) { // Evita peticiones si el token no está
+                try {
+                    const response = await fetch(`${API_BASE_URL}/orders/cart/`, { headers });
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(JSON.stringify(data));
+                    }
+
+                    const cartContent = document.getElementById('cart-content');
+                    if (data.items.length === 0) {
+                        cartContent.innerHTML = '<h3>Tu carrito está vacío.</h3>';
+                        return;
+                    }
+
+                    let itemsHtml = '<h3>Ítems en tu carrito:</h3>';
+                    data.items.forEach(item => {
+                        itemsHtml += `
+                            <div class="cart-item">
+                                <p><b>Producto:</b> ${item.product}</p>
+                                <p><b>Plan:</b> ${item.rental_plan_details || 'N/A'}</p>
+                                <p><b>Cantidad:</b> ${item.quantity}</p>
+                                <p><b>Precio Unitario:</b> S/.${item.item_price}</p>
+                                <p><b>Total:</b> S/.${item.total_price}</p>
+                                <button onclick="deleteCartItem(${item.id})">Eliminar</button>
+                            </div>
+                        `;
+                    });
+                    itemsHtml += `<hr><p><b>Total del Carrito: S/.${data.total_cart_price}</b></p>`;
+                    cartContent.innerHTML = itemsHtml;
+
+                } catch (error) {
+                    console.error('Error al obtener el carrito:', error);
+                    alert('Error al obtener el carrito: ' + error.message);
+                }
+            }
+        }
+
+        async function addItemToCart(event) {
+            event.preventDefault();
+            const headers = getAuthHeaders();
+
+            const form = event.target;
+            const data = {
+                product_type: form.product_type.value,
+                product_id: parseInt(form.product_id.value),
+                quantity: parseInt(form.quantity.value)
+            };
+
+            if (data.product_type === 'rental') {
+                data.rental_plan_id = parseInt(form.rental_plan_id.value);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/orders/cart/`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(JSON.stringify(result));
+                }
+                
+                alert('¡Producto añadido!');
+                fetchCart(); // Actualizar la vista del carrito
+
+            } catch(error) {
+                console.error('Error al añadir producto:', error);
+                alert('Error al añadir producto: ' + error.message);
+            }
+        }
+
+        async function deleteCartItem(itemId) {
+            const headers = getAuthHeaders();
+            
+            if (!confirm('¿Estás seguro de que quieres eliminar este ítem?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/orders/cart/${itemId}/`, {
+                    method: 'DELETE',
+                    headers: headers
+                });
+
+                if (response.status !== 204) {
+                     const result = await response.json();
+                     throw new Error(JSON.stringify(result));
+                }
+
+                alert('Ítem eliminado.');
+                fetchCart(); // Actualizar la vista del carrito
+
+            } catch(error) {
+                console.error('Error al eliminar el ítem:', error);
+                alert('Error al eliminar el ítem: ' + error.message);
+            }
+        }
+    </script>
+
+</body>
+</html>
