@@ -36,42 +36,26 @@
 </head>
 
 <body class="bg-gray-100 p-8">
+    </label>
+    <div id="card-element" class="p-2 border rounded">
+        <!-- A Stripe Element will be inserted here. -->
+    </div>
+    <!-- Used to display form errors. -->
+    <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
+    </div>
 
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
-        <h1 class="text-2xl font-bold mb-4">Finalizar Compra</h1>
+    <button id="submit-button"
+        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        disabled>
+        Pagar
+    </button>
+    </form>
 
-        <div id="order-summary" class="mb-6">
-            <h2 class="text-xl font-semibold mb-2">Resumen</h2>
-            <div id="items-list" class="text-gray-600 mb-4">
-                <!-- Items cargados dinámicamente -->
-            </div>
-            <div class="text-xl font-bold">Total: <span id="total-amount">Cargando...</span></div>
-        </div>
-
-        <form id="payment-form" class="mb-4">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="card-element">
-                    Tarjeta de Crédito o Débito
-                </label>
-                <div id="card-element" class="p-2 border rounded">
-                    <!-- A Stripe Element will be inserted here. -->
-                </div>
-                <!-- Used to display form errors. -->
-                <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
-            </div>
-
-            <button id="submit-button"
-                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                disabled>
-                Pagar
-            </button>
-        </form>
-
-        <div id="loading-message" class="hidden text-center text-gray-600">Procesando pago...</div>
-        <div id="success-message" class="hidden text-center text-green-600 font-bold">
-            ¡Pago Exitoso! <br>
-            <a id="download-invoice" href="#" class="text-blue-500 underline mt-2 block">Descargar Factura</a>
-        </div>
+    <div id="loading-message" class="hidden text-center text-gray-600">Procesando pago...</div>
+    <div id="success-message" class="hidden text-center text-green-600 font-bold">
+        ¡Pago Exitoso! <br>
+        <a id="download-invoice" href="#" class="text-blue-500 underline mt-2 block">Descargar Factura</a>
+    </div>
     </div>
 
     <script>
