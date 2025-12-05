@@ -29,13 +29,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
-    'corsheaders',  # AÑADIDO: corsheaders debe estar en INSTALLED_APPS
+    'rest_framework_simplejwt',
     'users',
     'api',
     'leasing',
     'products',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     # 1. Seguridad
@@ -45,6 +52,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', 
     
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -72,12 +80,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Pixsoft.wsgi.application'
 
 # Database
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -104,105 +119,7 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# ----------------------------------------------------------------------
-# --- CONFIGURACIÓN DRF (Django REST Framework) CORREGIDA ---
-# ----------------------------------------------------------------------
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.authentication.SupabaseAuthentication',
-        'rest_framework.authentication.SessionAuthentication',  # AÑADIDO para desarrollo
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        # CAMBIADO: Permitir acceso sin autenticación para desarrollo
-        'rest_framework.permissions.AllowAny',
-    ],
-}
-
-# ----------------------------------------------------------------------
-# --- CONFIGURACIÓN CRÍTICA DE CORS CORREGIDA ---
-# ----------------------------------------------------------------------
-
-# IMPORTANTE: Para desarrollo, permite todos los orígenes
-CORS_ALLOW_ALL_ORIGINS = True  # CAMBIADO de False a True para desarrollo
-
-# También puedes mantener estas configuraciones específicas:
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5500",
     "http://127.0.0.1:5500",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "file://",  # Para abrir HTML directamente desde el sistema de archivos
 ]
 
-# Permite credenciales (cookies, headers de autenticación)
-CORS_ALLOW_CREDENTIALS = True
-
-# Métodos HTTP permitidos
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
-# Headers permitidos
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-# ----------------------------------------------------------------------
-# --- CONFIGURACIÓN ADICIONAL DE SEGURIDAD PARA DESARROLLO ---
-# ----------------------------------------------------------------------
-
-# Deshabilitar CSRF para desarrollo (¡QUITAR EN PRODUCCIÓN!)
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
-
-# OPCIONAL: Deshabilitar CSRF completamente para desarrollo
-# CSRF_COOKIE_SECURE = False
-# CSRF_USE_SESSIONS = False
-
-# Para autenticación por sesión
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = False  # Solo True en producción con HTTPS
-SESSION_COOKIE_HTTPONLY = True
-
-# ----------------------------------------------------------------------
-# --- CONFIGURACIÓN DE LOGGING PARA DEBUG ---
-# ----------------------------------------------------------------------
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'corsheaders': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
