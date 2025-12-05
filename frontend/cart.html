@@ -1,218 +1,264 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 2em;
-        }
-
-        .cart-container {
-            max-width: 800px;
-            margin: auto;
-        }
-
-        .cart-item {
-            border-bottom: 1px solid #ccc;
-            padding: 10px 0;
-        }
-
-        .add-item-form {
-            margin-top: 2em;
-            border-top: 2px solid #000;
-            padding-top: 1em;
-        }
-
-        #token {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 1em;
-        }
-    </style>
-    <link rel="stylesheet" href="src/output.css">
-</head>
-
-<body>
-
-    <div class="cart-container">
-        <div class="logout-section" style="text-align: right; margin-bottom: 1em;">
-            <button onclick="logout()">Cerrar Sesión</button>
-        </div>
-
-        <h1>Carrito de Compras</h1>
-
-        <div id="cart-content">
-            <!-- El contenido del carrito se cargará aquí -->
-        </div>
-
-        <div class="add-item-form">
-            <h2>Añadir Producto (Ejemplo)</h2>
-            <p>Este es un formulario de ejemplo para añadir productos. Necesitarás los IDs reales de tu base de datos.
-            </p>
-
-            <form id="addItemForm" onsubmit="addItemToCart(event)">
-                <label for="product_type">Tipo:</label>
-                <select id="product_type" name="product_type">
-                    <option value="sale">Venta</option>
-                    <option value="rental">Alquiler</option>
-                </select>
-                <br><br>
-                <label for="product_id">ID del Producto:</label>
-                <input type="number" id="product_id" name="product_id" required value="1">
-                <br><br>
-                <label for="rental_plan_id">ID Plan de Alquiler (si aplica):</label>
-                <input type="number" id="rental_plan_id" name="rental_plan_id" value="1">
-                <br><br>
-                <label for="quantity">Cantidad:</label>
-                <input type="number" id="quantity" name="quantity" required value="1" min="1">
-                <br><br>
-                <button type="submit">Añadir al Carrito</button>
-            </form>
-        </div>
-    </div>
-
+    <title>PIXSOFT - Carrito de Compras</title>
+    <link href="src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // --- Protección de Ruta ---
-        (function () {
+        (function() {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('Acceso denegado. Debes iniciar sesión.');
-                // Redirige al login. Ajusta la ruta si es necesario.
-                window.location.href = '/frontend/Login.html';
+                window.location.href = 'Login.html'; 
             }
         })();
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50">
 
-        const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 nav-glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-8">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center gap-3">
+                    <div class="relative w-10 h-10 flex items-center justify-center">
+                        <span class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
+                </div>
 
-        // Cargar el carrito automáticamente al abrir la página
-        window.onload = fetchCart;
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <a href="Cliente/index.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Volver a Inicio">
+                        <i class="fa-solid fa-home text-xl"></i>
+                    </a>
+                    <a href="Cliente/profile.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Mi Perfil">
+                        <i class="fa-solid fa-user text-xl"></i>
+                    </a>
+                    <button onclick="logout()" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        function getAuthHeaders() {
-            const token = localStorage.getItem('accessToken');
-            // La validación ahora se hace en el script de protección de ruta
-            return {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            };
-        }
+    <!-- Main Content -->
+    <main class="flex-1 pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">Mi Carrito de Compras</h1>
+            <p class="text-slate-600">Revisa y gestiona los productos que deseas adquirir</p>
+        </div>
 
+        <!-- Cart Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Cart Items -->
+            <div class="lg:col-span-2">
+                <div id="cart-items-container" class="space-y-4">
+                    <!-- Items will be rendered here by JavaScript -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-cart" class="hidden glass-card rounded-2xl p-12 text-center bg-white">
+                    <i class="fa-solid fa-cart-shopping text-6xl text-slate-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Tu carrito está vacío</h3>
+                    <p class="text-slate-500 mb-6">Agrega productos para comenzar tu compra</p>
+                    <a href="Cliente/index.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Ir a Comprar
+                    </a>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div id="order-summary" class="glass-card rounded-2xl p-6 bg-white sticky top-28">
+                    <h2 class="text-xl font-bold text-slate-900 mb-6">Resumen del Pedido</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Subtotal (<span id="total-items">0</span> productos)</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Envío</span>
+                            <span class="text-green-600 font-medium">Gratis</span>
+                        </div>
+                        <div class="border-t border-slate-200 pt-3 flex justify-between text-lg font-bold text-slate-900">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button onclick="goToCheckout()" class="w-full py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5 mb-3">
+                        Proceder al Pago
+                    </button>
+                    
+                    <button onclick="clearFullCart()" class="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 font-medium transition-all border border-slate-200 hover:border-red-200">
+                        Vaciar Carrito
+                    </button>
+
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <div class="flex items-center gap-2 text-sm text-slate-500">
+                            <i class="fa-solid fa-shield-halved text-green-600"></i>
+                            <span>Compra 100% segura</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white/80 backdrop-blur-lg pt-8 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-slate-500 text-sm">
+                <p>© 2025 PIXSOFT. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
         function logout() {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             alert('Has cerrado la sesión.');
-            window.location.href = '/frontend/Login.html';
+            window.location.href = 'Login.html';
         }
 
-        async function fetchCart() {
-            const headers = getAuthHeaders();
-            if (!headers.Authorization.includes('null')) { // Evita peticiones si el token no está
+        // Load cart from localStorage
+        let cart = [];
+
+        function loadCart() {
+            const savedCart = localStorage.getItem('pixsoft_cart');
+            if (savedCart) {
                 try {
-                    const response = await fetch(`${API_BASE_URL}/orders/cart/`, { headers });
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(JSON.stringify(data));
-                    }
-
-                    const cartContent = document.getElementById('cart-content');
-                    if (data.items.length === 0) {
-                        cartContent.innerHTML = '<h3>Tu carrito está vacío.</h3>';
-                        return;
-                    }
-
-                    let itemsHtml = '<h3>Ítems en tu carrito:</h3>';
-                    data.items.forEach(item => {
-                        itemsHtml += `
-                            <div class="cart-item">
-                                <p><b>Producto:</b> ${item.product}</p>
-                                <p><b>Plan:</b> ${item.rental_plan_details || 'N/A'}</p>
-                                <p><b>Cantidad:</b> ${item.quantity}</p>
-                                <p><b>Precio Unitario:</b> S/.${item.item_price}</p>
-                                <p><b>Total:</b> S/.${item.total_price}</p>
-                                <button onclick="deleteCartItem(${item.id})">Eliminar</button>
-                            </div>
-                        `;
-                    });
-                    itemsHtml += `<hr><p><b>Total del Carrito: S/.${data.total_cart_price}</b></p>`;
-                    itemsHtml += `<button onclick="window.location.href='checkout.html'" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; margin-top: 10px;">Ir a Pagar</button>`;
-                    cartContent.innerHTML = itemsHtml;
-
-                } catch (error) {
-                    console.error('Error al obtener el carrito:', error);
-                    alert('Error al obtener el carrito: ' + error.message);
+                    cart = JSON.parse(savedCart);
+                } catch (e) {
+                    console.error('Error loading cart:', e);
+                    cart = [];
                 }
             }
+            renderCart();
         }
 
-        async function addItemToCart(event) {
-            event.preventDefault();
-            const headers = getAuthHeaders();
-
-            const form = event.target;
-            const data = {
-                product_type: form.product_type.value,
-                product_id: parseInt(form.product_id.value),
-                quantity: parseInt(form.quantity.value)
-            };
-
-            if (data.product_type === 'rental') {
-                data.rental_plan_id = parseInt(form.rental_plan_id.value);
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/orders/cart/`, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(JSON.stringify(result));
-                }
-
-                alert('¡Producto añadido!');
-                fetchCart(); // Actualizar la vista del carrito
-
-            } catch (error) {
-                console.error('Error al añadir producto:', error);
-                alert('Error al añadir producto: ' + error.message);
-            }
+        function saveCart() {
+            localStorage.setItem('pixsoft_cart', JSON.stringify(cart));
         }
 
-        async function deleteCartItem(itemId) {
-            const headers = getAuthHeaders();
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const emptyState = document.getElementById('empty-cart');
+            const orderSummary = document.getElementById('order-summary');
 
-            if (!confirm('¿Estás seguro de que quieres eliminar este ítem?')) {
+            if (cart.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                orderSummary.classList.add('hidden');
                 return;
             }
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/orders/cart/${itemId}/`, {
-                    method: 'DELETE',
-                    headers: headers
-                });
+            container.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            orderSummary.classList.remove('hidden');
 
-                if (response.status !== 204) {
-                    const result = await response.json();
-                    throw new Error(JSON.stringify(result));
+            // Render cart items
+            container.innerHTML = cart.map(item => `
+                <div class="glass-card rounded-xl p-4 flex gap-4 bg-white hover:shadow-lg transition-all group">
+                    <div class="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-contain">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-1 line-clamp-2">${item.name}</h3>
+                        <p class="text-xl font-bold text-pixsoft-primary mb-3">$${parseFloat(item.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-slate-600">Cantidad:</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                                    <i class="fa-solid fa-minus text-sm"></i>
+                                </button>
+                                <span class="text-base font-semibold text-slate-900 w-10 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                                    <i class="fa-solid fa-plus text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end justify-between">
+                        <button onclick="removeItem(${item.id})" class="text-slate-400 hover:text-red-500 transition-colors p-2">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        <p class="text-lg font-bold text-slate-900">$${(item.price * item.quantity).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update summary
+            updateSummary();
+        }
+
+        function updateQuantity(productId, change) {
+            const product = cart.find(item => item.id === productId);
+            if (product) {
+                product.quantity += change;
+                if (product.quantity <= 0) {
+                    removeItem(productId);
+                } else {
+                    saveCart();
+                    renderCart();
                 }
-
-                alert('Ítem eliminado.');
-                fetchCart(); // Actualizar la vista del carrito
-
-            } catch (error) {
-                console.error('Error al eliminar el ítem:', error);
-                alert('Error al eliminar el ítem: ' + error.message);
             }
         }
+
+        function removeItem(productId) {
+            if (confirm('¿Estás seguro de eliminar este producto?')) {
+                cart = cart.filter(item => item.id !== productId);
+                saveCart();
+                renderCart();
+            }
+        }
+
+        function updateSummary() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            document.getElementById('total-items').textContent = totalItems;
+            document.getElementById('subtotal').textContent = `$${subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+            document.getElementById('total').textContent = `$${subtotal.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+        }
+
+        function clearFullCart() {
+            if (confirm('¿Estás seguro de vaciar todo el carrito?')) {
+                cart = [];
+                saveCart();
+                renderCart();
+            }
+        }
+
+        function goToCheckout() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            window.location.href = 'checkout.html';
+        }
+
+        // Load cart on page load
+        document.addEventListener('DOMContentLoaded', loadCart);
     </script>
 
 </body>
-
 </html>
