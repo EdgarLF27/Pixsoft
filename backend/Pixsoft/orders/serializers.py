@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.contenttypes.models import ContentType
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Order, OrderItem
 from products.models import SaleProduct
 from leasing.models import RentalProduct, RentalPlan
 
@@ -102,3 +102,64 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         
         self.instance = cart_item
         return self.instance
+
+# --- Serializadores para Pedidos (Orders) ---
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    """
+    Serializador para los ítems de un pedido.
+    """
+    product = ProductRelatedField(read_only=True)
+
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'quantity', 'price_at_purchase', 'rental_plan']
+
+class OrderSerializer(serializers.ModelSerializer):
+    """
+    Serializador para ver un pedido y su historial.
+    """
+    items = OrderItemSerializer(many=True, read_only=True)
+    user = serializers.StringRelatedField()
+
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'status', 'total_price', 'created_at', 'items']
+
+class CreateOrderSerializer(serializers.Serializer):
+    """
+    Serializador para crear un pedido desde el carrito de un usuario.
+    Este serializador no está basado en un modelo, sino que orquesta la lógica.
+    """
+    def create(self, validated_data):
+        user = self.context['request'].user
+        cart = getattr(user, 'cart', None)
+
+        if not cart or not cart.items.exists():
+            raise serializers.ValidationError("Tu carrito está vacío.")
+
+        # Crear el pedido
+        order = Order.objects.create(user=user)
+        total_price = 0
+
+        # Mover ítems del carrito al pedido
+        for cart_item in cart.items.all():
+            order_item = OrderItem.objects.create(
+                order=order,
+                content_type=cart_item.content_type,
+                object_id=cart_item.object_id,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price_at_purchase=cart_item.item_price,
+                rental_plan=cart_item.rental_plan
+            )
+            total_price += order_item.total_price
+        
+        # Actualizar el precio total del pedido
+        order.total_price = total_price
+        order.save()
+
+        # Limpiar el carrito
+        cart.items.all().delete()
+
+        return order

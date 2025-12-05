@@ -1,8 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Cart, CartItem
-from .serializers import CartSerializer, AddCartItemSerializer, CartItemSerializer
+from .models import Cart, CartItem, Order
+from .serializers import (
+    CartSerializer, AddCartItemSerializer, CartItemSerializer, 
+    OrderSerializer, CreateOrderSerializer
+)
 
 class CartViewSet(viewsets.ViewSet):
     """
@@ -76,7 +79,44 @@ class CartViewSet(viewsets.ViewSet):
         try:
             cart_item = cart.items.get(pk=pk)
         except CartItem.DoesNotExist:
-            return Response({'error': 'Este ítem no existe en tu carrito.'}, status=status.HTTP_44_NOT_FOUND)
+            return Response({'error': 'Este ítem no existe en tu carrito.'}, status=status.HTTP_404_NOT_FOUND)
 
         cart_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar los pedidos (historial y creación).
+    - `list`: Devuelve el historial de pedidos del usuario.
+    - `retrieve`: Devuelve un pedido específico del usuario.
+    - `create`: Crea un nuevo pedido a partir del carrito del usuario.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Asegura que los usuarios solo puedan ver sus propios pedidos.
+        """
+        return Order.objects.filter(user=self.request.user).order_by('-created_at')
+
+    def get_serializer_class(self):
+        """
+        Usa un serializador diferente para la creación de pedidos.
+        """
+        if self.action == 'create':
+            return CreateOrderSerializer
+        return OrderSerializer
+
+    def perform_create(self, serializer):
+        """
+        Pasa el contexto del request al serializador de creación.
+        """
+        serializer.save()
+
+    def get_serializer_context(self):
+        """
+        Asegura que el serializador tenga acceso al objeto request.
+        """
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context
