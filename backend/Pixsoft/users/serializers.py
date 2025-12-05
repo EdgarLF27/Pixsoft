@@ -18,7 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'password', 'name', 'profile']
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True, 'required': False},
+            'username': {'required': False}
         }
 
     def create(self, validated_data):
@@ -37,24 +38,24 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', None)
+        profile_data = validated_data.pop('profile', {})
 
-        # Update User instance
-        instance.first_name = validated_data.get('name', instance.first_name)
-        instance.email = validated_data.get('email', instance.email)
         instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
         
-        # Handle password separately if provided
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
         
         instance.save()
 
-        # Update Profile instance
-        if profile_data is not None:
-            Profile.objects.filter(user=instance).update(**profile_data)
+        if profile_data:
+            # profile is a OneToOneField, so we access it directly
+            profile = instance.profile
+            for attr, value in profile_data.items():
+                setattr(profile, attr, value)
+            profile.save()
 
         return instance
-
 
 

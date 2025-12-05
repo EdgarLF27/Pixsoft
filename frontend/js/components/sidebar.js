@@ -6,62 +6,59 @@ function renderSidebar(activePageId) {
   const sidebarHTML = `
     <aside class="w-64 glass-sidebar flex flex-col h-full fixed md:relative z-50 transition-transform -translate-x-full md:translate-x-0" id="sidebar">
         <!-- Logo -->
-        <div class="h-20 flex items-center px-8 border-b border-white/5">
-            <div class="flex items-center gap-3">
-                <div class="relative w-8 h-8 flex items-center justify-center">
-                    <span class="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
-                </div>
-                <span class="text-xl font-bold text-slate-900 tracking-wide">PIXSOFT</span>
+        <div class="h-20 flex items-center justify-center px-8 border-b border-white/5">
+            <div class="w-32 h-16 flex items-center justify-center">
+                <img src="../img/Logo.png" alt="PIXSOFT Logo" class="w-full h-full object-contain">
             </div>
         </div>
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
             <a href="index.html" class="${getLinkClass(
-    activePageId,
-    "dashboard"
-  )}">
+              activePageId,
+              "dashboard"
+            )}">
                 <i class="fa-solid fa-chart-line w-5 ${getIconClass(
-    activePageId,
-    "dashboard"
-  )}"></i>
+                  activePageId,
+                  "dashboard"
+                )}"></i>
                 Dashboard
             </a>
             <a href="productos.html" class="${getLinkClass(
-    activePageId,
-    "productos"
-  )}">
+              activePageId,
+              "productos"
+            )}">
                 <i class="fa-solid fa-box-open w-5 ${getIconClass(
-    activePageId,
-    "productos"
-  )}"></i>
+                  activePageId,
+                  "productos"
+                )}"></i>
                 Productos
             </a>
             <a href="arrendamiento.html" class="${getLinkClass(
-    activePageId,
-    "arrendamientos"
-  )}">
+              activePageId,
+              "arrendamientos"
+            )}">
                 <i class="fa-solid fa-file-contract w-5 ${getIconClass(
-    activePageId,
-    "arrendamientos"
-  )}"></i>
+                  activePageId,
+                  "arrendamientos"
+                )}"></i>
                 Arrendamientos
             </a>
             <a href="envios.html" class="${getLinkClass(
-    activePageId,
-    "envios"
-  )}">
+              activePageId,
+              "envios"
+            )}">
                 <i class="fa-solid fa-truck-fast w-5 ${getIconClass(
-    activePageId,
-    "envios"
-  )}"></i>
+                  activePageId,
+                  "envios"
+                )}"></i>
                 Envíos
             </a>
             <a href="#" class="${getLinkClass(activePageId, "clientes")}">
                 <i class="fa-solid fa-users w-5 ${getIconClass(
-    activePageId,
-    "clientes"
-  )}"></i>
+                  activePageId,
+                  "clientes"
+                )}"></i>
                 Clientes
             </a>
             <div class="pt-4 pb-2">
@@ -69,9 +66,9 @@ function renderSidebar(activePageId) {
             </div>
             <a href="#" class="${getLinkClass(activePageId, "configuracion")}">
                 <i class="fa-solid fa-gear w-5 ${getIconClass(
-    activePageId,
-    "configuracion"
-  )}"></i>
+                  activePageId,
+                  "configuracion"
+                )}"></i>
                 Configuración
             </a>
         </nav>
@@ -93,8 +90,35 @@ function renderSidebar(activePageId) {
   const container = document.getElementById("sidebar-container");
   if (container) {
     container.outerHTML = sidebarHTML;
+
+    // Initialize mobile menu toggle after sidebar is rendered
+    initializeMobileMenu();
   } else {
     console.error("Sidebar container not found");
+  }
+}
+
+/**
+ * Initializes the mobile menu toggle functionality
+ */
+function initializeMobileMenu() {
+  const menuBtn = document.getElementById("menu-btn");
+  const sidebar = document.getElementById("sidebar");
+
+  if (menuBtn && sidebar) {
+    // Toggle sidebar on menu button click
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener("click", (e) => {
+      if (window.innerWidth < 768) {
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+          sidebar.classList.add("-translate-x-full");
+        }
+      }
+    });
   }
 }
 
