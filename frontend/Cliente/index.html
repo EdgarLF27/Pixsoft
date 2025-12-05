@@ -50,10 +50,51 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-4">
-                    <a href="../cart.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
-                        <i class="fa-solid fa-cart-shopping text-xl"></i>
-                        <span id="cart-item-count" class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
-                    </a>
+                    <div class="relative">
+                        <a href="../cart.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative block">
+                            <i class="fa-solid fa-cart-shopping text-xl"></i>
+                            <span id="cart-item-count" class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
+                        </a>
+                        
+                        <!-- Cart Dropdown -->
+                        <div id="cart-dropdown" class="hidden opacity-0 scale-95 transition-all duration-200 absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                            <!-- Empty Cart Message -->
+                            <div id="cart-empty-message" class="p-8 text-center">
+                                <i class="fa-solid fa-cart-shopping text-5xl text-slate-300 mb-3"></i>
+                                <p class="text-slate-500 font-medium">Tu carrito está vacío</p>
+                                <p class="text-slate-400 text-sm mt-1">Agrega productos para comenzar</p>
+                            </div>
+                            
+                            <!-- Cart Content -->
+                            <div id="cart-content" class="hidden">
+                                <!-- Header -->
+                                <div class="px-4 py-3 border-b border-slate-200 bg-slate-50/50">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-bold text-slate-900">Mi Carrito</h3>
+                                        <button onclick="clearCart()" class="text-xs text-red-500 hover:text-red-600 transition-colors font-medium">
+                                            Vaciar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cart Items -->
+                                <div id="cart-items" class="max-h-80 overflow-y-auto p-2">
+                                    <!-- Items will be rendered here by JavaScript -->
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div class="border-t border-slate-200 p-4 bg-slate-50/50">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-slate-600 font-medium">Subtotal:</span>
+                                        <span id="cart-total" class="text-xl font-bold text-slate-900">$0.00</span>
+                                    </div>
+                                    <a href="../cart.html" class="block w-full py-2.5 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white text-center font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
+                                        Ver Carrito Completo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <a href="profile.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Mi Perfil">
                         <i class="fa-solid fa-user text-xl"></i>
                     </a>
@@ -126,132 +167,13 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <!-- Product Card (Venta) -->
-            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
-                <div class="absolute top-4 left-4 z-10">
-                    <span class="px-2 py-1 rounded bg-green-100 text-green-600 text-xs font-bold border border-green-200">VENTA</span>
-                </div>
-                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
-                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
-                    <img src="https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_UF894,1000_QL80_.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
-                </div>
-                <div class="flex-1 flex flex-col">
-                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">ASUS ROG Strix GeForce RTX 4090 OC Edition 24GB</h3>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="flex text-yellow-400 text-xs">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
-                        </div>
-                        <span class="text-xs text-slate-400">(24)</span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-end justify-between mb-3">
-                            <div>
-                                <p class="text-xs text-slate-400 line-through">$42,999</p>
-                                <p class="text-xl font-bold text-slate-900">$38,500</p>
-                            </div>
-                            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-circle mr-1"></i>Stock</span>
-                        </div>
-                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-primary border border-slate-200 hover:border-pixsoft-primary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2 group/btn">
-                            <i class="fa-solid fa-cart-plus group-hover/btn:scale-110 transition-transform"></i> Agregar
-                        </button>
-                    </div>
-                </div>
+        <!-- Products Grid (Dynamic) -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Loading State -->
+            <div class="col-span-full text-center py-12">
+                <i class="fa-solid fa-spinner fa-spin text-5xl text-pixsoft-primary mb-4"></i>
+                <p class="text-slate-500 text-lg">Cargando productos...</p>
             </div>
-
-            <!-- Product Card (Leasing) -->
-            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
-                <div class="absolute top-4 left-4 z-10">
-                    <span class="px-2 py-1 rounded bg-pixsoft-primary/10 text-pixsoft-primary text-xs font-bold border border-pixsoft-primary/20">LEASING</span>
-                </div>
-                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
-                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
-                    <img src="https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-3420/media-gallery/peripherals_laptop_latitude_3420_gallery_1.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=555&qlt=100,1&resMode=sharp2&size=555,402&chrss=full" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
-                </div>
-                <div class="flex-1 flex flex-col">
-                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Dell Latitude 3420 Intel Core i5 16GB RAM 512GB SSD</h3>
-                    <p class="text-xs text-slate-500 mb-4">Ideal para trabajo remoto y oficina</p>
-                    <div class="mt-auto">
-                        <div class="flex items-end justify-between mb-3">
-                            <div>
-                                <p class="text-xs text-slate-400">Renta mensual desde</p>
-                                <p class="text-xl font-bold text-pixsoft-primary">$850 <span class="text-xs font-normal text-slate-400">/mes</span></p>
-                            </div>
-                        </div>
-                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-secondary border border-slate-200 hover:border-pixsoft-secondary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2">
-                            Ver Planes
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Product Card (Venta) -->
-             <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
-                <div class="absolute top-4 left-4 z-10">
-                    <span class="px-2 py-1 rounded bg-green-100 text-green-600 text-xs font-bold border border-green-200">VENTA</span>
-                </div>
-                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
-                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
-                    <img src="https://www.cyberpuerta.mx/img/product/XL/CP-AMD-100-100000593WOF-1.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
-                </div>
-                <div class="flex-1 flex flex-col">
-                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Procesador AMD Ryzen 9 7950X 4.5GHz</h3>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="flex text-yellow-400 text-xs">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <span class="text-xs text-slate-400">(128)</span>
-                    </div>
-                    <div class="mt-auto">
-                        <div class="flex items-end justify-between mb-3">
-                            <div>
-                                <p class="text-xs text-slate-400 line-through">$11,500</p>
-                                <p class="text-xl font-bold text-slate-900">$10,299</p>
-                            </div>
-                            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-circle mr-1"></i>Stock</span>
-                        </div>
-                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-primary border border-slate-200 hover:border-pixsoft-primary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2 group/btn">
-                            <i class="fa-solid fa-cart-plus group-hover/btn:scale-110 transition-transform"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card (Leasing) -->
-            <div class="glass-card rounded-xl p-4 flex flex-col group relative bg-white hover:shadow-xl transition-all border border-slate-100">
-                <div class="absolute top-4 left-4 z-10">
-                    <span class="px-2 py-1 rounded bg-pixsoft-primary/10 text-pixsoft-primary text-xs font-bold border border-pixsoft-primary/20">LEASING</span>
-                </div>
-                <div class="h-48 flex items-center justify-center mb-4 relative p-4">
-                    <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
-                    <img src="https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg" alt="Product" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
-                </div>
-                <div class="flex-1 flex flex-col">
-                    <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">Lenovo ThinkPad X1 Carbon Gen 10 i7 16GB</h3>
-                    <p class="text-xs text-slate-500 mb-4">Ultrabook empresarial premium</p>
-                    <div class="mt-auto">
-                        <div class="flex items-end justify-between mb-3">
-                            <div>
-                                <p class="text-xs text-slate-400">Renta mensual desde</p>
-                                <p class="text-xl font-bold text-pixsoft-primary">$1,200 <span class="text-xs font-normal text-slate-400">/mes</span></p>
-                            </div>
-                        </div>
-                        <button class="w-full py-2 rounded-lg bg-slate-100 hover:bg-pixsoft-secondary border border-slate-200 hover:border-pixsoft-secondary text-slate-700 hover:text-white transition-all font-medium flex items-center justify-center gap-2">
-                            Ver Planes
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </main>
@@ -323,6 +245,13 @@
         // Opcional: Actualizar el contador del carrito (si tienes esa info disponible)
         // document.getElementById('cart-item-count').innerText = numeroDeItems;
     </script>
+
+    <!-- Script para gestión del carrito -->
+    <script src="../js/cart.js"></script>
+    
+    <!-- Script para cargar productos dinámicamente -->
+    <script src="../js/indexCliente.js"></script>
+
 
 </body>
 </html>
