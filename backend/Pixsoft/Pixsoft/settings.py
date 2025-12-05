@@ -42,16 +42,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'users',
     'api',
     'leasing',
     'products',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -82,25 +91,16 @@ WSGI_APPLICATION = 'Pixsoft.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Usando SQLite temporalmente para testing (cambia a PostgreSQL en producción)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
-
-# Configuración original de PostgreSQL (comentada temporalmente)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME'),
-#         'USER': os.environ.get('DB_USER'),
-#         'PASSWORD': os.environ.get('DB_PASSWORD'),
-#         'HOST': os.environ.get('DB_HOST'),
-#         'PORT': os.environ.get('DB_PORT'),
-#     }
-# }
 
 
 # Password validation
@@ -139,12 +139,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Django Rest Framework configuration
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.authentication.SupabaseAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-}
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
+]
+

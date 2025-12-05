@@ -1,6 +1,13 @@
-from django.urls import path
-from .views import ProtectedTestView
+from django.urls import path, include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-    path('test/', ProtectedTestView.as_view(), name='protected_test_view'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/', include('users.urls')),
+    path('products/', include('products.urls')),
+    path('leasing/', include('leasing.urls')),
 ]
