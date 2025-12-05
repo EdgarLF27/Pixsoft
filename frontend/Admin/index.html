@@ -16,48 +16,7 @@
 <body class="h-screen overflow-hidden flex text-sm">
 
     <!-- Sidebar -->
-    <aside
-        class="w-64 glass-sidebar flex flex-col h-full fixed md:relative z-50 transition-transform -translate-x-full md:translate-x-0"
-        id="sidebar">
-        <!-- Logo -->
-        <div class="h-20 flex items-center px-8 border-b border-white/5">
-            <div class="flex items-center gap-3">
-                <div class="relative w-8 h-8 flex items-center justify-center">
-                    <span
-                        class="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
-                        style="font-family: sans-serif;">P</span>
-                </div>
-                <span class="text-xl font-bold text-slate-900 tracking-wide">PIXSOFT</span>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-            <a href="#"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl bg-linear-to-r from-[#5DADE2]/20 to-transparent text-[#5DADE2] border border-[#5DADE2]/20 font-medium transition-all">
-                <i class="fa-solid fa-chart-line w-5"></i>
-                </div>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
-                    <i class="fa-solid fa-gear w-5 group-hover:text-[#5DADE2] transition-colors"></i>
-                    Configuración
-                </a>
-        </nav>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t border-white/5">
-            <div
-                class="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=5DADE2&color=fff" alt="Admin"
-                    class="w-8 h-8 rounded-full">
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-slate-900 truncate">Administrador</p>
-                    <p class="text-xs text-slate-500 truncate">admin@pixsoft.com</p>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-            </div>
-        </div>
-    </aside>
+    <div id="sidebar-container"></div>
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
@@ -83,8 +42,7 @@
                         <i class="fa-regular fa-bell"></i>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                     </button>
-                    <button
-                        class="px-4 py-2.5 rounded-lg bg-[#5DADE2] hover:bg-[#4a90bd] text-white font-medium shadow-lg shadow-[#5DADE2]/20 transition-all flex items-center gap-2">
+                    <button class="btn-primary">
                         <i class="fa-solid fa-plus"></i> Nuevo Pedido
                     </button>
                 </div>
@@ -230,7 +188,7 @@
                             <i
                                 class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
                             <input type="text" placeholder="Buscar pedido..."
-                                class="pl-8 pr-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#5DADE2]/50 transition-all w-full sm:w-64">
+                                class="input-field pl-8 bg-slate-100 sm:w-64">
                         </div>
                         <button
                             class="px-3 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all">
@@ -365,6 +323,12 @@
             </div>
         </div>
     </main>
+    <script src="../js/components/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar('dashboard');
+        });
+    </script>
     <script src="../js/indexAdmin.js"></script>
 </body>
 
