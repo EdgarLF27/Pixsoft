@@ -1,16 +1,14 @@
-from rest_framework.routers import DefaultRouter
+# leasing/urls.py
 from django.urls import path, include
-from .views import ProductListView, RentalQuoteView, RentalContractViewSet # Importar RentalContractViewSet
+from rest_framework.routers import DefaultRouter
+from .views import ProductListView, ContractViewSet, PlanListView, calculate_quote
 
 router = DefaultRouter()
-# Registro del ViewSet para contratos
-router.register(r'contracts', RentalContractViewSet)
+router.register(r'contracts', ContractViewSet, basename='contract')
 
 urlpatterns = [
-    # Rutas para ViewSets (GET /contracts/, POST /contracts/, etc.)
-    path('', include(router.urls)), 
-    
-    # Rutas para las APIView (cotizaciones y listas simples)
     path('products/', ProductListView.as_view(), name='product-list'),
-    path('quote/', RentalQuoteView.as_view(), name='rental-quote'),
+    path('plans/', PlanListView.as_view(), name='plan-list'),
+    path('quote/', calculate_quote, name='calculate-quote'),  # ¡ESTA ES LA RUTA QUE FALTABA!
+    path('', include(router.urls)),
 ]

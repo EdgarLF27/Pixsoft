@@ -1,149 +1,155 @@
+# leasing/views.py
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny # Importar AllowAny
-from .models import RentalProduct, RentalPlan, RentalContract
-from .serializers import RentalQuoteSerializer, RentalProductSerializer, RentalContractSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from .models import RentalProduct, RentalContract, RentalPlan, RentalCategory
+from .serializers import RentalProductSerializer, RentalContractSerializer, RentalPlanSerializer
 from decimal import Decimal
 import datetime
 from django.utils import timezone
+from rest_framework.decorators import api_view, permission_classes
+from datetime import datetime as dt
 
-# --- Lógica Auxiliar de Cálculo ---
-# NOTA: Esta es una función simplificada para calcular la duración.
-def calculate_duration_in_units(start_date, end_date, period_type):
-    """Calcula la duración en la unidad del periodo (días, semanas, meses, años)."""
-    
-    if start_date >= end_date:
-        return 0
-
-    duration = end_date - start_date
-    
-    if period_type == 'DAILY':
-        return duration.days
-    elif period_type == 'WEEKLY':
-        # Calcula semanas redondeando hacia arriba
-        return (duration.days + 6) // 7
-    elif period_type == 'MONTHLY':
-        # Cálculo simple de meses. Mejor usar una librería para precisión.
-        return (duration.days / 30)
-    elif period_type == 'ANNUAL':
-        return (duration.days / 365)
-    
-    return 1 # Fallback
-
-# -----------------------------------------------------------------------------------
-# --- Vistas para Listar Productos y Cotizaciones (Mantienes tu estructura APIView) ---
-# -----------------------------------------------------------------------------------
-
+# Vista para productos
 class ProductListView(APIView):
-    """Lista todos los productos disponibles para arrendamiento."""
     permission_classes = [AllowAny]
+    
     def get(self, request):
-        products = RentalProduct.objects.filter(stock_quantity__gt=0)
+        products = RentalProduct.objects.all()
         serializer = RentalProductSerializer(products, many=True)
         return Response(serializer.data)
 
-class RentalQuoteView(APIView):
-    """Endpoint para calcular la cotización de un arrendamiento."""
-    permission_classes = [AllowAny]
-    def post(self, request):
-        serializer = RentalQuoteSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            data = serializer.validated_data
-            
-            product = data['product']
-            plan = data['plan']
-            duration = data['duration']
-            include_maintenance = data['include_maintenance']
-            
-            # --- Lógica de Cálculo de Cotización ---
-            base_cost = plan.base_price * Decimal(duration)
-            
-            maintenance_cost = Decimal(0.00)
-            if include_maintenance:
-                maintenance_cost = plan.maintenance_price * Decimal(duration)
-            
-            total_cost = base_cost + maintenance_cost
-            
-            # --- Respuesta de Cotización ---
-            response_data = {
-                "product_id": product.id,
-                "product_name": product.name,
-                "period": plan.get_period_display(),
-                "duration": duration,
-                "base_price_per_unit": plan.base_price,
-                "maintenance_price_per_unit": plan.maintenance_price,
-                "total_base_cost": base_cost,
-                "maintenance_cost": maintenance_cost,
-                "total_cost": total_cost,
-                "message": "Cotización calculada exitosamente."
-            }
-            
-            return Response(response_data, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# -----------------------------------------------------------------------------------
-# --- ViewSet para Contratos (Implementa la lógica del requisito final) ---
-# -----------------------------------------------------------------------------------
-
-class RentalContractViewSet(viewsets.ModelViewSet):
-    """
-    Permite crear, ver y actualizar Contratos de Arrendamiento.
-    Implementa la lógica de: 1. Cálculo de total_cost, 2. Llenado de contract_document.
-    """
-    queryset = RentalContract.objects.all().select_related('product', 'plan', 'customer')
+# Vista para contratos
+class ContractViewSet(viewsets.ModelViewSet):
+    queryset = RentalContract.objects.all()
     serializer_class = RentalContractSerializer
-    permission_classes = [AllowAny] # Temporalmente AllowAny para Postman
+    permission_classes = [AllowAny]
+
+# Vista para planes
+class PlanListView(APIView):
+    permission_classes = [AllowAny]
     
-    # Sobrescribimos el método de creación
-    def perform_create(self, serializer):
-        
-        plan = serializer.validated_data['plan']
-        start_date = serializer.validated_data['start_date']
-        end_date = serializer.validated_data['end_date']
-        
-        # 1. CÁLCULO DEL COSTO TOTAL BASADO EN LA DURACIÓN
-        
-        # Obtener el número de unidades de periodo (ej: 12 meses)
-        # Esto usará la función auxiliar. Usamos el campo period del plan.
-        duration_units = calculate_duration_in_units(start_date, end_date, plan.period)
-        
-        if duration_units <= 0:
-             # Este es un error que debería capturar el Serializer
-             raise serializers.ValidationError({"end_date": "La fecha de finalización debe ser posterior a la de inicio."})
+    def get(self, request):
+        plans = RentalPlan.objects.all()
+        serializer = RentalPlanSerializer(plans, many=True)
+        return Response(serializer.data)
 
-        # Costo total (Base + Mantenimiento) * Duración
-        total_cost_calculated = (plan.base_price + plan.maintenance_price) * Decimal(duration_units)
-
-        # 2. LLENADO DEL DOCUMENTO DE TÉRMINOS Y CONDICIONES
+# VISTA DE COTIZACIÓN - ¡ESTA ES LA QUE FALTABA!
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def calculate_quote(request):
+    try:
+        data = request.data
         
-        # Creamos una plantilla de contrato con los datos dinámicos
-        contract_terms = f"""
-        CONTRATO DE ARRENDAMIENTO PIXSOFT
-
-        FECHA DE INICIO: {start_date}
-        FECHA DE FINALIZACIÓN: {end_date}
-        DURACIÓN ESTIMADA: {duration_units} {plan.get_period_display().lower()}s.
-
-        EQUIPO: {plan.product.name} ({plan.product.sku})
-        ESPECIFICACIONES PRINCIPALES: {plan.product.specifications}
-
-        TARIFA BASE POR PERIODO: ${plan.base_price}
-        TARIFA MANTENIMIENTO/SEGURO: ${plan.maintenance_price}
-        ------------------------------------------
-        COSTO TOTAL DEL CONTRATO: ${total_cost_calculated}
-
-        TÉRMINOS LEGALES: El presente contrato establece un compromiso de arrendamiento
-        no cancelable y está sujeto a las cláusulas estándar de Pixsoft disponibles en nuestro sitio web.
-        """
+        # Obtener datos de la solicitud
+        product_id = data.get('product_id')
+        period = data.get('period', 'MONTHLY')
+        start_date_str = data.get('start_date')
+        end_date_str = data.get('end_date')
         
-        # 3. Guardar el objeto, inyectando los valores calculados
-        serializer.save(
-            total_cost=total_cost_calculated,
-            contract_document=contract_terms,
-            status='PENDING', # El estado por defecto es Pendiente de firma/pago
-            is_signed=False # Por defecto, no está firmado
+        # Validaciones básicas
+        if not all([product_id, start_date_str, end_date_str]):
+            return Response(
+                {'error': 'Faltan campos requeridos: product_id, start_date, end_date'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Obtener el producto
+        try:
+            product = RentalProduct.objects.get(id=product_id)
+        except RentalProduct.DoesNotExist:
+            return Response(
+                {'error': 'Producto no encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Obtener el plan correspondiente
+        try:
+            plan = RentalPlan.objects.get(product=product, period=period)
+        except RentalPlan.DoesNotExist:
+            # Listar los planes disponibles para este producto
+            available_plans = RentalPlan.objects.filter(product=product)
+            available_periods = [p.get_period_display() for p in available_plans]
+            
+            return Response({
+                'error': f'No hay un plan {period} para este producto',
+                'available_plans': available_periods,
+                'product_name': product.name
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Calcular duración
+        start_date = dt.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = dt.strptime(end_date_str, '%Y-%m-%d').date()
+        duration_days = (end_date - start_date).days
+        
+        if duration_days <= 0:
+            return Response(
+                {'error': 'La fecha de fin debe ser posterior a la fecha de inicio'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Calcular cantidad de periodos
+        period_multiplier = {
+            'DAILY': 1,
+            'WEEKLY': 7,
+            'MONTHLY': 30,  # Simplificado
+            'ANNUAL': 365   # Simplificado
+        }
+        
+        duration_units = max(1, duration_days // period_multiplier.get(period, 30))
+        
+        # Calcular costo total
+        base_cost = plan.base_price * Decimal(duration_units)
+        maintenance_cost = plan.maintenance_price * Decimal(duration_units)
+        total_cost = base_cost + maintenance_cost
+        
+        # Generar documento de contrato
+        contract_document = f"""CONTRATO DE ARRENDAMIENTO - {product.name}
+
+DETALLES DEL CONTRATO:
+• Producto: {product.name}
+• SKU: {product.sku}
+• Plan: {plan.get_period_display()}
+• Periodo: {start_date_str} a {end_date_str}
+• Duración: {duration_days} días ({duration_units} {plan.get_period_display().lower()}(s))
+
+DETALLES DE COSTO:
+• Precio base por {plan.get_period_display().lower()}: ${float(plan.base_price):.2f}
+• Mantenimiento/seguro por {plan.get_period_display().lower()}: ${float(plan.maintenance_price):.2f}
+• Costo base: ${float(base_cost):.2f}
+• Costo mantenimiento: ${float(maintenance_cost):.2f}
+• TOTAL: ${float(total_cost):.2f}
+
+TÉRMINOS Y CONDICIONES:
+1. El equipo debe ser devuelto en las mismas condiciones.
+2. Cualquier daño será responsabilidad del arrendatario.
+3. El pago debe realizarse al inicio del contrato.
+4. Cancelaciones con menos de 24h de anticipación incurren en penalización.
+
+FIRMA DEL CLIENTE: _________________________
+FECHA: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"""
+        
+        return Response({
+            'product_id': product.id,
+            'product_name': product.name,
+            'plan_id': plan.id,
+            'plan_period': plan.get_period_display(),
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+            'duration_days': duration_days,
+            'duration_units': duration_units,
+            'base_price_per_unit': float(plan.base_price),
+            'maintenance_price_per_unit': float(plan.maintenance_price),
+            'total_cost': float(total_cost),
+            'contract_document': contract_document
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Error interno: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
