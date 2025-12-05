@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras</title>
     <style>
-        body { font-family: sans-serif; margin: 2em; }
-        .cart-container { max-width: 800px; margin: auto; }
-        .cart-item { border-bottom: 1px solid #ccc; padding: 10px 0; }
-        .add-item-form { margin-top: 2em; border-top: 2px solid #000; padding-top: 1em; }
-        #token { width: 100%; padding: 8px; margin-bottom: 1em; }
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+        }
+
+        .cart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .add-item-form {
+            margin-top: 2em;
+            border-top: 2px solid #000;
+            padding-top: 1em;
+        }
+
+        #token {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 1em;
+        }
     </style>
     <link rel="stylesheet" href="src/output.css">
 </head>
+
 <body>
 
     <div class="cart-container">
@@ -28,8 +51,9 @@
 
         <div class="add-item-form">
             <h2>Añadir Producto (Ejemplo)</h2>
-            <p>Este es un formulario de ejemplo para añadir productos. Necesitarás los IDs reales de tu base de datos.</p>
-            
+            <p>Este es un formulario de ejemplo para añadir productos. Necesitarás los IDs reales de tu base de datos.
+            </p>
+
             <form id="addItemForm" onsubmit="addItemToCart(event)">
                 <label for="product_type">Tipo:</label>
                 <select id="product_type" name="product_type">
@@ -53,15 +77,15 @@
 
     <script>
         // --- Protección de Ruta ---
-        (function() {
+        (function () {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('Acceso denegado. Debes iniciar sesión.');
                 // Redirige al login. Ajusta la ruta si es necesario.
-                window.location.href = '/frontend/Login.html'; 
+                window.location.href = '/frontend/Login.html';
             }
         })();
-        
+
         const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
         // Cargar el carrito automáticamente al abrir la página
@@ -114,6 +138,7 @@
                         `;
                     });
                     itemsHtml += `<hr><p><b>Total del Carrito: S/.${data.total_cart_price}</b></p>`;
+                    itemsHtml += `<button onclick="window.location.href='checkout.html'" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; margin-top: 10px;">Ir a Pagar</button>`;
                     cartContent.innerHTML = itemsHtml;
 
                 } catch (error) {
@@ -144,17 +169,17 @@
                     headers: headers,
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
 
                 if (!response.ok) {
                     throw new Error(JSON.stringify(result));
                 }
-                
+
                 alert('¡Producto añadido!');
                 fetchCart(); // Actualizar la vista del carrito
 
-            } catch(error) {
+            } catch (error) {
                 console.error('Error al añadir producto:', error);
                 alert('Error al añadir producto: ' + error.message);
             }
@@ -162,7 +187,7 @@
 
         async function deleteCartItem(itemId) {
             const headers = getAuthHeaders();
-            
+
             if (!confirm('¿Estás seguro de que quieres eliminar este ítem?')) {
                 return;
             }
@@ -174,14 +199,14 @@
                 });
 
                 if (response.status !== 204) {
-                     const result = await response.json();
-                     throw new Error(JSON.stringify(result));
+                    const result = await response.json();
+                    throw new Error(JSON.stringify(result));
                 }
 
                 alert('Ítem eliminado.');
                 fetchCart(); // Actualizar la vista del carrito
 
-            } catch(error) {
+            } catch (error) {
                 console.error('Error al eliminar el ítem:', error);
                 alert('Error al eliminar el ítem: ' + error.message);
             }
@@ -189,4 +214,5 @@
     </script>
 
 </body>
+
 </html>
