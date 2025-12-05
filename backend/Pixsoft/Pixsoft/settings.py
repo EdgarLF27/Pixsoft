@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'shipping',
+    'billing',
 ]
 
 REST_FRAMEWORK = {
@@ -128,3 +129,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Stripe Configuration
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
