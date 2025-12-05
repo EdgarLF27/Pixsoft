@@ -401,6 +401,9 @@
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
   }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
   }
@@ -679,6 +682,9 @@
   }
   .animate-pulse {
     animation: var(--animate-pulse);
+  }
+  .cursor-not-allowed {
+    cursor: not-allowed;
   }
   .cursor-pointer {
     cursor: pointer;
@@ -1244,6 +1250,9 @@
   .pt-5 {
     padding-top: calc(var(--spacing) * 5);
   }
+  .pt-6 {
+    padding-top: calc(var(--spacing) * 6);
+  }
   .pt-8 {
     padding-top: calc(var(--spacing) * 8);
   }
@@ -1270,6 +1279,9 @@
   }
   .pb-3 {
     padding-bottom: calc(var(--spacing) * 3);
+  }
+  .pb-4 {
+    padding-bottom: calc(var(--spacing) * 4);
   }
   .pb-8 {
     padding-bottom: calc(var(--spacing) * 8);
@@ -2029,6 +2041,11 @@
       --tw-ring-color: #5DADE2;
     }
   }
+  .focus\:ring-\[\#5DADE2\]\/20 {
+    &:focus {
+      --tw-ring-color: color-mix(in oklab, #5DADE2 20%, transparent);
+    }
+  }
   .focus\:ring-\[\#34D399\] {
     &:focus {
       --tw-ring-color: #34D399;
@@ -2107,6 +2124,11 @@
   .md\:col-span-1 {
     @media (width >= 48rem) {
       grid-column: span 1 / span 1;
+    }
+  }
+  .md\:col-span-2 {
+    @media (width >= 48rem) {
+      grid-column: span 2 / span 2;
     }
   }
   .md\:block {
