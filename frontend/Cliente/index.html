@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,16 +12,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // --- Protección de Ruta ---
-        (function() {
+        (function () {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('Acceso denegado. Debes iniciar sesión.');
                 // Redirige al login.
-                window.location.href = '../Login.html'; 
+                window.location.href = '../Login.html';
             }
         })();
     </script>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
     <!-- Navbar -->
@@ -31,7 +33,9 @@
                 <div class="shrink-0 flex items-center gap-3">
                     <!-- Logo Icon (Simulado con CSS basado en la imagen) -->
                     <div class="relative w-10 h-10 flex items-center justify-center">
-                        <span class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                        <span
+                            class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
+                            style="font-family: sans-serif;">P</span>
                     </div>
                     <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
                 </div>
@@ -40,9 +44,10 @@
                 <div class="flex-1 max-w-2xl hidden md:block">
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-search text-slate-400 group-focus-within:text-pixsoft-primary transition-colors"></i>
+                            <i
+                                class="fa-solid fa-search text-slate-400 group-focus-within:text-pixsoft-primary transition-colors"></i>
                         </div>
-                        <input type="text" 
+                        <input type="text"
                             class="block w-full pl-11 pr-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-pixsoft-primary/50 focus:bg-white transition-all shadow-sm"
                             placeholder="Buscar hardware, componentes, laptops...">
                     </div>
@@ -51,69 +56,79 @@
                 <!-- Actions -->
                 <div class="flex items-center gap-4">
                     <div class="relative">
-                        <a href="../cart.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative block">
+                        <a href="../cart.html"
+                            class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative block">
                             <i class="fa-solid fa-cart-shopping text-xl"></i>
-                            <span id="cart-item-count" class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
+                            <span id="cart-item-count"
+                                class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
                         </a>
-                        
+
                         <!-- Cart Dropdown -->
-                        <div id="cart-dropdown" class="hidden opacity-0 scale-95 transition-all duration-200 absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                        <div id="cart-dropdown"
+                            class="hidden opacity-0 scale-95 transition-all duration-200 absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
                             <!-- Empty Cart Message -->
                             <div id="cart-empty-message" class="p-8 text-center">
                                 <i class="fa-solid fa-cart-shopping text-5xl text-slate-300 mb-3"></i>
                                 <p class="text-slate-500 font-medium">Tu carrito está vacío</p>
                                 <p class="text-slate-400 text-sm mt-1">Agrega productos para comenzar</p>
                             </div>
-                            
+
                             <!-- Cart Content -->
                             <div id="cart-content" class="hidden">
                                 <!-- Header -->
                                 <div class="px-4 py-3 border-b border-slate-200 bg-slate-50/50">
                                     <div class="flex items-center justify-between">
                                         <h3 class="font-bold text-slate-900">Mi Carrito</h3>
-                                        <button onclick="clearCart()" class="text-xs text-red-500 hover:text-red-600 transition-colors font-medium">
+                                        <button onclick="clearCart()"
+                                            class="text-xs text-red-500 hover:text-red-600 transition-colors font-medium">
                                             Vaciar
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Cart Items -->
                                 <div id="cart-items" class="max-h-80 overflow-y-auto p-2">
                                     <!-- Items will be rendered here by JavaScript -->
                                 </div>
-                                
+
                                 <!-- Footer -->
                                 <div class="border-t border-slate-200 p-4 bg-slate-50/50">
                                     <div class="flex items-center justify-between mb-3">
                                         <span class="text-slate-600 font-medium">Subtotal:</span>
                                         <span id="cart-total" class="text-xl font-bold text-slate-900">$0.00</span>
                                     </div>
-                                    <a href="../cart.html" class="block w-full py-2.5 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white text-center font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
+                                    <a href="../cart.html"
+                                        class="block w-full py-2.5 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white text-center font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
                                         Ver Carrito Completo
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <a href="profile.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Mi Perfil">
+                    <a href="profile.html"
+                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative"
+                        title="Mi Perfil">
                         <i class="fa-solid fa-user text-xl"></i>
                     </a>
-                    <button onclick="logout()" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
+                    <button onclick="logout()"
+                        class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
                         <i class="fa-solid fa-sign-out-alt"></i>
                         <span>Cerrar Sesión</span>
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <!-- Secondary Nav -->
         <div class="border-t border-slate-200 bg-white/50 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center h-12 gap-8 overflow-x-auto text-sm font-medium text-slate-600 no-scrollbar">
+                <div
+                    class="flex items-center h-12 gap-8 overflow-x-auto text-sm font-medium text-slate-600 no-scrollbar">
                     <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Hardware</a>
                     <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Computadoras</a>
                     <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Laptops</a>
-                    <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap text-pixsoft-primary font-semibold">Arrendamiento</a>
+                    <a href="arrendamiento.html"
+                        class="hover:text-pixsoft-primary transition-colors whitespace-nowrap text-pixsoft-primary font-semibold">Arrendamiento</a>
                     <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Software</a>
                     <a href="#" class="hover:text-pixsoft-primary transition-colors whitespace-nowrap">Accesorios</a>
                     <a href="#" class="hover:text-red-500 transition-colors whitespace-nowrap">Ofertas</a>
@@ -124,35 +139,49 @@
 
     <!-- Main Content -->
     <main class="flex-1 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        
+
         <!-- Hero Section -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
             <!-- Venta Hero -->
-            <div class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
+            <div
+                class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
                 <div class="absolute inset-0 bg-linear-to-br from-blue-50 to-transparent opacity-50"></div>
                 <div class="relative z-10 max-w-md">
-                    <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mb-4 border border-blue-200">VENTA DIRECTA</span>
-                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Potencia tu Setup <br><span class="text-blue-500">al Máximo Nivel</span></h2>
-                    <p class="text-slate-600 mb-8 text-lg">Encuentra las últimas tarjetas gráficas, procesadores y componentes de alto rendimiento.</p>
-                    <button class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-1">
+                    <span
+                        class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mb-4 border border-blue-200">VENTA
+                        DIRECTA</span>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Potencia tu Setup <br><span
+                            class="text-blue-500">al Máximo Nivel</span></h2>
+                    <p class="text-slate-600 mb-8 text-lg">Encuentra las últimas tarjetas gráficas, procesadores y
+                        componentes de alto rendimiento.</p>
+                    <button
+                        class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-1">
                         Ver Catálogo de Venta
                     </button>
                 </div>
-                <img src="https://assets.nvidia.partners/images/png/geforce-rtx-4090-back.png" alt="GPU" class="absolute -right-20 -bottom-20 w-96 opacity-80 group-hover:scale-110 transition-all duration-500 rotate-12 drop-shadow-2xl">
+                <img src="https://assets.nvidia.partners/images/png/geforce-rtx-4090-back.png" alt="GPU"
+                    class="absolute -right-20 -bottom-20 w-96 opacity-80 group-hover:scale-110 transition-all duration-500 rotate-12 drop-shadow-2xl">
             </div>
 
             <!-- Leasing Hero -->
-            <div class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
+            <div
+                class="glass-card rounded-2xl p-8 relative overflow-hidden group h-[400px] flex flex-col justify-center bg-white shadow-xl hover:shadow-2xl transition-all">
                 <div class="absolute inset-0 bg-linear-to-br from-cyan-50 to-transparent opacity-50"></div>
                 <div class="relative z-10 max-w-md">
-                    <span class="inline-block px-3 py-1 rounded-full bg-cyan-100 text-cyan-600 text-xs font-bold mb-4 border border-cyan-200">LEASING EMPRESARIAL</span>
-                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Tecnología sin <br><span class="text-pixsoft-primary">Descapitalizarte</span></h2>
-                    <p class="text-slate-600 mb-8 text-lg">Renta equipos de cómputo de última generación con planes flexibles y soporte incluido.</p>
-                    <button class="px-6 py-3 rounded-xl bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold shadow-lg shadow-pixsoft-primary/20 transition-all hover:-translate-y-1">
+                    <span
+                        class="inline-block px-3 py-1 rounded-full bg-cyan-100 text-cyan-600 text-xs font-bold mb-4 border border-cyan-200">LEASING
+                        EMPRESARIAL</span>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-4 leading-tight">Tecnología sin <br><span
+                            class="text-pixsoft-primary">Descapitalizarte</span></h2>
+                    <p class="text-slate-600 mb-8 text-lg">Renta equipos de cómputo de última generación con planes
+                        flexibles y soporte incluido.</p>
+                    <button onclick="window.location.href='arrendamiento.html'"
+                        class="px-6 py-3 rounded-xl bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold shadow-lg shadow-pixsoft-primary/20 transition-all hover:-translate-y-1">
                         Cotizar Arrendamiento
                     </button>
                 </div>
-                <img src="https://pngimg.com/d/macbook_PNG55.png" alt="Laptop" class="absolute -right-10 bottom-10 w-80 opacity-90 group-hover:scale-110 transition-all duration-500 drop-shadow-2xl">
+                <img src="https://pngimg.com/d/macbook_PNG55.png" alt="Laptop"
+                    class="absolute -right-10 bottom-10 w-80 opacity-90 group-hover:scale-110 transition-all duration-500 drop-shadow-2xl">
             </div>
         </div>
 
@@ -162,7 +191,8 @@
                 <h2 class="text-2xl font-bold text-slate-900 mb-2">Productos Destacados</h2>
                 <p class="text-slate-500">Lo mejor en hardware y soluciones empresariales</p>
             </div>
-            <a href="#" class="text-pixsoft-primary hover:text-pixsoft-secondary transition-colors text-sm font-medium flex items-center gap-1">
+            <a href="#"
+                class="text-pixsoft-primary hover:text-pixsoft-secondary transition-colors text-sm font-medium flex items-center gap-1">
                 Ver todo <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
@@ -185,15 +215,21 @@
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="relative w-8 h-8 flex items-center justify-center">
-                            <span class="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                            <span
+                                class="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
+                                style="font-family: sans-serif;">P</span>
                         </div>
                         <span class="text-xl font-bold text-slate-900">PIXSOFT</span>
                     </div>
-                    <p class="text-slate-500 text-sm mb-4">Tu aliado tecnológico en hardware de alto rendimiento y soluciones de arrendamiento empresarial.</p>
+                    <p class="text-slate-500 text-sm mb-4">Tu aliado tecnológico en hardware de alto rendimiento y
+                        soluciones de arrendamiento empresarial.</p>
                     <div class="flex gap-4">
-                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i
+                                class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-pixsoft-primary transition-colors"><i
+                                class="fa-brands fa-instagram"></i></a>
                     </div>
                 </div>
                 <div>
@@ -208,8 +244,10 @@
                 <div>
                     <h4 class="text-slate-900 font-bold mb-4">Empresas</h4>
                     <ul class="space-y-2 text-sm text-slate-500">
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Arrendamiento de Equipo</a></li>
-                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Licenciamiento Software</a></li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Arrendamiento de Equipo</a>
+                        </li>
+                        <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Licenciamiento Software</a>
+                        </li>
                         <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Servidores</a></li>
                         <li><a href="#" class="hover:text-pixsoft-primary transition-colors">Cotizador B2B</a></li>
                     </ul>
@@ -241,17 +279,18 @@
             alert('Has cerrado la sesión.');
             window.location.href = '../Login.html';
         }
-        
+
         // Opcional: Actualizar el contador del carrito (si tienes esa info disponible)
         // document.getElementById('cart-item-count').innerText = numeroDeItems;
     </script>
 
     <!-- Script para gestión del carrito -->
     <script src="../js/cart.js"></script>
-    
+
     <!-- Script para cargar productos dinámicamente -->
     <script src="../js/indexCliente.js"></script>
 
 
 </body>
+
 </html>

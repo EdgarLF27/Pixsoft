@@ -21,7 +21,7 @@ class RentalProductSerializer(serializers.ModelSerializer):
         model = RentalProduct
         fields = [
             'id', 'name', 'description', 'category', 'category_name',
-            'specifications', 'sku', 'stock_quantity',
+            'specifications', 'sku', 'stock_quantity', 'image',
             'is_available', 'plans'
         ]
 

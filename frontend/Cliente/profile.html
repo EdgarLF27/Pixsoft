@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +12,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // --- Protección de Ruta ---
-        (function() {
+        (function () {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('Acceso denegado. Debes iniciar sesión.');
-                window.location.href = '../Login.html'; 
+                window.location.href = '../Login.html';
             }
         })();
     </script>
 </head>
+
 <body class="min-h-screen flex flex-col bg-slate-50">
 
     <!-- Navbar -->
@@ -29,21 +31,27 @@
                 <!-- Logo -->
                 <a href="index.html" class="shrink-0 flex items-center gap-3">
                     <div class="relative w-10 h-10 flex items-center justify-center">
-                        <span class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                        <span
+                            class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
+                            style="font-family: sans-serif;">P</span>
                     </div>
                     <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
                 </a>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-4">
-                    <a href="../cart.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
+                    <a href="../cart.html"
+                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative">
                         <i class="fa-solid fa-cart-shopping text-xl"></i>
-                        <span id="cart-item-count" class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
+                        <span id="cart-item-count"
+                            class="absolute -top-1 -right-1 w-5 h-5 bg-pixsoft-primary text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">0</span>
                     </a>
-                    <a href="profile.html" class="p-2 text-pixsoft-primary transition-colors relative" title="Mi Perfil">
+                    <a href="profile.html" class="p-2 text-pixsoft-primary transition-colors relative"
+                        title="Mi Perfil">
                         <i class="fa-solid fa-user text-xl"></i>
                     </a>
-                    <button onclick="logout()" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
+                    <button onclick="logout()"
+                        class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
                         <i class="fa-solid fa-sign-out-alt"></i>
                         <span>Cerrar Sesión</span>
                     </button>
@@ -54,7 +62,7 @@
 
     <!-- Main Content -->
     <main class="flex-1 pt-36 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
-        
+
         <div class="glass-card rounded-2xl p-8 bg-white shadow-xl border border-slate-100">
             <div class="mb-8 border-b border-slate-100 pb-4">
                 <h1 class="text-3xl font-bold text-slate-900">Mi Perfil</h1>
@@ -64,7 +72,8 @@
             <form id="profileForm" class="space-y-6">
                 <!-- Account Data -->
                 <div class="space-y-4">
-                    <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                    <h4
+                        class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
                         Datos de Cuenta
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -83,7 +92,8 @@
 
                 <!-- Personal Data -->
                 <div class="space-y-4 pt-4">
-                    <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                    <h4
+                        class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
                         Información Personal
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -112,7 +122,8 @@
 
                 <!-- Addresses -->
                 <div class="space-y-4 pt-4">
-                    <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                    <h4
+                        class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
                         Direcciones
                     </h4>
                     <div>
@@ -128,7 +139,8 @@
                 </div>
 
                 <div class="pt-6 flex justify-end gap-4">
-                    <a href="index.html" class="px-6 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors font-medium">
+                    <a href="index.html"
+                        class="px-6 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors font-medium">
                         Cancelar
                     </a>
                     <button type="submit"
@@ -137,6 +149,38 @@
                     </button>
                 </div>
             </form>
+        </div>
+
+        <!-- Order History Section -->
+        <div class="glass-card rounded-2xl p-8 bg-white shadow-xl border border-slate-100 mt-8">
+            <div class="mb-6 border-b border-slate-100 pb-4">
+                <h2 class="text-2xl font-bold text-slate-900">Historial de Pedidos</h2>
+                <p class="text-slate-500 mt-1">Revisa el estado de tus compras y arrendamientos.</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-500 text-sm border-b border-slate-200">
+                            <th class="py-3 px-4 font-semibold">ID Pedido</th>
+                            <th class="py-3 px-4 font-semibold">Fecha</th>
+                            <th class="py-3 px-4 font-semibold">Estado</th>
+                            <th class="py-3 px-4 font-semibold">Total</th>
+                            <th class="py-3 px-4 font-semibold text-right">Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body" class="text-sm text-slate-700">
+                        <tr>
+                            <td colspan="5" class="py-6 text-center text-slate-400">
+                                <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Cargando pedidos...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="no-orders-message" class="hidden text-center py-8 text-slate-500">
+                    No tienes pedidos registrados aún.
+                </div>
+            </div>
         </div>
 
     </main>
@@ -181,7 +225,7 @@
             document.getElementById('username').value = user.username;
             document.getElementById('email').value = user.email;
             document.getElementById('name').value = user.name || '';
-            
+
             if (user.profile) {
                 document.getElementById('ap_p').value = user.profile.ap_p || '';
                 document.getElementById('ap_m').value = user.profile.ap_m || '';
@@ -194,7 +238,7 @@
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const token = localStorage.getItem('accessToken');
-            
+
             const formData = {
                 email: document.getElementById('email').value,
                 name: document.getElementById('name').value,
@@ -230,9 +274,70 @@
             }
         });
 
-        // Load profile on start
+        // --- Orders Logic ---
+        async function fetchOrders() {
+            const token = localStorage.getItem('accessToken');
+            const tableBody = document.getElementById('orders-table-body');
+            const noOrdersMsg = document.getElementById('no-orders-message');
+
+            try {
+                const response = await fetch(API_BASE + 'orders/', { // GET /api/v1/orders/
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const orders = await response.json();
+
+                    if (orders.length === 0) {
+                        tableBody.innerHTML = '';
+                        noOrdersMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    noOrdersMsg.classList.add('hidden');
+                    tableBody.innerHTML = orders.map(order => `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="py-3 px-4 text-pixsoft-primary font-bold">#${order.id}</td>
+                            <td class="py-3 px-4">${new Date(order.created_at).toLocaleDateString()}</td>
+                            <td class="py-3 px-4">
+                                <span class="px-2 py-1 rounded text-xs font-bold ${getStatusColor(order.status)}">
+                                    ${order.status.toUpperCase()}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 font-semibold">$${parseFloat(order.total_price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-3 px-4 text-right">
+                                <button onclick="showOrderDetails(${order.id})" class="text-slate-400 hover:text-pixsoft-primary transition-colors">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                tableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-red-500">Error al cargar pedidos.</td></tr>';
+            }
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-700';
+                case 'completed': return 'bg-green-100 text-green-700';
+                case 'cancelled': return 'bg-red-100 text-red-700';
+                default: return 'bg-slate-100 text-slate-700';
+            }
+        }
+
+        function showOrderDetails(orderId) {
+            alert('Detalles del pedido #' + orderId + ' (Próximamente modal de detalles)');
+            // TODO: Implement modal if needed
+        }
+
+        // Load profile and orders on start
         fetchProfile();
+        fetchOrders();
     </script>
 
 </body>
+
 </html>
