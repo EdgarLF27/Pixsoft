@@ -1,467 +1,693 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PIXSOFT - Acceso</title>
-    <link href="./src/output.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="./src/output.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            /* Light gray/white background */
-            background-image:
-                radial-gradient(at 0% 0%, rgba(93, 173, 226, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(133, 193, 226, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.06) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(93, 173, 226, 0.06) 0px, transparent 50%);
-            background-attachment: fixed;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        /* Light gray/white background */
+        background-image: radial-gradient(
+            at 0% 0%,
+            rgba(93, 173, 226, 0.08) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(133, 193, 226, 0.08) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 100%,
+            rgba(52, 211, 153, 0.06) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 0% 100%,
+            rgba(93, 173, 226, 0.06) 0px,
+            transparent 50%
+          );
+        background-attachment: fixed;
+      }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
-        }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+      }
 
-        .input-glass {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            color: #1e293b;
-        }
+      .input-glass {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        color: #1e293b;
+      }
 
-        .input-glass::placeholder {
-            color: #94a3b8;
-        }
+      .input-glass::placeholder {
+        color: #94a3b8;
+      }
 
-        .input-glass:focus {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #5DADE2;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.1);
-        }
+      .input-glass:focus {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #5dade2;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.1);
+      }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(248, 250, 252, 0.5);
-        }
+      ::-webkit-scrollbar-track {
+        background: rgba(248, 250, 252, 0.5);
+      }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(93, 173, 226, 0.3);
-            border-radius: 4px;
-        }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(93, 173, 226, 0.3);
+        border-radius: 4px;
+      }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(93, 173, 226, 0.5);
-        }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(93, 173, 226, 0.5);
+      }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(93, 173, 226, 0.4);
-            border-radius: 3px;
-        }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(93, 173, 226, 0.4);
+        border-radius: 3px;
+      }
     </style>
-</head>
+  </head>
 
-<body class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-
+  <body
+    class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+  >
     <!-- Background Elements -->
     <div
-        class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#5DADE2] rounded-full mix-blend-multiply filter blur-[128px] opacity-15 animate-blob">
-    </div>
+      class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#5DADE2] rounded-full mix-blend-multiply filter blur-[128px] opacity-15 animate-blob"
+    ></div>
     <div
-        class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[#34D399] rounded-full mix-blend-multiply filter blur-[128px] opacity-12 animate-blob animation-delay-2000">
-    </div>
+      class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[#34D399] rounded-full mix-blend-multiply filter blur-[128px] opacity-12 animate-blob animation-delay-2000"
+    ></div>
     <div
-        class="absolute -bottom-32 left-20 w-96 h-96 bg-[#85C1E2] rounded-full mix-blend-multiply filter blur-[128px] opacity-12 animate-blob animation-delay-4000">
-    </div>
+      class="absolute -bottom-32 left-20 w-96 h-96 bg-[#85C1E2] rounded-full mix-blend-multiply filter blur-[128px] opacity-12 animate-blob animation-delay-4000"
+    ></div>
 
     <div
-        class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl overflow-hidden glass-panel shadow-2xl relative z-10 min-h-[600px]">
-
-        <!-- Left Side: Branding / Info -->
-        <div
-            class="hidden md:flex flex-col justify-between p-10 bg-linear-to-br from-[#5DADE2]/15 to-[#34D399]/10 relative">
-            <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-8">
-                    <div
-                        class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/80 backdrop-blur-sm border border-[#5DADE2]/30 shadow-sm">
-                        <span class="text-2xl font-bold text-[#5DADE2]">P</span>
-                    </div>
-                    <span class="text-xl font-bold text-slate-800 tracking-wide">PIXSOFT</span>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-900 mb-4 leading-tight">Tu Hardware,<br>Tu Potencial.</h2>
-                <p class="text-slate-600 text-sm leading-relaxed">Accede a la plataforma líder en venta y arrendamiento
-                    de equipo de cómputo de alto rendimiento.</p>
-            </div>
-
-            <div class="relative z-10 mt-auto">
-                <div class="flex gap-2 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-[#5DADE2]"></div>
-                    <div class="w-2 h-2 rounded-full bg-[#5DADE2]/50"></div>
-                    <div class="w-2 h-2 rounded-full bg-[#5DADE2]/50"></div>
-                </div>
-                <p class="text-xs text-slate-500">© 2025 Pixsoft Inc.</p>
-            </div>
-
-            <!-- Decorative Circle -->
+      class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-0 rounded-2xl overflow-hidden glass-panel shadow-2xl relative z-10 min-h-[600px]"
+    >
+      <!-- Left Side: Branding / Info -->
+      <div
+        class="hidden md:flex flex-col justify-between p-10 bg-linear-to-br from-[#5DADE2]/15 to-[#34D399]/10 relative"
+      >
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-8">
             <div
-                class="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-linear-to-br from-[#5DADE2] to-[#34D399] rounded-full filter blur-[80px] opacity-20">
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/80 backdrop-blur-sm border border-[#5DADE2]/30 shadow-sm"
+            >
+              <span class="text-2xl font-bold text-[#5DADE2]">P</span>
             </div>
+            <span class="text-xl font-bold text-slate-800 tracking-wide"
+              >PIXSOFT</span
+            >
+          </div>
+          <h2 class="text-3xl font-bold text-slate-900 mb-4 leading-tight">
+            Tu Hardware,<br />Tu Potencial.
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Accede a la plataforma líder en venta y arrendamiento de equipo de
+            cómputo de alto rendimiento.
+          </p>
         </div>
 
-        <!-- Right Side: Forms -->
-        <div class="p-8 md:p-10 flex flex-col justify-center relative bg-white/40">
-
-            <!-- Login Form -->
-            <div id="loginSection" class="transition-all duration-500 ease-in-out">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Bienvenido de nuevo</h3>
-                    <p class="text-slate-600 text-sm">Ingresa tus credenciales para acceder</p>
-                </div>
-
-                <form id="loginForm" class="space-y-5">
-                    <div>
-                        <label for="login_username"
-                            class="block text-xs font-medium text-slate-700 mb-1.5 uppercase tracking-wider">Usuario o
-                            Email</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-regular fa-user text-slate-400"></i>
-                            </div>
-                            <input type="text" id="login_username" name="username"
-                                class="input-glass w-full pl-10 pr-4 py-2.5 rounded-lg text-sm placeholder-slate-400 focus:ring-1 focus:ring-[#5DADE2] transition-all"
-                                placeholder="ej. usuario@pixsoft.com" required>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between items-center mb-1.5">
-                            <label for="login_password"
-                                class="block text-xs font-medium text-slate-700 uppercase tracking-wider">Contraseña</label>
-                            <a href="#" class="text-xs text-[#5DADE2] hover:text-[#34D399] transition-colors">¿Olvidaste
-                                tu contraseña?</a>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-lock text-slate-400"></i>
-                            </div>
-                            <input type="password" id="login_password" name="password"
-                                class="input-glass w-full pl-10 pr-4 py-2.5 rounded-lg text-sm placeholder-slate-400 focus:ring-1 focus:ring-[#5DADE2] transition-all"
-                                placeholder="••••••••" required>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full py-3 rounded-lg bg-linear-to-r from-[#5DADE2] to-[#34D399] hover:from-[#4FA0D5] hover:to-[#2DD98C] text-white font-semibold shadow-lg shadow-[#5DADE2]/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <span>Ingresar</span>
-                        <i class="fa-solid fa-arrow-right text-sm"></i>
-                    </button>
-                </form>
-
-                <div class="mt-8">
-                    <div class="relative">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-slate-300"></div>
-                        </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-white/80 text-slate-500 backdrop-blur-sm">O continúa con</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 grid grid-cols-2 gap-3">
-                        <button onclick="loginWithGoogle()"
-                            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm">
-                            <i class="fa-brands fa-google text-red-500"></i> Google
-                        </button>
-                        <button onclick="loginWithFacebook()"
-                            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm">
-                            <i class="fa-brands fa-facebook text-blue-600"></i> Facebook
-                        </button>
-                    </div>
-                </div>
-
-                <p class="text-center text-slate-600 text-sm mt-8">
-                    ¿No tienes cuenta? <button onclick="toggleForms()"
-                        class="text-[#5DADE2] hover:text-[#34D399] font-medium transition-colors">Regístrate
-                        aquí</button>
-                </p>
-            </div>
-
-            <!-- Register Form (Initially Hidden) -->
-            <div id="registerSection" class="hidden transition-all duration-500 ease-in-out">
-                <div class="mb-6">
-                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Crear Cuenta</h3>
-                    <p class="text-slate-600 text-sm">Únete a Pixsoft hoy mismo</p>
-                </div>
-
-                <form id="registrationForm" class="space-y-4 h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-
-                    <!-- Account Data -->
-                    <div class="space-y-4">
-                        <h4
-                            class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2">
-                            Datos de Cuenta</h4>
-                        <div class="grid grid-cols-1 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Usuario</label>
-                                <input type="text" name="username"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
-                                    required>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Email</label>
-                                <input type="email" name="email"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
-                                    required>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña</label>
-                                <input type="password" name="password"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
-                                    required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Personal Data -->
-                    <div class="space-y-4 pt-2">
-                        <h4
-                            class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2">
-                            Información Personal</h4>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="col-span-2">
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Nombre(s)</label>
-                                <input type="text" name="name"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Apellido P.</label>
-                                <input type="text" name="ap_p"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Apellido M.</label>
-                                <input type="text" name="ap_m"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]">
-                            </div>
-                            <div class="col-span-2">
-                                <label class="block text-xs font-medium text-slate-700 mb-1">Teléfono</label>
-                                <input type="tel" name="phone_number"
-                                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Addresses -->
-                    <div class="space-y-4 pt-2">
-                        <h4
-                            class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2">
-                            Direcciones</h4>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Dirección de Envío</label>
-                            <textarea name="shipping_address" rows="2"
-                                class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Dirección de
-                                Facturación</label>
-                            <textarea name="billing_address" rows="2"
-                                class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"></textarea>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full py-3 rounded-lg bg-linear-to-r from-[#34D399] to-[#5DADE2] hover:from-[#2DD98C] hover:to-[#4FA0D5] text-white font-semibold shadow-lg shadow-[#34D399]/30 transition-all transform hover:-translate-y-0.5 mt-4">
-                        Registrarse
-                    </button>
-                </form>
-
-                <p class="text-center text-slate-600 text-sm mt-6">
-                    ¿Ya tienes cuenta? <button onclick="toggleForms()"
-                        class="text-[#5DADE2] hover:text-[#34D399] font-medium transition-colors">Inicia sesión</button>
-                </p>
-            </div>
-
+        <div class="relative z-10 mt-auto">
+          <div class="flex gap-2 mb-4">
+            <div class="w-2 h-2 rounded-full bg-[#5DADE2]"></div>
+            <div class="w-2 h-2 rounded-full bg-[#5DADE2]/50"></div>
+            <div class="w-2 h-2 rounded-full bg-[#5DADE2]/50"></div>
+          </div>
+          <p class="text-xs text-slate-500">© 2025 Pixsoft Inc.</p>
         </div>
+
+        <!-- Decorative Circle -->
+        <div
+          class="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-linear-to-br from-[#5DADE2] to-[#34D399] rounded-full filter blur-[80px] opacity-20"
+        ></div>
+      </div>
+
+      <!-- Right Side: Forms -->
+      <div
+        class="p-8 md:p-10 flex flex-col justify-center relative bg-white/40"
+      >
+        <!-- Login Form -->
+        <div id="loginSection" class="transition-all duration-500 ease-in-out">
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold text-slate-900 mb-2">
+              Bienvenido de nuevo
+            </h3>
+            <p class="text-slate-600 text-sm">
+              Ingresa tus credenciales para acceder
+            </p>
+          </div>
+
+          <form id="loginForm" class="space-y-5">
+            <div>
+              <label
+                for="login_username"
+                class="block text-xs font-medium text-slate-700 mb-1.5 uppercase tracking-wider"
+                >Usuario o Email</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <i class="fa-regular fa-user text-slate-400"></i>
+                </div>
+                <input
+                  type="text"
+                  id="login_username"
+                  name="username"
+                  class="input-glass w-full pl-10 pr-4 py-2.5 rounded-lg text-sm placeholder-slate-400 focus:ring-1 focus:ring-[#5DADE2] transition-all"
+                  placeholder="ej. usuario@pixsoft.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label
+                  for="login_password"
+                  class="block text-xs font-medium text-slate-700 uppercase tracking-wider"
+                  >Contraseña</label
+                >
+                <a
+                  href="javascript:void(0)"
+                  onclick="openPasswordResetModal()"
+                  class="text-xs text-[#5DADE2] hover:text-[#34D399] transition-colors"
+                  >¿Olvidaste tu contraseña?</a
+                >
+              </div>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <i class="fa-solid fa-lock text-slate-400"></i>
+                </div>
+                <input
+                  type="password"
+                  id="login_password"
+                  name="password"
+                  class="input-glass w-full pl-10 pr-4 py-2.5 rounded-lg text-sm placeholder-slate-400 focus:ring-1 focus:ring-[#5DADE2] transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3 rounded-lg bg-linear-to-r from-[#5DADE2] to-[#34D399] hover:from-[#4FA0D5] hover:to-[#2DD98C] text-white font-semibold shadow-lg shadow-[#5DADE2]/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            >
+              <span>Ingresar</span>
+              <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+          </form>
+
+          <div class="mt-8">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-slate-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white/80 text-slate-500 backdrop-blur-sm"
+                  >O continúa con</span
+                >
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+              <button
+                onclick="loginWithGoogle()"
+                class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm"
+              >
+                <i class="fa-brands fa-google text-red-500"></i> Google
+              </button>
+              <button
+                onclick="loginWithFacebook()"
+                class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm"
+              >
+                <i class="fa-brands fa-facebook text-blue-600"></i> Facebook
+              </button>
+            </div>
+          </div>
+
+          <p class="text-center text-slate-600 text-sm mt-8">
+            ¿No tienes cuenta?
+            <button
+              onclick="toggleForms()"
+              class="text-[#5DADE2] hover:text-[#34D399] font-medium transition-colors"
+            >
+              Regístrate aquí
+            </button>
+          </p>
+        </div>
+
+        <!-- Register Form (Initially Hidden) -->
+        <div
+          id="registerSection"
+          class="hidden transition-all duration-500 ease-in-out"
+        >
+          <div class="mb-6">
+            <h3 class="text-2xl font-bold text-slate-900 mb-2">Crear Cuenta</h3>
+            <p class="text-slate-600 text-sm">Únete a Pixsoft hoy mismo</p>
+          </div>
+
+          <form
+            id="registrationForm"
+            class="space-y-4 h-[450px] overflow-y-auto pr-2 custom-scrollbar"
+          >
+            <!-- Account Data -->
+            <div class="space-y-4">
+              <h4
+                class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2"
+              >
+                Datos de Cuenta
+              </h4>
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Usuario</label
+                  >
+                  <input
+                    type="text"
+                    name="username"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    name="email"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Contraseña</label
+                  >
+                  <input
+                    type="password"
+                    name="password"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Personal Data -->
+            <div class="space-y-4 pt-2">
+              <h4
+                class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2"
+              >
+                Información Personal
+              </h4>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="col-span-2">
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Nombre(s)</label
+                  >
+                  <input
+                    type="text"
+                    name="name"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Apellido P.</label
+                  >
+                  <input
+                    type="text"
+                    name="ap_p"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Apellido M.</label
+                  >
+                  <input
+                    type="text"
+                    name="ap_m"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                  />
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-xs font-medium text-slate-700 mb-1"
+                    >Teléfono</label
+                  >
+                  <input
+                    type="tel"
+                    name="phone_number"
+                    class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Addresses -->
+            <div class="space-y-4 pt-2">
+              <h4
+                class="text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-300 pb-1 mb-2"
+              >
+                Direcciones
+              </h4>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >Dirección de Envío</label
+                >
+                <textarea
+                  name="shipping_address"
+                  rows="2"
+                  class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                ></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-700 mb-1"
+                  >Dirección de Facturación</label
+                >
+                <textarea
+                  name="billing_address"
+                  rows="2"
+                  class="input-glass w-full px-3 py-2 rounded-lg text-sm focus:ring-1 focus:ring-[#5DADE2]"
+                ></textarea>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3 rounded-lg bg-linear-to-r from-[#34D399] to-[#5DADE2] hover:from-[#2DD98C] hover:to-[#4FA0D5] text-white font-semibold shadow-lg shadow-[#34D399]/30 transition-all transform hover:-translate-y-0.5 mt-4"
+            >
+              Registrarse
+            </button>
+          </form>
+
+          <p class="text-center text-slate-600 text-sm mt-6">
+            ¿Ya tienes cuenta?
+            <button
+              onclick="toggleForms()"
+              class="text-[#5DADE2] hover:text-[#34D399] font-medium transition-colors"
+            >
+              Inicia sesión
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
 
     <script>
-        function toggleForms() {
-            const loginSection = document.getElementById('loginSection');
-            const registerSection = document.getElementById('registerSection');
+      function toggleForms() {
+        const loginSection = document.getElementById("loginSection");
+        const registerSection = document.getElementById("registerSection");
 
-            if (loginSection.classList.contains('hidden')) {
-                loginSection.classList.remove('hidden');
-                registerSection.classList.add('hidden');
+        if (loginSection.classList.contains("hidden")) {
+          loginSection.classList.remove("hidden");
+          registerSection.classList.add("hidden");
+        } else {
+          loginSection.classList.add("hidden");
+          registerSection.classList.remove("hidden");
+        }
+      }
+
+      // Login Logic
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const form = event.target;
+          const formData = new FormData(form);
+          const data = {
+            username: formData.get("username"),
+            password: formData.get("password"),
+          };
+
+          console.log(
+            "Enviando credenciales a la API de login:",
+            JSON.stringify(data, null, 2)
+          );
+
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:8000/api/v1/token/",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+              }
+            );
+
+            const result = await response.json();
+
+            if (response.ok) {
+              console.log("Login exitoso. Respuesta:", result);
+              console.log("Role flags:", {
+                is_staff: result.is_staff,
+                is_superuser: result.is_superuser,
+              });
+
+              // Guardar tokens en localStorage para uso futuro
+              localStorage.setItem("accessToken", result.access);
+              localStorage.setItem("refreshToken", result.refresh);
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  username: result.username,
+                  is_staff: result.is_staff,
+                  is_superuser: result.is_superuser,
+                })
+              );
+
+              alert(
+                "¡Login exitoso! Serás redirigido a tu panel correspondiente."
+              );
+
+              // Redireccionar según el rol
+              if (result.is_staff) {
+                window.location.href = "./Admin/index.html";
+              } else {
+                window.location.href = "./Cliente/index.html";
+              }
             } else {
-                loginSection.classList.add('hidden');
-                registerSection.classList.remove('hidden');
+              console.error("Error en el login:", result);
+              alert("Error en el login:\n" + JSON.stringify(result, null, 2));
             }
-        }
-
-        // Login Logic
-        document.getElementById('loginForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const data = {
-                username: formData.get('username'),
-                password: formData.get('password')
-            };
-
-            console.log('Enviando credenciales a la API de login:', JSON.stringify(data, null, 2));
-
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/v1/token/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    console.log('Login exitoso. Respuesta:', result);
-                    console.log('Role flags:', { is_staff: result.is_staff, is_superuser: result.is_superuser });
-
-                    // Guardar tokens en localStorage para uso futuro
-                    localStorage.setItem('accessToken', result.access);
-                    localStorage.setItem('refreshToken', result.refresh);
-                    localStorage.setItem('user', JSON.stringify({
-                        username: result.username,
-                        is_staff: result.is_staff,
-                        is_superuser: result.is_superuser
-                    }));
-
-                    alert('¡Login exitoso! Serás redirigido a tu panel correspondiente.');
-
-                    // Redireccionar según el rol
-                    if (result.is_staff) {
-                        window.location.href = './Admin/index.html';
-                    } else {
-                        window.location.href = './Cliente/index.html';
-                    }
-                } else {
-                    console.error('Error en el login:', result);
-                    alert('Error en el login:\n' + JSON.stringify(result, null, 2));
-                }
-            } catch (error) {
-                console.error('Error de red:', error);
-                alert('No se pudo conectar con el servidor.');
-            }
+          } catch (error) {
+            console.error("Error de red:", error);
+            alert("No se pudo conectar con el servidor.");
+          }
         });
 
-        // Registration Logic
-        document.getElementById('registrationForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
+      // Registration Logic
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const form = event.target;
+          const formData = new FormData(form);
 
-            const data = {
-                username: formData.get('username'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                name: formData.get('name'),
-                profile: {
-                    ap_p: formData.get('ap_p'),
-                    ap_m: formData.get('ap_m'),
-                    phone_number: formData.get('phone_number'),
-                    shipping_address: formData.get('shipping_address'),
-                    billing_address: formData.get('billing_address')
-                }
-            };
+          const data = {
+            username: formData.get("username"),
+            email: formData.get("email"),
+            password: formData.get("password"),
+            name: formData.get("name"),
+            profile: {
+              ap_p: formData.get("ap_p"),
+              ap_m: formData.get("ap_m"),
+              phone_number: formData.get("phone_number"),
+              shipping_address: formData.get("shipping_address"),
+              billing_address: formData.get("billing_address"),
+            },
+          };
 
-            console.log('Enviando datos a la API:', JSON.stringify(data, null, 2));
+          console.log(
+            "Enviando datos a la API:",
+            JSON.stringify(data, null, 2)
+          );
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/v1/users/register/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:8000/api/v1/users/register/",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+              }
+            );
 
-                const result = await response.json();
+            const result = await response.json();
 
-                if (response.ok) {
-                    console.log('Registro exitoso:', result);
-                    alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
-                    toggleForms(); // Switch back to login
-                    form.reset();
-                } else {
-                    console.error('Error en el registro:', result);
-                    alert('Error en el registro:\n' + JSON.stringify(result, null, 2));
-                }
-            } catch (error) {
-                console.error('Error de red:', error);
-                alert('No se pudo conectar con el servidor.');
+            if (response.ok) {
+              console.log("Registro exitoso:", result);
+              alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
+              toggleForms(); // Switch back to login
+              form.reset();
+            } else {
+              console.error("Error en el registro:", result);
+              alert(
+                "Error en el registro:\n" + JSON.stringify(result, null, 2)
+              );
             }
+          } catch (error) {
+            console.error("Error de red:", error);
+            alert("No se pudo conectar con el servidor.");
+          }
         });
-        // Social Login Functions
-        function loginWithGoogle() {
-            const client = google.accounts.oauth2.initCodeClient({
-                client_id: '862385698822-ihj654l1q6s8pul4ao0lgknjftqbaa4i.apps.googleusercontent.com',
-                scope: 'email profile',
-                ux_mode: 'popup',
-                callback: (response) => {
-                    if (response.code) {
-                        console.log('Authorization Code received:', response.code);
-                        // Send the code to backend
-                        authenticateWithBackend('google', response.code);
-                    }
-                },
-            });
-            client.requestCode();
-        }
-
-        async function authenticateWithBackend(provider, code) {
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/v1/auth/${provider}/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code }),
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    console.log(`${provider} login successful:`, result);
-                    localStorage.setItem('accessToken', result.key || result.access_token || result.access); // Adjust based on dj-rest-auth response
-                    // dj-rest-auth usually returns 'key' (token)
-                    
-                    alert('Login con Google exitoso!');
-                    window.location.href = './Cliente/index.html'; // Default redirect
-                } else {
-                    console.error('Backend authentication failed:', result);
-                    alert(`Error en el login con ${provider}.\n` + (result.non_field_errors || JSON.stringify(result)));
-                }
-            } catch (error) {
-                console.error('Network error during social login:', error);
-                alert('Error de conexión con el servidor.');
+      // Social Login Functions
+      function loginWithGoogle() {
+        const client = google.accounts.oauth2.initCodeClient({
+          client_id:
+            "862385698822-ihj654l1q6s8pul4ao0lgknjftqbaa4i.apps.googleusercontent.com",
+          scope: "email profile",
+          ux_mode: "popup",
+          callback: (response) => {
+            if (response.code) {
+              console.log("Authorization Code received:", response.code);
+              // Send the code to backend
+              authenticateWithBackend("google", response.code);
             }
-        }
+          },
+        });
+        client.requestCode();
+      }
 
-        function loginWithFacebook() {
-            // Similar logic for Facebook
-            console.log('Initiating Facebook Login...');
-            alert('Para habilitar el inicio de sesión con Facebook, necesitas configurar un App ID de Facebook.\n\nPor ahora, esto es una demostración de la interfaz.');
+      async function authenticateWithBackend(provider, code) {
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:8000/api/v1/auth/${provider}/`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ code: code }),
+            }
+          );
+
+          const result = await response.json();
+
+          if (response.ok) {
+            console.log(`${provider} login successful:`, result);
+            localStorage.setItem(
+              "accessToken",
+              result.key || result.access_token || result.access
+            ); // Adjust based on dj-rest-auth response
+            // dj-rest-auth usually returns 'key' (token)
+
+            alert("Login con Google exitoso!");
+            window.location.href = "./Cliente/index.html"; // Default redirect
+          } else {
+            console.error("Backend authentication failed:", result);
+            alert(
+              `Error en el login con ${provider}.\n` +
+                (result.non_field_errors || JSON.stringify(result))
+            );
+          }
+        } catch (error) {
+          console.error("Network error during social login:", error);
+          alert("Error de conexión con el servidor.");
         }
+      }
+
+      function loginWithFacebook() {
+        // Similar logic for Facebook
+        console.log("Initiating Facebook Login...");
+        alert(
+          "Para habilitar el inicio de sesión con Facebook, necesitas configurar un App ID de Facebook.\n\nPor ahora, esto es una demostración de la interfaz."
+        );
+      }
     </script>
-</body>
 
+    <!-- Password Reset Modal -->
+    <div id="passwordResetModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl p-8 max-w-md w-full relative">
+            <button type="button" onclick="closePasswordResetModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+            
+            <div class="mb-6">
+                <div class="w-12 h-12 rounded-full bg-[#5DADE2]/10 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-key text-[#5DADE2] text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Recuperar Contraseña</h3>
+                <p class="text-slate-600 text-sm">Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+            </div>
+
+            <form id="passwordResetForm" class="space-y-4">
+                <div>
+                    <label for="reset_email" class="block text-xs font-medium text-slate-700 mb-1.5 uppercase tracking-wider">Correo Electrónico</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-regular fa-envelope text-slate-400"></i>
+                        </div>
+                        <input type="email" id="reset_email" name="email"
+                            class="input-glass w-full pl-10 pr-4 py-2.5 rounded-lg text-sm placeholder-slate-400 focus:ring-1 focus:ring-[#5DADE2] transition-all"
+                            placeholder="tu-email@ejemplo.com" required>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-3 rounded-lg bg-linear-to-r from-[#5DADE2] to-[#34D399] hover:from-[#4FA0D5] hover:to-[#2DD98C] text-white font-semibold shadow-lg shadow-[#5DADE2]/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <span>Enviar Enlace de Recuperación</span>
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+            </form>
+
+            <div id="resetSuccessMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-circle-check text-green-500 text-xl mt-0.5"></i>
+                    <div>
+                        <p class="text-sm font-medium text-green-900">¡Correo enviado!</p>
+                        <p class="text-xs text-green-700 mt-1">Si el correo existe en nuestro sistema, recibirás un enlace de recuperación en breve.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resetErrorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-circle-exclamation text-red-500 text-xl mt-0.5"></i>
+                    <div>
+                        <p class="text-sm font-medium text-red-900">Error</p>
+                        <p class="text-xs text-red-700 mt-1" id="resetErrorText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/passwordReset.js"></script>
+  </body>
 </html>
