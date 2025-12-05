@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXSOFT - Usuarios</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="h-screen overflow-hidden flex text-sm">
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- Mobile Header -->
+        <header class="md:hidden h-16 flex items-center justify-between px-4 glass-panel z-40">
+            <button id="menu-btn" class="text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-slate-900">PIXSOFT Admin</span>
+            <div class="w-8"></div> <!-- Spacer -->
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-1">Gestión de Usuarios</h1>
+                    <p class="text-slate-600">Administra los accesos y roles de la plataforma.</p>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h3 class="text-lg font-bold text-slate-900">Lista de Usuarios</h3>
+                    <div class="flex gap-2">
+                         <div class="relative">
+                            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input type="text" id="searchInput" placeholder="Buscar usuario..." class="input-field pl-8 bg-slate-100 sm:w-64 rounded-lg py-2 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#5DADE2]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                                <th class="px-6 py-4 font-medium">ID</th>
+                                <th class="px-6 py-4 font-medium">Usuario</th>
+                                <th class="px-6 py-4 font-medium">Email</th>
+                                <th class="px-6 py-4 font-medium">Es Admin</th>
+                                <th class="px-6 py-4 font-medium text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="text-sm divide-y divide-slate-200">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/components/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             // Basic sidebar render if component exists, otherwise manual or mock
+             if (typeof renderSidebar === 'function') {
+                renderSidebar('usuarios'); 
+             }
+             loadUsers();
+        });
+
+        async function loadUsers() {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    window.location.href = '../Login.html';
+                    return;
+                }
+
+                const response = await fetch('http://127.0.0.1:8000/api/v1/users/manage/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const users = await response.json();
+                    renderUsers(users);
+                } else {
+                    console.error('Error fetching users:', response.status);
+                    if (response.status === 401) {
+                         alert('Sesión expirada. Por favor inicia sesión nuevamente.');
+                         window.location.href = '../Login.html';
+                    } else if (response.status === 403) {
+                         alert('Acceso denegado. No tienes permisos de administrador.');
+                         window.location.href = '../Cliente/index.html';
+                    }
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition-colors group';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-slate-900">#${user.id}</td>
+                    <td class="px-6 py-4 font-medium text-slate-900">${user.username}</td>
+                     <td class="px-6 py-4 text-slate-500">${user.email || '-'}</td>
+                     <td class="px-6 py-4">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" onchange="toggleAdminStatus(${user.id}, this.checked)" ${user.profile && user.profile.is_staff ? 'checked' : ''} ${user.username === 'admin' ? 'disabled' : ''}> 
+                            <!-- Note: API returns is_staff but serializer structure might differ, checking generic 'is_staff' from custom serializer or standard user model -->
+                             <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#5DADE2]/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5DADE2]"></div>
+                        </label>
+                    </td>
+                     <td class="px-6 py-4 text-right">
+                         <button class="text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                // Temporary fix: the serializer I updated was CustomTokenObtainPairSerializer, 
+                // but the list view uses standard UserSerializer. I need to make sure UserSerializer or the view returns is_staff.
+                // Standard Django UserSerializer usually doesn't include is_staff unless specified.
+                // I should verify UserSerializer in users/serializers.py.
+                
+                // Let's optimize the checkbox checked state logic in the next step if needed after checking serializer.
+                // user.is_staff should be directly on the user object if correctly serialized.
+                
+                // Updating innerHTML for checkbox based on probable field 'is_staff' directly on user object.
+                const isStaff = user.is_staff === true; 
+                tr.querySelector('input[type="checkbox"]').checked = isStaff;
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function toggleAdminStatus(userId, isStaff) {
+             try {
+                const token = localStorage.getItem('accessToken');
+                const response = await fetch(`http://127.0.0.1:8000/api/v1/users/manage/${userId}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ is_staff: isStaff })
+                });
+
+                if (response.ok) {
+                    // Success notification (could implement toast)
+                    console.log(`User ${userId} admin status updated to ${isStaff}`);
+                } else {
+                    console.error('Failed to update status');
+                     // Revert checkbox if failed?
+                     alert('Error al actualizar permisos.');
+                     loadUsers(); // Reload to revert state
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

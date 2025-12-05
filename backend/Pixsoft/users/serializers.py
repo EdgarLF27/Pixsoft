@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.models import User
 from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -10,16 +11,25 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['ap_p', 'ap_m', 'shipping_address', 'billing_address', 'phone_number']
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['is_staff'] = self.user.is_staff
+        data['is_superuser'] = self.user.is_superuser
+        data['username'] = self.user.username
+        return data
+
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(required=False)
     name = serializers.CharField(source='first_name', required=False)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'name', 'profile', 'is_staff', 'is_superuser']
+        fields = ['id', 'username', 'email', 'password', 'name', 'profile', 'is_staff']
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
-            'username': {'required': False}
+            'username': {'required': False},
+            'is_staff': {'read_only': False} # Allow updating is_staff
         }
 
     def create(self, validated_data):
@@ -51,6 +61,9 @@ class UserSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
         
+        if 'is_staff' in validated_data:
+            instance.is_staff = validated_data['is_staff']
+
         instance.save()
 
         if profile_data:

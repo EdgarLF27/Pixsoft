@@ -1,6 +1,7 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
-from .serializers import UserSerializer
+from .serializers import UserSerializer, CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -26,8 +27,21 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
             Profile.objects.create(user=user)
         return user
 
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
-
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+class UserListUpdateView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+class ToggleUserStaffStatusView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+    def perform_update(self, serializer):
+        # Toggle staff status logic could also be done here or in serializer, 
+        # but using a simple update is cleaner if we pass the new value.
+        # However, to strictly 'toggle' or force 'is_staff', we can intercept.
+        instance = serializer.save()
