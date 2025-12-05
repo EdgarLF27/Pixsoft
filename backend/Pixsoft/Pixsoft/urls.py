@@ -11,8 +11,8 @@ from billing.views import InvoiceViewSet, PaymentViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'products', SaleProductViewSet)
-router.register(r'categories', SaleCategoryViewSet)
+# router.register(r'products', SaleProductViewSet) # Moved to products.urls
+# router.register(r'categories', SaleCategoryViewSet) # Moved to products.urls
 router.register(r'shipping/methods', ShippingMethodViewSet)
 router.register(r'shipping/shipments', ShipmentViewSet)
 from orders.views import OrderViewSet, CartViewSet
@@ -30,6 +30,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
+    path('api/v1/leasing/', include('leasing.urls')),
+    path('api/v1/products/', include('products.urls')),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
