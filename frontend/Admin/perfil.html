@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXSOFT - Mi Perfil Admin</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="h-screen overflow-hidden flex text-sm">
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- Mobile Header -->
+        <header class="md:hidden h-16 flex items-center justify-between px-4 glass-panel z-40">
+            <button id="menu-btn" class="text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-slate-900">PIXSOFT Admin</span>
+            <div class="w-8"></div> <!-- Spacer -->
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-1">Tu Perfil</h1>
+                    <p class="text-slate-600">Administra tu información personal.</p>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="glass-panel rounded-2xl p-8 bg-white shadow-xl border border-slate-100 max-w-4xl mx-auto">
+                 <form id="profileForm" class="space-y-6">
+                    <!-- Account Data -->
+                    <div class="space-y-4">
+                        <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                            Datos de Cuenta
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+                                <input type="text" id="username" disabled
+                                    class="w-full px-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                                <input type="email" id="email" name="email"
+                                    class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Data -->
+                    <div class="space-y-4 pt-4">
+                        <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                            Información Personal
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre(s)</label>
+                                <input type="text" id="name" name="name"
+                                    class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Apellido Paterno</label>
+                                <input type="text" id="ap_p" name="ap_p"
+                                    class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Apellido Materno</label>
+                                <input type="text" id="ap_m" name="ap_m"
+                                    class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Teléfono</label>
+                                <input type="tel" id="phone_number" name="phone_number"
+                                    class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Addresses (Optional for Admin but copied for completeness/consistency) -->
+                    <div class="space-y-4 pt-4">
+                        <h4 class="text-slate-700 text-sm font-bold uppercase tracking-wider border-b border-slate-200 pb-2 mb-4">
+                            Direcciones
+                        </h4>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Dirección de Envío</label>
+                            <textarea id="shipping_address" name="shipping_address" rows="3"
+                                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Dirección de Facturación</label>
+                            <textarea id="billing_address" name="billing_address" rows="3"
+                                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#5DADE2] focus:ring-2 focus:ring-[#5DADE2]/20 outline-none transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 flex justify-end gap-4">
+                        <button type="submit"
+                            class="px-6 py-2 rounded-lg bg-linear-to-r from-[#5DADE2] to-[#34D399] hover:from-[#4FA0D5] hover:to-[#2DD98C] text-white font-semibold shadow-lg shadow-[#5DADE2]/30 transition-all transform hover:-translate-y-0.5">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/components/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             if (typeof renderSidebar === 'function') {
+                renderSidebar('configuracion'); 
+             }
+             fetchProfile();
+        });
+
+        // Script copied from Cliente/profile.html and adapted
+        const API_BASE = 'http://127.0.0.1:8000/api/v1/';
+
+        async function fetchProfile() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                 window.location.href = '../Login.html';
+                 return;
+            }
+
+            try {
+                const response = await fetch(API_BASE + 'users/profile/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    populateForm(user);
+                } else {
+                    if (response.status === 401) {
+                        alert('Sesión expirada. Por favor inicia sesión nuevamente.');
+                        window.location.href = '../Login.html';
+                    } else {
+                        console.error('Error fetching profile:', await response.text());
+                    }
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+
+        function populateForm(user) {
+            document.getElementById('username').value = user.username;
+            document.getElementById('email').value = user.email;
+            document.getElementById('name').value = user.name || '';
+            
+            if (user.profile) {
+                document.getElementById('ap_p').value = user.profile.ap_p || '';
+                document.getElementById('ap_m').value = user.profile.ap_m || '';
+                document.getElementById('phone_number').value = user.profile.phone_number || '';
+                document.getElementById('shipping_address').value = user.profile.shipping_address || '';
+                document.getElementById('billing_address').value = user.profile.billing_address || '';
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('accessToken');
+            
+            const formData = {
+                email: document.getElementById('email').value,
+                name: document.getElementById('name').value,
+                profile: {
+                    ap_p: document.getElementById('ap_p').value,
+                    ap_m: document.getElementById('ap_m').value,
+                    phone_number: document.getElementById('phone_number').value,
+                    shipping_address: document.getElementById('shipping_address').value,
+                    billing_address: document.getElementById('billing_address').value
+                }
+            };
+
+            try {
+                const response = await fetch(API_BASE + 'users/profile/', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Perfil actualizado correctamente.');
+                    // Optionally reload or just stay
+                } else {
+                    const errorData = await response.json();
+                    alert('Error al actualizar: ' + JSON.stringify(errorData));
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('Error de conexión.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -54,36 +54,34 @@ function renderSidebar(activePageId) {
                 )}"></i>
                 Envíos
             </a>
-            <a href="#" class="${getLinkClass(activePageId, "clientes")}">
-                <i class="fa-solid fa-users w-5 ${getIconClass(
+            <a href="usuarios.html" class="${getLinkClass(
+              activePageId,
+              "usuarios"
+            )}">
+                <i class="fa-solid fa-user-shield w-5 ${getIconClass(
                   activePageId,
-                  "clientes"
+                  "usuarios"
                 )}"></i>
-                Clientes
+                Usuarios
             </a>
             <div class="pt-4 pb-2">
                 <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema</p>
             </div>
-            <a href="#" class="${getLinkClass(activePageId, "configuracion")}">
+            <a href="perfil.html" class="${getLinkClass(
+              activePageId,
+              "configuracion"
+            )}">
                 <i class="fa-solid fa-gear w-5 ${getIconClass(
                   activePageId,
                   "configuracion"
                 )}"></i>
                 Configuración
             </a>
-        </nav>
-
-        <!-- User Profile -->
-        <div class="p-4 border-t border-white/5">
-            <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=5DADE2&color=fff" alt="Admin" class="w-8 h-8 rounded-full">
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-slate-900 truncate">Administrador</p>
-                    <p class="text-xs text-slate-500 truncate">admin@pixsoft.com</p>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
-            </div>
-        </div>
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group text-red-500 hover:bg-red-50">
+                    <i class="fa-solid fa-sign-out-alt w-5 group-hover:text-red-600 transition-colors"></i>
+                    Cerrar Sesión
+                </button>
+            </nav>
     </aside>
     `;
 
@@ -139,4 +137,10 @@ function getIconClass(activePageId, pageId) {
   return activePageId === pageId
     ? ""
     : "group-hover:text-[#5DADE2] transition-colors";
+}
+function logout() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user");
+  window.location.href = "../Login.html";
 }

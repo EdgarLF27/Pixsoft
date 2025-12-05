@@ -340,11 +340,20 @@
                     // Guardar tokens en localStorage para uso futuro
                     localStorage.setItem('accessToken', result.access);
                     localStorage.setItem('refreshToken', result.refresh);
+                    localStorage.setItem('user', JSON.stringify({
+                        username: result.username,
+                        is_staff: result.is_staff,
+                        is_superuser: result.is_superuser
+                    }));
 
-                    alert('¡Login exitoso! Serás redirigido a la página principal.');
+                    alert('¡Login exitoso! Serás redirigido a tu panel correspondiente.');
 
-                    // Redireccionar a la página principal del cliente
-                    window.location.href = './Cliente/index.html';
+                    // Redireccionar según el rol
+                    if (result.is_staff) {
+                         window.location.href = './Admin/index.html';
+                    } else {
+                         window.location.href = './Cliente/index.html';
+                    }
                 } else {
                     console.error('Error en el login:', result);
                     alert('Error en el login:\n' + JSON.stringify(result, null, 2));
