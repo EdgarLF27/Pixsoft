@@ -35,6 +35,7 @@ class RentalProduct(models.Model):
     
     sku = models.CharField(max_length=50, unique=True, verbose_name="Código de Inventario")
     stock_quantity = models.IntegerField(default=0, verbose_name="Cantidad en Inventario para Arrendamiento")
+    image = models.ImageField(upload_to='leasing/', null=True, blank=True, verbose_name="Imagen del Equipo")
     
     @property
     def is_available(self):

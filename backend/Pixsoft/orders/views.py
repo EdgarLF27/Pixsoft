@@ -38,8 +38,10 @@ class CartViewSet(viewsets.ViewSet):
         serializer = AddCartItemSerializer(data=request.data, context={'cart': cart})
         
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            cart_item = serializer.save()
+            # Return the full cart item representation
+            response_serializer = CartItemSerializer(cart_item)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.models import ContentType
 from leasing.models import RentalPlan
+from leasing.utils import calculate_rental_cost
 
 User = get_user_model()
 
@@ -33,6 +35,8 @@ class CartItem(models.Model):
 
     # Campo específico para productos de arrendamiento
     rental_plan = models.ForeignKey(RentalPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    rental_start_date = models.DateField(null=True, blank=True)
+    rental_end_date = models.DateField(null=True, blank=True)
 
     class Meta:
         # Evita duplicados del mismo producto en el carrito, a menos que sea un plan de renta distinto
@@ -49,6 +53,9 @@ class CartItem(models.Model):
         Si es un producto de arrendamiento, usa el precio base del plan.
         """
         if self.rental_plan:
+            if self.rental_start_date and self.rental_end_date:
+                total, _, _ = calculate_rental_cost(self.rental_plan, self.rental_start_date, self.rental_end_date)
+                return total
             return self.rental_plan.base_price
         return self.product.price
 
@@ -101,6 +108,8 @@ class OrderItem(models.Model):
 
     # Campo específico para productos de arrendamiento
     rental_plan = models.ForeignKey(RentalPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    rental_start_date = models.DateField(null=True, blank=True)
+    rental_end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"Ítem de pedido {self.id} para el pedido #{self.order.id}"
