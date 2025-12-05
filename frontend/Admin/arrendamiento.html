@@ -14,8 +14,8 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(93, 173, 226, 0.05) 0px, transparent 50%), 
+            background-image:
+                radial-gradient(at 0% 0%, rgba(93, 173, 226, 0.05) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(133, 193, 226, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
         }
@@ -44,12 +44,16 @@
 <body class="h-screen overflow-hidden flex text-sm">
 
     <!-- Sidebar -->
-    <aside class="w-64 glass-sidebar flex flex-col h-full fixed md:relative z-50 transition-transform -translate-x-full md:translate-x-0" id="sidebar">
+    <aside
+        class="w-64 glass-sidebar flex flex-col h-full fixed md:relative z-50 transition-transform -translate-x-full md:translate-x-0"
+        id="sidebar">
         <!-- Logo -->
         <div class="h-20 flex items-center px-8 border-b border-white/5">
             <div class="flex items-center gap-3">
                 <div class="relative w-8 h-8 flex items-center justify-center">
-                    <span class="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                    <span
+                        class="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
+                        style="font-family: sans-serif;">P</span>
                 </div>
                 <span class="text-xl font-bold text-slate-900 tracking-wide">PIXSOFT</span>
             </div>
@@ -57,26 +61,31 @@
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-            <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-chart-line w-5 group-hover:text-[#5DADE2] transition-colors"></i>
                 Dashboard
             </a>
-            <a href="productos.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+            <a href="productos.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-box-open w-5 group-hover:text-[#5DADE2] transition-colors"></i>
                 Productos
             </a>
-            <a href="arrendamiento.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-linear-to-r from-[#5DADE2]/20 to-transparent text-[#5DADE2] border border-[#5DADE2]/20 font-medium transition-all">
+            <a href="arrendamiento.html"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl bg-linear-to-r from-[#5DADE2]/20 to-transparent text-[#5DADE2] border border-[#5DADE2]/20 font-medium transition-all">
                 <i class="fa-solid fa-file-contract w-5"></i>
                 Arrendamientos
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-users w-5 group-hover:text-[#5DADE2] transition-colors"></i>
                 Clientes
             </a>
             <div class="pt-4 pb-2">
                 <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema</p>
             </div>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all group">
                 <i class="fa-solid fa-gear w-5 group-hover:text-[#5DADE2] transition-colors"></i>
                 Configuración
             </a>
@@ -84,8 +93,10 @@
 
         <!-- User Profile -->
         <div class="p-4 border-t border-white/5">
-            <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer" onclick="logout()">
-                <img src="https://ui-avatars.com/api/?name=Admin+User&background=5DADE2&color=fff" alt="Admin" class="w-8 h-8 rounded-full">
+            <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+                onclick="logout()">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=5DADE2&color=fff" alt="Admin"
+                    class="w-8 h-8 rounded-full">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-slate-900 truncate" id="user-name">Administrador</p>
                     <p class="text-xs text-slate-500 truncate" id="user-email">admin@pixsoft.com</p>
@@ -108,64 +119,70 @@
 
         <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
 
-        <!-- Tabs de Categorías -->
-        <div class="mb-8">
-            <div class="border-b border-slate-200">
-                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                    <button onclick="switchTab('computers')" id="tab-computers"
-                        class="tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center">
-                        <i data-lucide="laptop" class="w-4 h-4 mr-2"></i> Computadoras
-                    </button>
-                    <button onclick="switchTab('servers')" id="tab-servers"
-                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
-                        <i data-lucide="server" class="w-4 h-4 mr-2"></i> Servidores y Redes
-                    </button>
-                    <button onclick="switchTab('printing')" id="tab-printing"
-                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
-                        <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Impresión
-                    </button>
-                    <button onclick="switchTab('contracts')" id="tab-contracts"
-                        class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center ml-auto text-[#5DADE2]">
-                        <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Mis Contratos
-                    </button>
-                </nav>
+            <!-- Tabs de Categorías -->
+            <div class="mb-8">
+                <div class="border-b border-slate-200">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button onclick="switchTab('computers')" id="tab-computers"
+                            class="tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center">
+                            <i data-lucide="laptop" class="w-4 h-4 mr-2"></i> Computadoras
+                        </button>
+                        <button onclick="switchTab('servers')" id="tab-servers"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
+                            <i data-lucide="server" class="w-4 h-4 mr-2"></i> Servidores y Redes
+                        </button>
+                        <button onclick="switchTab('printing')" id="tab-printing"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center">
+                            <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Impresión
+                        </button>
+                        <button onclick="switchTab('contracts')" id="tab-contracts"
+                            class="tab-inactive whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-sm flex items-center ml-auto text-[#5DADE2]">
+                            <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Mis Contratos
+                        </button>
+                    </nav>
+                </div>
             </div>
-        </div>
 
-        <!-- Contenido: Catálogo de Productos -->
-        <div id="catalog-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Las tarjetas de productos se inyectarán aquí -->
-            <div class="col-span-full text-center py-12 text-slate-500">Cargando equipos...</div>
-        </div>
-
-        <!-- Contenido: Mis Contratos -->
-        <div id="contracts-view" class="hidden">
-            <div class="bg-white/90 backdrop-blur-md shadow-lg overflow-hidden sm:rounded-xl border border-slate-200">
-                <table class="min-w-full divide-y divide-slate-200">
-                    <thead class="bg-slate-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                Equipo</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                Periodo</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                Estado</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">
-                                Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contracts-list" class="bg-white divide-y divide-slate-200">
-                        <!-- Contratos inyectados aquí -->
-                    </tbody>
-                </table>
+            <!-- Contenido: Catálogo de Productos -->
+            <div id="catalog-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Las tarjetas de productos se inyectarán aquí -->
+                <div class="col-span-full text-center py-12 text-slate-500">Cargando equipos...</div>
             </div>
-        </div>
+
+            <!-- Contenido: Mis Contratos -->
+            <div id="contracts-view" class="hidden">
+                <div
+                    class="bg-white/90 backdrop-blur-md shadow-lg overflow-hidden sm:rounded-xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                    ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                    Equipo</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                    Periodo</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                    Estado</th>
+                                <th
+                                    class="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">
+                                    Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contracts-list" class="bg-white divide-y divide-slate-200">
+                            <!-- Contratos inyectados aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
 
-    </div>
+        </div>
     </main>
 
     <!-- Modal de Cotización y Contrato -->
@@ -173,8 +190,8 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden border border-slate-200">
             <div class="px-6 py-4 bg-linear-to-r from-[#5DADE2] to-[#34D399] flex justify-between items-center">
                 <h3 class="text-lg font-medium text-white" id="modal-title">Configurar Arrendamiento</h3>
-                <button onclick="closeModal()" class="text-white hover:text-slate-100 transition-colors"><i data-lucide="x"
-                        class="w-5 h-5"></i></button>
+                <button onclick="closeModal()" class="text-white hover:text-slate-100 transition-colors"><i
+                        data-lucide="x" class="w-5 h-5"></i></button>
             </div>
 
             <div class="p-6">
@@ -223,7 +240,8 @@
                             </label>
                         </div>
 
-                        <div id="quote-summary" class="bg-linear-to-r from-[#5DADE2]/10 to-[#34D399]/10 p-4 rounded-lg border border-[#5DADE2]/20 hidden">
+                        <div id="quote-summary"
+                            class="bg-linear-to-r from-[#5DADE2]/10 to-[#34D399]/10 p-4 rounded-lg border border-[#5DADE2]/20 hidden">
                             <div class="flex justify-between text-sm font-medium text-slate-900">
                                 <span>Costo Total Estimado:</span>
                                 <span id="modal-total-cost" class="text-lg font-bold text-[#5DADE2]">$0.00</span>
@@ -249,16 +267,19 @@
 
     <!-- Modal de Firma -->
     <div id="sign-modal" class="fixed inset-0 bg-slate-900 bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
+        <div
+            class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                 <h3 class="text-lg font-medium text-slate-900">Firma de Contrato</h3>
                 <button onclick="document.getElementById('sign-modal').classList.add('hidden')"
-                    class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    class="text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x"
+                        class="w-5 h-5"></i></button>
             </div>
 
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="prose prose-sm max-w-none bg-slate-50 p-4 border border-slate-200 rounded-lg mb-4">
-                    <h4 class="text-center font-bold mb-4 text-slate-900">CONTRATO DE ARRENDAMIENTO DE EQUIPO TECNOLÓGICO</h4>
+                    <h4 class="text-center font-bold mb-4 text-slate-900">CONTRATO DE ARRENDAMIENTO DE EQUIPO
+                        TECNOLÓGICO</h4>
                     <pre id="contract-text" class="whitespace-pre-wrap font-mono text-xs text-slate-700"></pre>
                 </div>
 
@@ -570,7 +591,7 @@
         // Mobile menu toggle
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
-        
+
         if (menuBtn) {
             menuBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('-translate-x-full');
