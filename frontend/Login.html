@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -184,11 +185,11 @@
                     </div>
 
                     <div class="mt-6 grid grid-cols-2 gap-3">
-                        <button
+                        <button onclick="loginWithGoogle()"
                             class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm">
                             <i class="fa-brands fa-google text-red-500"></i> Google
                         </button>
-                        <button
+                        <button onclick="loginWithFacebook()"
                             class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white/70 hover:bg-white/90 border border-slate-200 transition-colors text-slate-700 text-sm shadow-sm">
                             <i class="fa-brands fa-facebook text-blue-600"></i> Facebook
                         </button>
@@ -336,15 +337,26 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    console.log('Login exitoso. Guardando tokens y redirigiendo...');
+                    console.log('Login exitoso. Respuesta:', result);
+                    console.log('Role flags:', { is_staff: result.is_staff, is_superuser: result.is_superuser });
+
                     // Guardar tokens en localStorage para uso futuro
                     localStorage.setItem('accessToken', result.access);
                     localStorage.setItem('refreshToken', result.refresh);
+                    localStorage.setItem('user', JSON.stringify({
+                        username: result.username,
+                        is_staff: result.is_staff,
+                        is_superuser: result.is_superuser
+                    }));
 
-                    alert('¡Login exitoso! Serás redirigido a la página principal.');
+                    alert('¡Login exitoso! Serás redirigido a tu panel correspondiente.');
 
-                    // Redireccionar a la página principal del cliente
-                    window.location.href = './Cliente/index.html';
+                    // Redireccionar según el rol
+                    if (result.is_staff) {
+                        window.location.href = './Admin/index.html';
+                    } else {
+                        window.location.href = './Cliente/index.html';
+                    }
                 } else {
                     console.error('Error en el login:', result);
                     alert('Error en el login:\n' + JSON.stringify(result, null, 2));
@@ -400,6 +412,55 @@
                 alert('No se pudo conectar con el servidor.');
             }
         });
+        // Social Login Functions
+        function loginWithGoogle() {
+            const client = google.accounts.oauth2.initCodeClient({
+                client_id: '862385698822-ihj654l1q6s8pul4ao0lgknjftqbaa4i.apps.googleusercontent.com',
+                scope: 'email profile',
+                ux_mode: 'popup',
+                callback: (response) => {
+                    if (response.code) {
+                        console.log('Authorization Code received:', response.code);
+                        // Send the code to backend
+                        authenticateWithBackend('google', response.code);
+                    }
+                },
+            });
+            client.requestCode();
+        }
+
+        async function authenticateWithBackend(provider, code) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/v1/auth/${provider}/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code }),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    console.log(`${provider} login successful:`, result);
+                    localStorage.setItem('accessToken', result.key || result.access_token || result.access); // Adjust based on dj-rest-auth response
+                    // dj-rest-auth usually returns 'key' (token)
+                    
+                    alert('Login con Google exitoso!');
+                    window.location.href = './Cliente/index.html'; // Default redirect
+                } else {
+                    console.error('Backend authentication failed:', result);
+                    alert(`Error en el login con ${provider}.\n` + (result.non_field_errors || JSON.stringify(result)));
+                }
+            } catch (error) {
+                console.error('Network error during social login:', error);
+                alert('Error de conexión con el servidor.');
+            }
+        }
+
+        function loginWithFacebook() {
+            // Similar logic for Facebook
+            console.log('Initiating Facebook Login...');
+            alert('Para habilitar el inicio de sesión con Facebook, necesitas configurar un App ID de Facebook.\n\nPor ahora, esto es una demostración de la interfaz.');
+        }
     </script>
 </body>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +12,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         // --- Protección de Ruta ---
-        (function() {
+        (function () {
             const token = localStorage.getItem('accessToken');
             if (!token) {
                 alert('Acceso denegado. Debes iniciar sesión.');
-                window.location.href = 'Login.html'; 
+                window.location.href = 'Login.html';
             }
         })();
     </script>
 </head>
+
 <body class="min-h-screen flex flex-col bg-slate-50">
 
     <!-- Navbar -->
@@ -29,20 +31,27 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center gap-3">
                     <div class="relative w-10 h-10 flex items-center justify-center">
-                        <span class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]" style="font-family: sans-serif;">P</span>
+                        <span
+                            class="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-br from-[#5DADE2] to-[#85C1E2]"
+                            style="font-family: sans-serif;">P</span>
                     </div>
                     <span class="text-2xl font-bold tracking-tight text-black">PIXSOFT</span>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex items-center gap-4">
-                    <a href="Cliente/index.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Volver a Inicio">
+                    <a href="Cliente/index.html"
+                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative"
+                        title="Volver a Inicio">
                         <i class="fa-solid fa-home text-xl"></i>
                     </a>
-                    <a href="Cliente/profile.html" class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative" title="Mi Perfil">
+                    <a href="Cliente/profile.html"
+                        class="p-2 text-slate-600 hover:text-pixsoft-primary transition-colors relative"
+                        title="Mi Perfil">
                         <i class="fa-solid fa-user text-xl"></i>
                     </a>
-                    <button onclick="logout()" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
+                    <button onclick="logout()"
+                        class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/30 transition-all transform hover:-translate-y-0.5 text-sm font-medium">
                         <i class="fa-solid fa-sign-out-alt"></i>
                         <span>Cerrar Sesión</span>
                     </button>
@@ -53,7 +62,7 @@
 
     <!-- Main Content -->
     <main class="flex-1 pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        
+
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-slate-900 mb-2">Mi Carrito de Compras</h1>
@@ -62,19 +71,20 @@
 
         <!-- Cart Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <!-- Cart Items -->
             <div class="lg:col-span-2">
                 <div id="cart-items-container" class="space-y-4">
                     <!-- Items will be rendered here by JavaScript -->
                 </div>
-                
+
                 <!-- Empty State -->
                 <div id="empty-cart" class="hidden glass-card rounded-2xl p-12 text-center bg-white">
                     <i class="fa-solid fa-cart-shopping text-6xl text-slate-300 mb-4"></i>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Tu carrito está vacío</h3>
                     <p class="text-slate-500 mb-6">Agrega productos para comenzar tu compra</p>
-                    <a href="Cliente/index.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
+                    <a href="Cliente/index.html"
+                        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5">
                         <i class="fa-solid fa-arrow-left"></i>
                         Ir a Comprar
                     </a>
@@ -85,7 +95,7 @@
             <div class="lg:col-span-1">
                 <div id="order-summary" class="glass-card rounded-2xl p-6 bg-white sticky top-28">
                     <h2 class="text-xl font-bold text-slate-900 mb-6">Resumen del Pedido</h2>
-                    
+
                     <div class="space-y-3 mb-6">
                         <div class="flex justify-between text-slate-600">
                             <span>Subtotal (<span id="total-items">0</span> productos)</span>
@@ -95,17 +105,20 @@
                             <span>Envío</span>
                             <span class="text-green-600 font-medium">Gratis</span>
                         </div>
-                        <div class="border-t border-slate-200 pt-3 flex justify-between text-lg font-bold text-slate-900">
+                        <div
+                            class="border-t border-slate-200 pt-3 flex justify-between text-lg font-bold text-slate-900">
                             <span>Total</span>
                             <span id="total">$0.00</span>
                         </div>
                     </div>
 
-                    <button onclick="goToCheckout()" class="w-full py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5 mb-3">
+                    <button onclick="goToCheckout()"
+                        class="w-full py-3 rounded-lg bg-pixsoft-primary hover:bg-pixsoft-secondary text-white font-semibold transition-all shadow-lg shadow-pixsoft-primary/20 hover:-translate-y-0.5 mb-3">
                         Proceder al Pago
                     </button>
-                    
-                    <button onclick="clearFullCart()" class="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 font-medium transition-all border border-slate-200 hover:border-red-200">
+
+                    <button onclick="clearFullCart()"
+                        class="w-full py-2.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 font-medium transition-all border border-slate-200 hover:border-red-200">
                         Vaciar Carrito
                     </button>
 
@@ -178,12 +191,12 @@
             // Render cart items
             container.innerHTML = cart.map(item => `
                 <div class="glass-card rounded-xl p-4 flex gap-4 bg-white hover:shadow-lg transition-all group">
-                    <div class="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-contain">
+                    <div class="w-24 h-24 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-200">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-semibold text-slate-900 mb-1 line-clamp-2">${item.name}</h3>
-                        <p class="text-xl font-bold text-pixsoft-primary mb-3">$${parseFloat(item.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
+                        <p class="text-xl font-bold text-pixsoft-primary">$${parseFloat(item.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
                         <div class="flex items-center gap-3">
                             <span class="text-sm text-slate-600">Cantidad:</span>
                             <div class="flex items-center gap-2">
@@ -259,6 +272,6 @@
         // Load cart on page load
         document.addEventListener('DOMContentLoaded', loadCart);
     </script>
-
 </body>
+
 </html>

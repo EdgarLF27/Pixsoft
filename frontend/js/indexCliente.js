@@ -68,9 +68,14 @@ function createProductCard(product) {
     : `<span class="px-2 py-1 rounded bg-green-100 text-green-600 text-xs font-bold border border-green-200">VENTA</span>`;
 
   // Imagen del producto (usar placeholder si no hay imagen)
-  const imageUrl =
-    product.custom_attributes?.image_url ||
-    "https://via.placeholder.com/300x300?text=Producto";
+  let imageUrl = "https://via.placeholder.com/300x300?text=Producto";
+  if (product.image) {
+    imageUrl = product.image.startsWith("http")
+      ? product.image
+      : `http://localhost:8000${product.image}`;
+  } else if (product.custom_attributes?.image_url) {
+    imageUrl = product.custom_attributes.image_url;
+  }
 
   // Generar estrellas de rating (simulado, puedes agregar este campo al modelo si lo necesitas)
   const rating = product.custom_attributes?.rating || 4.5;
@@ -163,13 +168,24 @@ function createProductCard(product) {
         <div class="absolute top-4 left-4 z-10">
             ${badgeHTML}
         </div>
-        <div class="h-48 flex items-center justify-center mb-4 relative p-4">
-            <div class="absolute inset-0 bg-slate-50 rounded-lg group-hover:bg-slate-100 transition-colors -z-10"></div>
-            <img src="${imageUrl}" alt="${product.name}" class="h-32 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300 mix-blend-multiply">
+        <div class="h-64 w-full flex items-center justify-center mb-4 relative overflow-hidden bg-white">
+            <img src="${imageUrl}" alt="${
+    product.name
+  }" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
         </div>
-        <div class="flex-1 flex flex-col">
-            <h3 class="text-slate-800 font-semibold mb-1 line-clamp-2 group-hover:text-pixsoft-primary transition-colors">${product.name}</h3>
+
+        <div class="px-2 w-full flex-1 flex flex-col">
+            <div class="mb-2">
+                <p class="text-xs text-slate-500 uppercase tracking-wider font-medium mb-1">${
+                  product.brand || "Generico"
+                }</p>
+                <h3 class="font-bold text-slate-800 leading-tight group-hover:text-pixsoft-primary transition-colors line-clamp-2 min-h-[2.5em]">${
+                  product.name
+                }</h3>
+            </div>
+            
             ${descriptionHTML}
+            
             <div class="mt-auto">
                 ${priceHTML}
                 ${buttonHTML}
