@@ -51,6 +51,9 @@ class SaleProduct(models.Model):
         verbose_name="Categoría"
     ) 
     
+    # Campo para la imagen del producto
+    image = models.ImageField(upload_to='product_pics/', blank=True, null=True, verbose_name="Imagen del Producto")
+    
     # 4.1 Atributos Personalizados (JSONField para flexibilidad)
     # Almacena detalles específicos como 'tipo_conector', 'velocidad', 'compatibilidad'.
     custom_attributes = models.JSONField(

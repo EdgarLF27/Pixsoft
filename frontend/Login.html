@@ -336,15 +336,29 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    console.log('Login exitoso. Guardando tokens y redirigiendo...');
+                    console.log('Login exitoso. Respuesta:', result);
+                    console.log('Role flags:', { is_staff: result.is_staff, is_superuser: result.is_superuser });
+
                     // Guardar tokens en localStorage para uso futuro
                     localStorage.setItem('accessToken', result.access);
                     localStorage.setItem('refreshToken', result.refresh);
+                    // Also store user info if needed
+                    localStorage.setItem('userInfo', JSON.stringify({
+                        username: result.username,
+                        is_staff: result.is_staff,
+                        is_superuser: result.is_superuser
+                    }));
 
-                    alert('¡Login exitoso! Serás redirigido a la página principal.');
+                    alert('¡Login exitoso! Serás redirigido.');
 
-                    // Redireccionar a la página principal del cliente
-                    window.location.href = './Cliente/index.html';
+                    // Redirección basada en roles
+                    if (result.is_superuser || result.is_staff) {
+                        console.log('Redirigiendo a Admin...');
+                        window.location.href = './Admin/index.html';
+                    } else {
+                        console.log('Redirigiendo a Cliente...');
+                        window.location.href = './Cliente/index.html';
+                    }
                 } else {
                     console.error('Error en el login:', result);
                     alert('Error en el login:\n' + JSON.stringify(result, null, 2));

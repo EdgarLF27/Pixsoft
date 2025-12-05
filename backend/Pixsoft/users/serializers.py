@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'name', 'profile']
+        fields = ['id', 'username', 'email', 'password', 'name', 'profile', 'is_staff', 'is_superuser']
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
             'username': {'required': False}
@@ -29,7 +29,9 @@ class UserSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password'],
-            first_name=validated_data.get('first_name', '')
+            first_name=validated_data.get('first_name', ''),
+            is_staff=validated_data.get('is_staff', False),
+            is_superuser=validated_data.get('is_superuser', False)
         )
         
         # The post_save signal creates the profile. We just update it.
@@ -43,6 +45,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.is_staff = validated_data.get('is_staff', instance.is_staff)
+        instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
         
         if 'password' in validated_data:
             instance.set_password(validated_data['password'])
@@ -50,7 +54,6 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         if profile_data:
-            # profile is a OneToOneField, so we access it directly
             profile = instance.profile
             for attr, value in profile_data.items():
                 setattr(profile, attr, value)
@@ -59,3 +62,26 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        token['is_staff'] = user.is_staff
+        token['is_superuser'] = user.is_superuser
+
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        # Add extra responses data
+        data['username'] = self.user.username
+        data['is_staff'] = self.user.is_staff
+        data['is_superuser'] = self.user.is_superuser
+        
+        return data

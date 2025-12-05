@@ -15,60 +15,67 @@ function renderSidebar(activePageId) {
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
             <a href="index.html" class="${getLinkClass(
-              activePageId,
-              "dashboard"
-            )}">
+    activePageId,
+    "dashboard"
+  )}">
                 <i class="fa-solid fa-chart-line w-5 ${getIconClass(
-                  activePageId,
-                  "dashboard"
-                )}"></i>
+    activePageId,
+    "dashboard"
+  )}"></i>
                 Dashboard
             </a>
             <a href="productos.html" class="${getLinkClass(
-              activePageId,
-              "productos"
-            )}">
+    activePageId,
+    "productos"
+  )}">
                 <i class="fa-solid fa-box-open w-5 ${getIconClass(
-                  activePageId,
-                  "productos"
-                )}"></i>
+    activePageId,
+    "productos"
+  )}"></i>
                 Productos
             </a>
             <a href="arrendamiento.html" class="${getLinkClass(
-              activePageId,
-              "arrendamientos"
-            )}">
+    activePageId,
+    "arrendamientos"
+  )}">
                 <i class="fa-solid fa-file-contract w-5 ${getIconClass(
-                  activePageId,
-                  "arrendamientos"
-                )}"></i>
+    activePageId,
+    "arrendamientos"
+  )}"></i>
                 Arrendamientos
             </a>
             <a href="envios.html" class="${getLinkClass(
-              activePageId,
-              "envios"
-            )}">
+    activePageId,
+    "envios"
+  )}">
                 <i class="fa-solid fa-truck-fast w-5 ${getIconClass(
-                  activePageId,
-                  "envios"
-                )}"></i>
+    activePageId,
+    "envios"
+  )}"></i>
                 Envíos
             </a>
             <a href="#" class="${getLinkClass(activePageId, "clientes")}">
                 <i class="fa-solid fa-users w-5 ${getIconClass(
-                  activePageId,
-                  "clientes"
-                )}"></i>
+    activePageId,
+    "clientes"
+  )}"></i>
                 Clientes
+            </a>
+            <a href="admins.html" class="${getLinkClass(activePageId, "admins")}">
+                <i class="fa-solid fa-user-shield w-5 ${getIconClass(
+    activePageId,
+    "admins"
+  )}"></i>
+                Administradores
             </a>
             <div class="pt-4 pb-2">
                 <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema</p>
             </div>
             <a href="#" class="${getLinkClass(activePageId, "configuracion")}">
                 <i class="fa-solid fa-gear w-5 ${getIconClass(
-                  activePageId,
-                  "configuracion"
-                )}"></i>
+    activePageId,
+    "configuracion"
+  )}"></i>
                 Configuración
             </a>
         </nav>

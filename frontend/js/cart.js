@@ -177,36 +177,30 @@ function renderCartDropdown() {
       (item) => `
         <div class="flex gap-3 p-3 hover:bg-slate-50 rounded-lg transition-colors group">
             <div class="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                <img src="${item.image}" alt="${
-        item.name
-      }" class="w-full h-full object-contain">
+                <img src="${item.image}" alt="${item.name
+        }" class="w-full h-full object-contain">
             </div>
             <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1">${
-                  item.name
-                }</h4>
+                <h4 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-1">${item.name
+        }</h4>
                 <p class="text-sm font-bold text-slate-900">$${parseFloat(
-                  item.price
-                ).toLocaleString("es-MX", { minimumFractionDigits: 2 })}</p>
+          item.price
+        ).toLocaleString("es-MX", { minimumFractionDigits: 2 })}</p>
                 <div class="flex items-center gap-2 mt-1">
-                    <button onclick="event.stopPropagation(); updateQuantity(${
-                      item.id
-                    }, -1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                    <button onclick="event.stopPropagation(); updateQuantity(${item.id
+        }, -1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
                         <i class="fa-solid fa-minus text-xs"></i>
                     </button>
-                    <span class="text-sm font-medium text-slate-700 w-8 text-center">${
-                      item.quantity
-                    }</span>
-                    <button onclick="event.stopPropagation(); updateQuantity(${
-                      item.id
-                    }, 1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                    <span class="text-sm font-medium text-slate-700 w-8 text-center">${item.quantity
+        }</span>
+                    <button onclick="event.stopPropagation(); updateQuantity(${item.id
+        }, 1)" class="w-6 h-6 rounded bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
                         <i class="fa-solid fa-plus text-xs"></i>
                     </button>
                 </div>
             </div>
-            <button onclick="event.stopPropagation(); removeFromCart(${
-              item.id
-            })" class="text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 self-start">
+            <button onclick="event.stopPropagation(); removeFromCart(${item.id
+        })" class="text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 self-start">
                 <i class="fa-solid fa-trash text-sm"></i>
             </button>
         </div>
