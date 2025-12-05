@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXSOFT - Gestión de Administradores</title>
+    <link href="../src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="h-screen overflow-hidden flex text-sm bg-slate-50">
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- Mobile Header -->
+        <header class="md:hidden h-16 flex items-center justify-between px-4 glass-panel z-40">
+            <button id="menu-btn" class="text-slate-600 hover:text-slate-900">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-slate-900">PIXSOFT Admin</span>
+            <div class="w-8"></div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+
+            <!-- Header & Actions -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 mb-1">Administradores</h1>
+                    <p class="text-slate-600">Gestiona el acceso y privilegios del personal administrativo.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openUserModal()" class="btn-primary">
+                        <i class="fa-solid fa-user-plus"></i> Nuevo Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="glass-panel rounded-2xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200 bg-slate-50/50">
+                                <th class="px-6 py-4 font-medium">Usuario</th>
+                                <th class="px-6 py-4 font-medium">Email</th>
+                                <th class="px-6 py-4 font-medium">Rol</th>
+                                <th class="px-6 py-4 font-medium text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody" class="text-sm divide-y divide-slate-200">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Modal -->
+    <div id="userModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity opacity-0" id="modalOverlay"
+            onclick="closeUserModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col transform transition-all scale-95 opacity-0 pointer-events-auto"
+                id="userModalPanel">
+
+                <div
+                    class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                    <h2 class="text-lg font-bold text-slate-800" id="modalTitle">Nuevo Administrador</h2>
+                    <button onclick="closeUserModal()"
+                        class="text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <input type="hidden" id="userId">
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Username</label>
+                        <input type="text" id="username" class="input-field">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" id="email" class="input-field">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Nombre Completo</label>
+                        <input type="text" id="fullname" class="input-field">
+                    </div>
+
+                    <div id="passwordField">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña</label>
+                        <input type="password" id="password" class="input-field" placeholder="Mínimo 8 caracteres">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-2">Privilegios</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="isStaff" class="w-4 h-4 text-[#5DADE2] rounded">
+                                <span class="text-slate-600">Staff (Acceso básico)</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="isSuperuser" class="w-4 h-4 text-[#5DADE2] rounded">
+                                <span class="text-slate-600">Superusuario (Total)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3 rounded-b-2xl">
+                    <button onclick="closeUserModal()"
+                        class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200">Cancelar</button>
+                    <button onclick="saveUser()" class="btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/components/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar('admins');
+        });
+    </script>
+    <script src="../js/admins.js"></script>
+</body>
+
+</html>

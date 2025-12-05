@@ -51,10 +51,12 @@ class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
     product_type = serializers.ChoiceField(choices=['sale', 'rental'])
     rental_plan_id = serializers.IntegerField(required=False)
+    rental_start_date = serializers.DateField(required=False)
+    rental_end_date = serializers.DateField(required=False)
 
     class Meta:
         model = CartItem
-        fields = ['product_id', 'product_type', 'quantity', 'rental_plan_id']
+        fields = ['product_id', 'product_type', 'quantity', 'rental_plan_id', 'rental_start_date', 'rental_end_date']
 
     def validate(self, data):
         product_type = data['product_type']
@@ -83,6 +85,8 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         product_id = self.validated_data['product_id']
         quantity = self.validated_data['quantity']
         rental_plan_id = self.validated_data.get('rental_plan_id')
+        rental_start_date = self.validated_data.get('rental_start_date')
+        rental_end_date = self.validated_data.get('rental_end_date')
 
         if product_type == 'sale':
             content_type = ContentType.objects.get_for_model(SaleProduct)
@@ -97,7 +101,11 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             content_type=content_type,
             object_id=product_id,
             rental_plan=rental_plan,
-            defaults={'quantity': quantity}
+            defaults={
+                'quantity': quantity,
+                'rental_start_date': rental_start_date,
+                'rental_end_date': rental_end_date
+            }
         )
         
         self.instance = cart_item
@@ -151,7 +159,9 @@ class CreateOrderSerializer(serializers.Serializer):
                 product=cart_item.product,
                 quantity=cart_item.quantity,
                 price_at_purchase=cart_item.item_price,
-                rental_plan=cart_item.rental_plan
+                rental_plan=cart_item.rental_plan,
+                rental_start_date=cart_item.rental_start_date,
+                rental_end_date=cart_item.rental_end_date
             )
             total_price += order_item.total_price
         
@@ -163,3 +173,9 @@ class CreateOrderSerializer(serializers.Serializer):
         cart.items.all().delete()
 
         return order
+
+    def to_representation(self, instance):
+        """
+        Devuelve la representación detallada del pedido usando OrderSerializer.
+        """
+        return OrderSerializer(instance).data

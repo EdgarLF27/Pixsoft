@@ -4,173 +4,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Pixsoft</title>
+    <title>PIXSOFT - Checkout</title>
+    <link href="src/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://js.stripe.com/v3/"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        /* Estilos para Stripe Elements */
-        .StripeElement {
-            box-sizing: border-box;
-            height: 40px;
-            padding: 10px 12px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            background-color: white;
-            box-shadow: 0 1px 3px 0 #e6ebf1;
-            -webkit-transition: box-shadow 150ms ease;
-            transition: box-shadow 150ms ease;
-        }
-
-        .StripeElement--focus {
-            box-shadow: 0 1px 3px 0 #cfd7df;
-        }
-
-        .StripeElement--invalid {
-            border-color: #fa755a;
-        }
-
-        .StripeElement--webkit-autofill {
-            background-color: #fefde5 !important;
-        }
-    </style>
+    <script>
+        // --- Protección de Ruta ---
+        (function () {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                window.location.href = 'Login.html';
+            }
+        })();
+    </script>
 </head>
 
-<body class="bg-gray-100 p-8">
-    </label>
-    <div id="card-element" class="p-2 border rounded">
-        <!-- A Stripe Element will be inserted here. -->
-    </div>
-    <!-- Used to display form errors. -->
-    <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
-    </div>
+<body class="min-h-screen flex flex-col bg-slate-50">
 
-    <button id="submit-button"
-        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        disabled>
-        Pagar
-    </button>
-    </form>
+    <!-- Navbar Simplificado -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span
+                        class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pixsoft-primary to-pixsoft-secondary">PIXSOFT</span>
+                    <span class="text-slate-400 text-sm border-l border-slate-300 pl-2 ml-2">Checkout Seguro</span>
+                </div>
+                <!-- Back -->
+                <a href="cart.html" class="text-slate-500 hover:text-slate-800 text-sm font-medium">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Volver al Carrito
+                </a>
+            </div>
+        </div>
+    </nav>
 
-    <div id="loading-message" class="hidden text-center text-gray-600">Procesando pago...</div>
-    <div id="success-message" class="hidden text-center text-green-600 font-bold">
-        ¡Pago Exitoso! <br>
-        <a id="download-invoice" href="#" class="text-blue-500 underline mt-2 block">Descargar Factura</a>
-    </div>
-    </div>
+    <!-- Main Content -->
+    <main class="flex-1 pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+
+        <h1 class="text-3xl font-bold text-slate-900 mb-8">Finalizar Compra</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Columna Izquierda: Formulario de Pago y Dirección -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- 1. Dirección de Entrega (Simulado) -->
+                <div class="glass-card bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                        <span
+                            class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                        Dirección de Entrega
+                    </h2>
+                    <form id="shipping-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
+                                <input type="text"
+                                    class="w-full rounded-lg border-slate-300 focus:ring-pixsoft-primary focus:border-pixsoft-primary"
+                                    placeholder="Juan Pérez">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Teléfono</label>
+                                <input type="tel"
+                                    class="w-full rounded-lg border-slate-300 focus:ring-pixsoft-primary focus:border-pixsoft-primary"
+                                    placeholder="+52 55 1234 5678">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Dirección Completa</label>
+                            <input type="text"
+                                class="w-full rounded-lg border-slate-300 focus:ring-pixsoft-primary focus:border-pixsoft-primary"
+                                placeholder="Calle, Número, Colonia, Ciudad">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Método de Pago -->
+                <div class="glass-card bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                        <span
+                            class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                        Método de Pago
+                    </h2>
+
+                    <div class="mb-4">
+                        <div id="card-element" class="p-4 border border-slate-200 rounded-lg bg-slate-50">
+                            <!-- Stripe Element -->
+                        </div>
+                        <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 p-3 rounded-lg">
+                        <i class="fa-solid fa-lock text-green-500"></i>
+                        Sus datos están encriptados y seguros.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Resumen -->
+            <div class="lg:col-span-1">
+                <div class="glass-card bg-white rounded-xl p-6 shadow-sm border border-slate-100 sticky top-24">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6">Resumen del Pedido</h2>
+
+                    <div id="order-items-list" class="space-y-4 mb-6 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Loading spinner -->
+                        <div class="text-center py-4 text-slate-400">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Cargando resumen...
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-4 space-y-2">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Envío</span>
+                            <span class="text-green-600">Gratis</span>
+                        </div>
+                        <div
+                            class="flex justify-between text-slate-900 font-bold text-xl pt-2 border-t border-slate-100 mt-2">
+                            <span>Total</span>
+                            <span id="summary-total">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button id="submit-button"
+                        class="w-full mt-6 btn-primary py-3 text-lg shadow-lg shadow-pixsoft-primary/20 flex justify-center items-center gap-2">
+                        <span>Pagar Ahora</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                    <div id="loading-overlay"
+                        class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-xl z-10">
+                        <div class="text-center">
+                            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-pixsoft-primary mb-2"></i>
+                            <p class="text-slate-600 font-medium">Procesando pago...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx'); // Clave pública de prueba
+        const stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx'); // Reemplazar con tu llave pública real
         const elements = stripe.elements();
-        const card = elements.create('card');
+
+        // Estilos para Stripe
+        const style = {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Inter", sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        const card = elements.create('card', { style: style });
         card.mount('#card-element');
 
         const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
-        let currentInvoiceId = null;
 
-        // Obtener token
+        // --- Auth Headers ---
         function getAuthHeaders() {
             const token = localStorage.getItem('accessToken');
-            if (!token) window.location.href = '/frontend/Login.html';
             return {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             };
         }
 
-        // Cargar resumen del carrito
-        async function loadCart() {
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCartSummary();
+
+            document.getElementById('submit-button').addEventListener('click', handlePayment);
+        });
+
+        // --- Load Cart ---
+        async function loadCartSummary() {
             try {
                 const response = await fetch(`${API_BASE_URL}/orders/cart/`, { headers: getAuthHeaders() });
-                const data = await response.json();
+                if (!response.ok) throw new Error('Error al cargar carrito');
 
-                const itemsList = document.getElementById('items-list');
-                let html = '';
-                data.items.forEach(item => {
-                    html += `<p>${item.product} x ${item.quantity} - S/.${item.total_price}</p>`;
-                });
-                itemsList.innerHTML = html;
-                document.getElementById('total-amount').innerText = `S/.${data.total_cart_price}`;
-
-                document.getElementById('submit-button').disabled = false;
+                const cart = await response.json();
+                renderSummary(cart);
             } catch (error) {
-                console.error('Error cargando carrito:', error);
+                console.error(error);
+                document.getElementById('order-items-list').innerHTML = '<p class="text-red-500 text-sm">Error al cargar el resumen.</p>';
             }
         }
 
-        loadCart();
+        function renderSummary(cart) {
+            const container = document.getElementById('order-items-list');
 
-        // Manejar envío del formulario
-        const form = document.getElementById('payment-form');
-        form.addEventListener('submit', async function (event) {
-            event.preventDefault();
-            document.getElementById('submit-button').disabled = true;
-            document.getElementById('loading-message').classList.remove('hidden');
+            if (cart.items.length === 0) {
+                window.location.href = 'cart.html'; // Redirect valid cart
+                return;
+            }
 
-            // 1. Crear PaymentIntent en el backend (simulado por ahora o real)
-            // Para simplificar este demo rápido, crearemos la orden y la factura primero
+            container.innerHTML = cart.items.map(item => `
+                <div class="flex gap-3 text-sm">
+                    <div class="w-12 h-12 bg-slate-100 rounded border border-slate-200 shrink-0 flex items-center justify-center overflow-hidden">
+                        <!-- Placeholder image logic simplificada -->
+                        <i class="fa-solid ${item.rental_plan_details ? 'fa-laptop text-blue-500' : 'fa-box text-orange-500'}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-slate-800 line-clamp-2">${item.product}</p>
+                        ${renderItemDetails(item)}
+                        <div class="flex justify-between mt-1 text-slate-500">
+                            <span>Cant: ${item.quantity}</span>
+                            <span class="font-semibold text-slate-700">$${parseFloat(item.total_price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('summary-subtotal').textContent = `$${parseFloat(cart.total_cart_price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+            document.getElementById('summary-total').textContent = `$${parseFloat(cart.total_cart_price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+        }
+
+        function renderItemDetails(item) {
+            if (item.rental_plan_details) {
+                // Como el serializer no nos manda las fechas directamente en la vista del carrito (aun), 
+                // intentamos usar lo que hay o mostrar que es renta.
+                // Corrección: Modificamos el serializer para mandar rental_start_date? 
+                // Si no, solo mostramos "Renta".
+                return `<span class="text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">Renta</span>`;
+            }
+            return `<span class="text-xs text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">Venta</span>`;
+        }
+
+        // --- Handle Payment ---
+        async function handlePayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-button');
+            const loader = document.getElementById('loading-overlay');
+            const errDiv = document.getElementById('card-errors');
+
+            btn.disabled = true;
+            loader.classList.remove('hidden');
+            errDiv.textContent = '';
+
             try {
-                // Paso A: Checkout (Crear Orden y Factura)
-                const checkoutResponse = await fetch(`${API_BASE_URL}/orders/cart/checkout/`, { // Asumiendo que existe este endpoint o similar
-                    method: 'POST',
-                    headers: getAuthHeaders()
-                });
-
-                // NOTA: Si no tienes el endpoint de checkout específico, usaremos una lógica simulada
-                // Pero como prometí arreglarlo, voy a asumir que necesitamos crear el pago.
-
-                // Vamos a simular el éxito directo con Stripe frontend para demostración
-                // En producción real: Backend crea Intent -> Frontend confirma -> Backend webhook
-
+                // 1. Create Token (Simulated Stripe)
                 const { token, error } = await stripe.createToken(card);
 
                 if (error) {
-                    // Mostrar error
-                    const errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = error.message;
-                    document.getElementById('submit-button').disabled = false;
-                    document.getElementById('loading-message').classList.add('hidden');
-                } else {
-                    // Enviar token al backend
-                    stripeTokenHandler(token);
+                    throw new Error(error.message);
                 }
-            } catch (e) {
-                console.error(e);
-            }
-        });
 
-        async function stripeTokenHandler(token) {
-            // Enviar el token al backend para procesar el cargo
-            try {
-                // Primero creamos la factura/orden si no existe
-                // Como no tengo el endpoint de "checkout" en orders aun, voy a usar el de pagos directo
-                // Pero necesito una factura ID. 
-
-                // HACK: Para este demo, voy a crear un pago "dummy" que el backend aceptará
-                const response = await fetch(`${API_BASE_URL}/billing/payments/`, {
+                // 2. Create Order in Backend
+                // We send a POST to orders to convert Cart -> Order
+                const orderResponse = await fetch(`${API_BASE_URL}/orders/`, {
                     method: 'POST',
                     headers: getAuthHeaders(),
-                    body: JSON.stringify({
-                        amount: 100.00, // Monto dummy, el backend debería validar
-                        invoice: 1, // ID dummy, esto fallará si no hay factura.
-                        method: 'CARD',
-                        transaction_id: token.id
-                    })
+                    body: JSON.stringify({}) // Empty body, logic is handled by backend using user's cart
                 });
 
-                // Si falla por ID de factura, es porque necesitamos integrar el flujo completo de Orden -> Factura.
-                // Voy a asumir que el usuario quiere ver la UI primero.
+                if (!orderResponse.ok) {
+                    const errorData = await orderResponse.json();
+                    throw new Error(errorData.detail || 'Error al crear el pedido');
+                }
 
-                document.getElementById('payment-form').classList.add('hidden');
-                document.getElementById('loading-message').classList.add('hidden');
-                document.getElementById('success-message').classList.remove('hidden');
+                const order = await orderResponse.json();
+                console.log('Order created:', order);
 
-                // Simular link de factura
-                document.getElementById('download-invoice').href = `${API_BASE_URL}/billing/invoices/1/generate_pdf/`;
+                // 3. Process Payment (Simulated)
+                // Real implementation would use PaymentIntent here.
+                // We'll just show success for now.
+
+                // Clear Local Cart
+                localStorage.removeItem('pixsoft_cart');
+
+                // Redirect to Success
+                alert('¡Pago procesado con éxito!');
+                window.location.href = 'Cliente/profile.html'; // Or success page
 
             } catch (error) {
-                console.error('Error en pago:', error);
+                console.error(error);
+                errDiv.textContent = error.message;
+                btn.disabled = false;
+                loader.classList.add('hidden');
             }
         }
+
     </script>
 </body>
 

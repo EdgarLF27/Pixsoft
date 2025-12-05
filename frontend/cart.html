@@ -196,15 +196,21 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-semibold text-slate-900 mb-1 line-clamp-2">${item.name}</h3>
+                        ${item.rental_data ? `
+                            <div class="text-xs text-slate-500 mb-2 bg-blue-50 p-2 rounded border border-blue-100 inline-block">
+                                <span class="font-medium text-blue-700">Periodo:</span> ${item.rental_data.start_date} al ${item.rental_data.end_date}<br>
+                                <span class="font-medium text-blue-700">Días:</span> ${item.rental_data.duration_days}
+                            </div>
+                        ` : ''}
                         <p class="text-xl font-bold text-pixsoft-primary">$${parseFloat(item.price).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
                         <div class="flex items-center gap-3">
                             <span class="text-sm text-slate-600">Cantidad:</span>
                             <div class="flex items-center gap-2">
-                                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                                <button onclick="updateQuantity('${item.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
                                     <i class="fa-solid fa-minus text-sm"></i>
                                 </button>
                                 <span class="text-base font-semibold text-slate-900 w-10 text-center">${item.quantity}</span>
-                                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
+                                <button onclick="updateQuantity('${item.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition-colors">
                                     <i class="fa-solid fa-plus text-sm"></i>
                                 </button>
                             </div>

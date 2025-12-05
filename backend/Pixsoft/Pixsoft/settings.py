@@ -104,6 +104,11 @@ DATABASES = {
     }
 }
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -159,6 +164,10 @@ REST_AUTH = {
     'JWT_AUTH_COOKIE': 'pixsoft-auth',
     'JWT_AUTH_REFRESH_COOKIE': 'pixsoft-refresh-token',
 }
+
+# Suppress annoying dj-rest-auth warnings
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='dj_rest_auth.registration.serializers')
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
