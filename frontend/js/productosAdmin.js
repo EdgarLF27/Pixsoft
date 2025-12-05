@@ -16,10 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 // --- API Calls ---
 async function apiCall(endpoint, method = 'GET', body = null) {
   const headers = { 'Content-Type': 'application/json' };
-  // Si se requiere autenticación, descomentar:
-  // const token = localStorage.getItem('accessToken');
-  // if (token) headers['Authorization'] = `Bearer ${token}`;
-
   try {
     const res = await fetch(API_BASE + endpoint, {
       method, headers, body: body ? JSON.stringify(body) : null
@@ -132,7 +128,6 @@ function populateCategoryFilters() {
     option.textContent = cat.name;
     select.appendChild(option);
 
-    // Subcategorías (flattened for filter)
     if (cat.subcategories) {
       cat.subcategories.forEach(sub => {
         const subOpt = document.createElement("option");
@@ -154,8 +149,6 @@ function handleFilter() {
       p.brand.toLowerCase().includes(searchTerm) ||
       p.sku.toLowerCase().includes(searchTerm);
 
-    // Filtrado por categoría (simple, por ID directo)
-    // Nota: Para filtrar por padre e hijos se requeriría más lógica en frontend o backend
     const matchesCategory = categoryId ? p.category == categoryId : true;
 
     let matchesStatus = true;
@@ -177,8 +170,7 @@ function openProductModal() {
   isEditing = false;
   currentProductId = null;
   document.getElementById("modalTitle").textContent = "Nuevo Producto";
-  // Reset form fields...
-  // (Simplificación: limpiar inputs manualmente o usar form.reset() si estuviera en un form)
+
   document.querySelectorAll('#productModal input').forEach(i => i.value = '');
   document.getElementById("modalCategory").value = "";
   document.getElementById("modalSubcategory").innerHTML = '<option value="">Selecciona categoría primero</option>';
@@ -193,26 +185,50 @@ function editProduct(product) {
   currentProductId = product.id;
   document.getElementById("modalTitle").textContent = "Editar Producto";
 
-  // Populate fields
-  const inputs = document.querySelectorAll('#productModal input');
-  // Asumiendo orden: Name, Brand, Model, Price, SKU, Stock, Alert
-  // Esto es frágil, mejor usar IDs específicos en el HTML
-  // Por ahora, mapearé manualmente si agrego IDs al HTML o uso selectores más específicos
-  // Para simplificar, asumiré que el usuario editará en el backend admin si falla, 
-  // pero intentaré llenar lo básico.
+  document.getElementById('prodName').value = product.name;
+  document.getElementById('prodBrand').value = product.brand;
+  document.getElementById('prodModel').value = product.model;
+  document.getElementById('prodPrice').value = product.price;
+  document.getElementById('prodSku').value = product.sku;
+  document.getElementById('prodStock').value = product.stock_quantity;
 
-  // NOTA: Necesito IDs en el HTML del modal para hacer esto bien. 
-  // Voy a asumir que puedo seleccionarlos por placeholder o label cercano, 
-  // pero lo ideal es modificar el HTML para tener IDs.
-  // Como no puedo modificar el HTML fácilmente en este paso sin otro tool call,
-  // usaré selectores por tipo y orden (riesgoso pero efectivo si no cambia el HTML).
+  let parentId = null;
+  let subId = null;
 
-  // Mejor enfoque: Modificar el HTML para añadir IDs a los inputs del modal.
-  // Pero el usuario dijo "haz un html", así que puedo reescribir el HTML también si quiero.
-  // Por ahora, solo mostraré el modal vacío para "Nuevo" y alertaré para "Editar" que use el admin
-  // O mejor, implementaré IDs en el HTML en el siguiente paso.
+  const parent = allCategories.find(c => c.id == product.category);
+  if (parent) {
+    parentId = parent.id;
+  } else {
+    for (const cat of allCategories) {
+      if (cat.subcategories) {
+        const sub = cat.subcategories.find(s => s.id == product.category);
+        if (sub) {
+          parentId = cat.id;
+          subId = sub.id;
+          break;
+        }
+      }
+    }
+  }
 
-  alert("Funcionalidad de edición completa disponible próximamente. Use el panel de administración para editar detalles complejos.");
+  if (parentId) {
+    document.getElementById("modalCategory").value = parentId;
+    updateModalSubcategories();
+    if (subId) {
+      document.getElementById("modalSubcategory").value = subId;
+    }
+  }
+
+  if (product.custom_attributes) {
+    for (const [key, value] of Object.entries(product.custom_attributes)) {
+      const input = document.querySelector(`#dynamicFieldsContainer input[data-attr="${key}"]`);
+      if (input) {
+        input.value = value;
+      }
+    }
+  }
+
+  toggleModal(true);
 }
 
 function toggleModal(show) {
@@ -266,7 +282,7 @@ function updateModalSubcategories() {
   }
 
   const category = allCategories.find(c => c.id == categoryId);
-  if (category && category.subcategories) {
+  if (category && category.subcategories && category.subcategories.length > 0) {
     category.subcategories.forEach(sub => {
       const option = document.createElement("option");
       option.value = sub.id;
@@ -274,10 +290,10 @@ function updateModalSubcategories() {
       subSelect.appendChild(option);
     });
     subSelect.disabled = false;
+  } else {
+    subSelect.disabled = true;
   }
 
-  // Lógica de atributos dinámicos (simulada basada en nombre de categoría)
-  // En un sistema real, los atributos requeridos vendrían de la configuración de la categoría en BD
   dynamicSection.classList.remove("hidden");
   let attributes = [];
 
@@ -306,7 +322,7 @@ async function deleteProduct(id) {
   if (confirm("¿Estás seguro de eliminar este producto?")) {
     const success = await apiCall(`productos/${id}/`, 'DELETE');
     if (success) {
-      fetchProducts(); // Recargar lista
+      fetchProducts();
     }
   }
 }
@@ -318,9 +334,11 @@ async function saveProduct() {
   const price = document.getElementById('prodPrice').value;
   const sku = document.getElementById('prodSku').value;
   const stock = document.getElementById('prodStock').value;
-  const categoryId = document.getElementById('modalCategory').value;
 
-  // Recolectar atributos dinámicos
+  const catId = document.getElementById('modalCategory').value;
+  const subId = document.getElementById('modalSubcategory').value;
+  const finalCategoryId = subId || catId;
+
   const customAttributes = {};
   document.querySelectorAll('#dynamicFieldsContainer input').forEach(input => {
     if (input.dataset.attr && input.value) {
@@ -328,7 +346,7 @@ async function saveProduct() {
     }
   });
 
-  if (!name || !price || !sku || !categoryId) {
+  if (!name || !price || !sku || !finalCategoryId) {
     alert("Por favor complete los campos obligatorios (Nombre, Precio, SKU, Categoría).");
     return;
   }
@@ -337,17 +355,21 @@ async function saveProduct() {
     name, brand, model, sku,
     price: parseFloat(price),
     stock_quantity: parseInt(stock) || 0,
-    category: categoryId,
-    description: `${name} - ${brand} ${model}`, // Descripción básica automática
+    category: finalCategoryId,
+    description: `${name} - ${brand} ${model}`,
     custom_attributes: customAttributes
   };
 
-  const success = await apiCall('productos/', 'POST', payload);
+  let success;
+  if (isEditing && currentProductId) {
+    success = await apiCall(`productos/${currentProductId}/`, 'PUT', payload);
+  } else {
+    success = await apiCall('productos/', 'POST', payload);
+  }
+
   if (success) {
-    alert("Producto guardado exitosamente.");
+    alert(isEditing ? "Producto actualizado exitosamente." : "Producto creado exitosamente.");
     closeProductModal();
     fetchProducts();
   }
 }
-
-// TODO: Implementar saveProduct() para recoger datos del modal y enviar POST/PUT
