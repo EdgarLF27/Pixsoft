@@ -58,3 +58,53 @@ class CartItem(models.Model):
         Calcula el precio total para este ítem (precio * cantidad).
         """
         return self.item_price * self.quantity
+
+class Order(models.Model):
+    """
+    Modelo que representa un pedido de un usuario.
+    """
+    STATUS_CHOICES = (
+        ('pending', 'Pendiente'),
+        ('processing', 'En proceso'),
+        ('shipped', 'Enviado'),
+        ('delivered', 'Entregado'),
+        ('canceled', 'Cancelado'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='orders')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    # Podríamos añadir más campos para la dirección de envío, método de pago, etc.
+    # shipping_address = models.ForeignKey('users.Address', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Pedido #{self.id} de {self.user.username}"
+
+class OrderItem(models.Model):
+    """
+    Modelo que representa un ítem dentro de un pedido.
+    Guarda una instantánea del producto y precio en el momento de la compra.
+    """
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+
+    # Relación genérica para poder apuntar a cualquier tipo de producto
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    product = GenericForeignKey('content_type', 'object_id')
+    
+    quantity = models.PositiveIntegerField()
+    # Guardamos el precio en el momento de la compra para mantener un histórico fiable
+    price_at_purchase = models.DecimalField(max_digits=10, decimal_places=2)
+
+    # Campo específico para productos de arrendamiento
+    rental_plan = models.ForeignKey(RentalPlan, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Ítem de pedido {self.id} para el pedido #{self.order.id}"
+
+    @property
+    def total_price(self):
+        return self.price_at_purchase * self.quantity

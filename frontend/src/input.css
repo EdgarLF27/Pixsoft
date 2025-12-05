@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* Custom Pixsoft Colors */
   --color-pixsoft-primary: #5dade2;
   --color-pixsoft-secondary: #85c1e2;
   --color-pixsoft-dark: #1c2833;
@@ -21,6 +22,9 @@
   }
   .glass-button {
     @apply bg-blue-600/80 hover:bg-blue-600 backdrop-blur-md text-white px-4 py-2 rounded-lg transition-all;
+  }
+  .nav-glass {
+    @apply bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-sm;
   }
 
   /* Sidebar Links */
