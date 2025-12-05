@@ -107,142 +107,146 @@
     </main>
 
     <!-- Product Modal (Centered) -->
-    <div id="productModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="productModal" class="fixed inset-0 z-50 hidden">
         <!-- Overlay -->
-        <div class="modal-overlay" id="modalOverlay" onclick="closeProductModal()"></div>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity opacity-0" id="modalOverlay"
+            onclick="closeProductModal()"></div>
 
-        <!-- Modal Panel -->
-        <div class="modal-panel" id="productModalPanel">
+        <!-- Modal Panel Container -->
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col transform transition-all scale-95 opacity-0 pointer-events-auto"
+                id="productModalPanel">
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h2 class="text-lg font-bold text-slate-800" id="modalTitle">Nuevo Producto</h2>
-                <button onclick="closeProductModal()"
-                    class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200/50">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
+                <!-- Modal Header -->
+                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                    <h2 class="text-lg font-bold text-slate-800" id="modalTitle">Nuevo Producto</h2>
+                    <button onclick="closeProductModal()"
+                        class="text-slate-400 hover:text-slate-600 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200/50">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
 
-            <!-- Modal Content -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                <!-- Modal Content -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-8">
 
-                <!-- Basic Info -->
-                <section>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-[#5DADE2]"></i> Información Básica
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Nombre del Producto</label>
-                            <input type="text" id="prodName" class="input-field" placeholder="Ej. Monitor Gaming 27''">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Marca</label>
-                            <input type="text" id="prodBrand" class="input-field" placeholder="Ej. Samsung">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Modelo</label>
-                            <input type="text" id="prodModel" class="input-field" placeholder="Ej. Odyssey G5">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Precio (MXN)</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                                <input type="number" id="prodPrice" class="input-field pl-7" placeholder="0.00">
+                    <!-- Basic Info -->
+                    <section>
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-[#5DADE2]"></i> Información Básica
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Nombre del Producto</label>
+                                <input type="text" id="prodName" class="input-field" placeholder="Ej. Monitor Gaming 27''">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Marca</label>
+                                <input type="text" id="prodBrand" class="input-field" placeholder="Ej. Samsung">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Modelo</label>
+                                <input type="text" id="prodModel" class="input-field" placeholder="Ej. Odyssey G5">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Precio (MXN)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                                    <input type="number" id="prodPrice" class="input-field pl-7" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">SKU</label>
+                                <input type="text" id="prodSku" class="input-field" placeholder="GEN-001">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">SKU</label>
-                            <input type="text" id="prodSku" class="input-field" placeholder="GEN-001">
+                    </section>
+
+                    <hr class="border-slate-100">
+
+                    <!-- Categorization -->
+                    <section>
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-purple-500"></i> Categorización
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Categoría Principal</label>
+                                <select id="modalCategory" onchange="updateModalSubcategories()"
+                                    class="input-field bg-white">
+                                    <option value="">Seleccionar...</option>
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Subcategoría</label>
+                                <select id="modalSubcategory" class="input-field bg-white" disabled>
+                                    <option value="">Selecciona categoría primero</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <hr class="border-slate-100">
+                    <hr class="border-slate-100">
 
-                <!-- Categorization -->
-                <section>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-purple-500"></i> Categorización
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Categoría Principal</label>
-                            <select id="modalCategory" onchange="updateModalSubcategories()"
-                                class="input-field bg-white">
-                                <option value="">Seleccionar...</option>
-                                <!-- Populated by JS -->
-                            </select>
+                    <!-- Dynamic Attributes -->
+                    <section id="dynamicAttributesSection" class="hidden">
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-orange-500"></i> Especificaciones Técnicas
+                        </h3>
+                        <div id="dynamicFieldsContainer" class="grid grid-cols-2 gap-4">
+                            <!-- Injected by JS based on Category -->
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Subcategoría</label>
-                            <select id="modalSubcategory" class="input-field bg-white" disabled>
-                                <option value="">Selecciona categoría primero</option>
-                            </select>
+                    </section>
+
+                    <hr class="border-slate-100">
+
+                    <!-- Inventory -->
+                    <section>
+                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-green-500"></i> Inventario
+                        </h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Stock Actual</label>
+                                <input type="number" id="prodStock" class="input-field" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Alerta Mínima</label>
+                                <input type="number" class="input-field" placeholder="5">
+                            </div>
+                            <div class="flex items-center h-full pt-5">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox"
+                                        class="w-4 h-4 text-[#5DADE2] rounded border-slate-300 focus:ring-[#5DADE2]">
+                                    <span class="text-sm text-slate-600">Permitir Backorder</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <hr class="border-slate-100">
-
-                <!-- Dynamic Attributes -->
-                <section id="dynamicAttributesSection" class="hidden">
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-orange-500"></i> Especificaciones Técnicas
-                    </h3>
-                    <div id="dynamicFieldsContainer" class="grid grid-cols-2 gap-4">
-                        <!-- Injected by JS based on Category -->
-                    </div>
-                </section>
-
-                <hr class="border-slate-100">
-
-                <!-- Inventory -->
-                <section>
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-boxes-stacked text-green-500"></i> Inventario
-                    </h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Stock Actual</label>
-                            <input type="number" id="prodStock" class="input-field" placeholder="0">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 mb-1">Alerta Mínima</label>
-                            <input type="number" class="input-field" placeholder="5">
-                        </div>
-                        <div class="flex items-center h-full pt-5">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox"
-                                    class="w-4 h-4 text-[#5DADE2] rounded border-slate-300 focus:ring-[#5DADE2]">
-                                <span class="text-sm text-slate-600">Permitir Backorder</span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Image Upload (Mock) -->
-                <section>
-                    <label class="block text-xs font-medium text-slate-700 mb-2">Imagen del Producto</label>
-                    <div
-                        class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors cursor-pointer group">
+                    <!-- Image Upload (Mock) -->
+                    <section>
+                        <label class="block text-xs font-medium text-slate-700 mb-2">Imagen del Producto</label>
                         <div
-                            class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 group-hover:text-[#5DADE2] group-hover:bg-[#5DADE2]/10 transition-all">
-                            <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                            class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors cursor-pointer group">
+                            <div
+                                class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 group-hover:text-[#5DADE2] group-hover:bg-[#5DADE2]/10 transition-all">
+                                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                            </div>
+                            <p class="text-sm text-slate-600 font-medium">Haz clic o arrastra una imagen aquí</p>
+                            <p class="text-xs text-slate-400 mt-1">PNG, JPG hasta 5MB</p>
                         </div>
-                        <p class="text-sm text-slate-600 font-medium">Haz clic o arrastra una imagen aquí</p>
-                        <p class="text-xs text-slate-400 mt-1">PNG, JPG hasta 5MB</p>
-                    </div>
-                </section>
+                    </section>
 
-            </div>
+                </div>
 
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button onclick="closeProductModal()"
-                    class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors font-medium">Cancelar</button>
-                <button onclick="saveProduct()" class="btn-primary">Guardar
-                    Producto</button>
+                <!-- Modal Footer -->
+                <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3 rounded-b-2xl">
+                    <button onclick="closeProductModal()"
+                        class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors font-medium">Cancelar</button>
+                    <button onclick="saveProduct()" class="btn-primary">Guardar
+                        Producto</button>
+                </div>
             </div>
         </div>
     </div>
