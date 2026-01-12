@@ -1,3 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-pixsoft-primary: #34D399;
+  --color-pixsoft-secondary: #059669;
+}
+
+@layer utilities {
+  .glass-card {
+    /* CAMBIO: 0.9 -> 0.7 para más transparencia */
+    background: rgba(255, 255, 255, 0.70);
+    
+    /* El motor del efecto vidrio */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    
+    /* Borde semitransparente para dar volumen */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    
+    /* Sombra suave */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  }
+  
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  
+  /* CAMBIO: Hice los gradientes de fondo más intensos y coloridos 
+     para que se noten detrás del vidrio */
+  background-image: 
+      radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(52, 211, 153, 0.15) 0px, transparent 50%);
+  background-attachment: fixed;
+}

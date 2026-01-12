@@ -316,3 +316,6 @@ pyrightconfig.json
 
 # package-lock.json
 package-lock.json
+
+# User Uploads
+**/media/

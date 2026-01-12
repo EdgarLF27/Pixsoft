@@ -3,8 +3,8 @@ from django.urls import path, include
 from .views import SaleCategoryViewSet, SaleProductViewSet
 
 router = DefaultRouter()
-router.register(r'categories', SaleCategoryViewSet)
-router.register(r'productos', SaleProductViewSet)
+router.register(r'category', SaleCategoryViewSet)
+router.register(r'product', SaleProductViewSet)
 
 urlpatterns = [
     # Mapea /api/v1/products/categories/ y /api/v1/products/productos/
